@@ -43,7 +43,7 @@ h2 small{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:8px}
 <header><div class="w">
   <div>
     <h1>诉讼策略工作台 · 高保真原型</h1>
-    <p>每块屏幕都是真实运行的 App 页面（不是截图），可以直接在框里点击操作。页面与低保真原型 P0–P13 一一对应，标「调研新增」的是根据学姐访谈和问卷结论补充的功能。</p>
+    <p>每块屏幕都是真实运行的 App 页面（不是截图），可以直接在框里点击操作。页面与低保真原型 P0–P16 一一对应，标「调研新增」的是根据学姐访谈和问卷结论补充的功能。</p>
   </div>
   <div class="meta">v1.0 · 2026-11-22<br>移动端 375 × 776 · 网页端 1280 × 800<br><a href="wireframe.html">低保真原型</a> · <a href="index.html">App Demo</a> · <a href="web.html">网页版 Demo</a> · <a href="workflow.html">AI 工作流</a></div>
 </div></header>
@@ -58,7 +58,7 @@ h2 small{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:8px}
 <h2>主线一：登录与建案 <small>从触达到上传材料</small></h2>
 <div class="grid">
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=login&embed=1"></iframe></div><div class="cap"><b>P0</b><span>登录</span><p>验证码 / 账号密码两种方式；勾选协议时明确告知「材料先脱敏再给 AI」，回应问卷里「涉密不敢用 AI」的顾虑。</p></div></div>
-  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=home&embed=1"></iframe></div><div class="cap"><b>P1</b><span>案件首页</span><p>顶部汇总开庭倒计时和待质证数量；红色预警条直达对方新证据，AI 工作流入口紧随其后。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=home&embed=1"></iframe></div><div class="cap"><b>P1</b><span>案件首页</span><p>顶部显示所在律所，案件分「我参与的 / 本所全部」，标注承办与协办；红色入口用于对方开庭前突然交证据时快速录入。</p></div></div>
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=new&embed=1"></iframe></div><div class="cap"><b>P2</b><span>新建案件</span><p>案由、诉讼地位（原告 / 被告 / 第三人）、大白话描述案情、上传材料。</p></div></div>
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=mask&embed=1"></iframe></div><div class="cap"><b>P3</b><span>上传脱敏</span><em>新增</em><p>识别 5 类敏感信息，掩码 / 代号 / 泛化三种方式可切换，原文对照高亮。对应问卷「隐去客户隐私才敢用 AI」。</p></div></div>
 </div>
@@ -66,7 +66,7 @@ h2 small{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:8px}
 <h2>主线二：证据与时间线 <small>多轮补材料 → 证据库 → 时间线</small></h2>
 <div class="grid">
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=search&embed=1"></iframe></div><div class="cap"><b>P4</b><span>证据库检索</span><em>新增</em><p>按名称、证明目的、OCR 原文、标签检索，关键词高亮并显示原文片段；新增「录音」「财务流水」类型（访谈建议）。</p></div></div>
-  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=evdetail&embed=1"></iframe></div><div class="cap"><b>P5</b><span>证据详情</span><p>证明目的、对应主张、脱敏原文；对方证据显示质证意见区，一键进入 AI 工作流。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=evdetail&embed=1"></iframe></div><div class="cap"><b>P5</b><span>证据详情</span><p>证明目的、对应主张、脱敏原文、提交轮次；对方证据显示三性质证意见。</p></div></div>
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=tlpick&embed=1"></iframe></div><div class="cap"><b>P6</b><span>时间线 · 选择案件</span><em>新增</em><p>时间线一级页先选案件，避免多个案件的节点混在一起。</p></div></div>
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=timeline&embed=1"></iframe></div><div class="cap"><b>P7</b><span>案件时间线</span><em>调研新增</em><p>标出「陈述冲突」「时间存疑」，并区分事件时间与文件形成时间（问卷第 8 题两位受访者都选了的困难）。</p></div></div>
 </div>
@@ -79,6 +79,14 @@ h2 small{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:8px}
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=op&embed=1"></iframe></div><div class="cap"><b>P11</b><span>质证意见</span><p>真实性、合法性、关联性三栏结论，加可直接当庭发表的完整意见。</p></div></div>
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=risk&embed=1"></iframe></div><div class="cap"><b>P12</b><span>不利点排查</span><em>调研新增</em><p>从全部材料中找出当事人没主动说的不利内容，附原文出处和应对建议。</p></div></div>
   <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=report&embed=1"></iframe></div><div class="cap"><b>P13</b><span>策略报告</span><p>争议焦点、攻防、证据链、证据目录、质证意见、时间节点、不利点，一键复制。</p></div></div>
+</div>
+
+
+<h2>主线四：开庭前一天，对方交了新证据 <small>律师录入 → 脱敏 → 几分钟出应对方案</small></h2>
+<div class="grid">
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=rush&embed=1"></iframe></div><div class="cap"><b>P14</b><span>录入对方新证据</span><em>调研新增</em><p>证据由代理律师录入，标记为「对方提交 · 第 N 轮」，先脱敏再进入分析。对应访谈：对方卡在举证期限最后一天提交大量新证据。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=respond&embed=1"></iframe></div><div class="cap"><b>P15</b><span>庭前应对方案</span><em>调研新增</em><p>四块内容：本轮证据的质证意见、受冲击的主张及反驳证据、与上一轮相比的策略调整、开庭前要做的事。律师采纳后写回庭审策略。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=firm&embed=1"></iframe></div><div class="cap"><b>P16</b><span>律所空间</span><em>新增</em><p>律所购买、律师使用：显示版本与席位用量；材料按「律所 → 部门 → 案件 → 证据轮次」归档；四种角色权限；离职交接、结案归档。</p></div></div>
 </div>
 
 <h2>网页端 <small>同一套功能，左侧导航 + 宽屏内容区，适合在律所电脑上整理案卷</small></h2>

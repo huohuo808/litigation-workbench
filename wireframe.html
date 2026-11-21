@@ -90,7 +90,7 @@ h2 small{font-weight:400;color:var(--g4);font-size:12px;margin-left:8px}
     <h1>诉讼策略工作台 · 低保真原型</h1>
     <p>以「诉讼策略助手」为主框架，并入「案件材料整理助手」的时间线、证据链匹配与质证意见。蓝色标注为新增能力：证据库检索、先选案件再生成时间线、上传后脱敏，以及根据学姐访谈和律师问卷补充的证据目录自动编号、待补材料清单、时间线冲突标注、不利点排查、录音与流水材料。</p>
   </div>
-  <div class="meta">v1.0 · 2026-11-22<br>移动端 App · 14 个页面（P0–P13）<br>二组作业 · 高保真见 hifi.html</div>
+  <div class="meta">v1.0 · 2026-11-22<br>移动端 App · 17 个页面（P0–P16）<br>二组作业 · 高保真见 hifi.html</div>
 </header>
 
 <h2>页面流程：一条主线，三个新增节点 <small>箭头上的文字是用户动作</small></h2>
@@ -103,11 +103,11 @@ h2 small{font-weight:400;color:var(--g4);font-size:12px;margin-left:8px}
     <div class="fb">P8 证据链</div><div class="ar"><span>自动生成</span></div><div class="fb new">P9 证据目录<small>编号页码</small></div><div class="ar"><span>核对完成</span></div>
     <div class="fb">P13 策略报告<small>复制/交付</small></div>
   </div>
-  <div class="row"><div class="lbl">庭前证据突袭</div>
-    <div class="fb">P1 预警条<small>对方新增证据</small></div><div class="ar"><span>去质证</span></div>
-    <div class="fb new">P4 证据库<small>筛「庭前新增」</small></div><div class="ar"><span>点开证据</span></div>
-    <div class="fb">P5 证据详情<small>三性 + 意见</small></div><div class="ar"><span>一键生成</span></div>
-    <div class="fb">P11 质证意见<small>写回策略</small></div><div class="ar"><span>补强证据</span></div>
+  <div class="row"><div class="lbl">开庭前一天<br>对方交证据</div>
+    <div class="fb">P1 录入入口<small>律师收到证据</small></div><div class="ar"><span>选案件</span></div>
+    <div class="fb new">P14 录入 + 脱敏<small>对方 · 第 N 轮</small></div><div class="ar"><span>确认</span></div>
+    <div class="fb new">P15 应对方案<small>质证·影响·调整·待办</small></div><div class="ar"><span>采纳</span></div>
+    <div class="fb">P8 庭审策略<small>写回攻防</small></div><div class="ar"><span>补强证据</span></div>
     <div class="fb new">P3 脱敏核对<small>补充入库</small></div>
   </div>
   <div class="row"><div class="lbl">按案件看时间线</div>
@@ -127,7 +127,7 @@ h2 small{font-weight:400;color:var(--g4);font-size:12px;margin-left:8px}
   <div class="legend"><span><i></i>沿用两个原 Demo 的页面</span><span><i class="n"></i>本次新增 / 改造的页面</span><span>底部 Tab：案件 · 证据库 · 时间线 · 策略 · 报告</span></div>
 </div>
 
-<h2>页面线框 <small>P0–P13，标注序号对应下方说明</small></h2>
+<h2>页面线框 <small>P0–P16，标注序号对应下方说明</small></h2>
 <div class="grid">
 
 <!-- P0 -->
@@ -153,7 +153,7 @@ h2 small{font-weight:400;color:var(--g4);font-size:12px;margin-left:8px}
   <div class="nav">诉讼策略工作台<span class="r">＋新建</span></div>
   <div class="bd">
     <div class="box dk"><div class="t">未来 30 天 3 件开庭，对方新增 4 份证据</div><div class="rw" style="margin-top:6px"><div class="box sp" style="background:#fff">在办 3</div><div class="box sp" style="background:#fff">证据 17</div><div class="box sp" style="background:#fff">待质证 3</div></div></div>
-    <div class="box solid"><span class="mk">1</span><div class="t">庭前证据突袭预警</div><div class="ln m"></div><div style="text-align:right;font-size:9.5px">去质证 ›</div></div>
+    <div class="box solid"><span class="mk">1</span><div class="t">对方开庭前突然交了证据？</div>拍照上传 → 脱敏 → 出应对<div style="text-align:right;font-size:9.5px">录入 ›</div></div>
     <div class="box"><span class="mk">2</span>⌕ 搜索证据：名称、证明目的、原文…</div>
     <div class="rw"><div class="t">我的案件</div><div class="sp"></div><span style="font-size:9.5px">＋新建案件</span></div>
     <div class="box"><span class="mk">3</span><div class="t">李某诉张某民间借贷纠纷</div><div class="rw" style="margin-top:3px"><span class="pill">CASE-001</span><span class="pill k">原告</span><span class="pill">策略已生成</span></div><div class="rw" style="margin-top:4px"><span>开庭 12-03 · 还有 11 天</span><div class="sp"></div><span>庭前新增 2</span></div></div>
@@ -162,7 +162,7 @@ h2 small{font-weight:400;color:var(--g4);font-size:12px;margin-left:8px}
   </div>
   <div class="tb"><div class="on">案件</div><div>证据库</div><div>时间线</div><div>策略</div><div>报告</div></div>
 </div></div>
-<ul class="notes"><li><b>1</b>对方补充了证据且尚未出质证意见时出现，点击直达证据库并预置「庭前新增」筛选。</li><li><b>2</b>搜索入口，点击进入 P4 并自动聚焦输入框。</li><li><b>3</b>案件卡点击弹出操作面板：查看策略 / 时间线 / 本案证据 / 补充上传。</li></ul>
+<ul class="notes"><li><b>1</b>常驻入口：证据都由代理律师录入，系统不会自动收到对方证据。律师拿到对方临时提交的证据后从这里录入，进入 P14 → P15。</li><li><b>4</b>顶部显示律所名称；案件分「我参与的 / 本所全部」，卡片标注承办、协办与部门。</li><li><b>2</b>搜索入口，点击进入 P4 并自动聚焦输入框。</li><li><b>3</b>案件卡点击弹出操作面板：查看策略 / 时间线 / 本案证据 / 补充上传。</li></ul>
 </div>
 
 <!-- P2 -->
@@ -375,6 +375,53 @@ h2 small{font-weight:400;color:var(--g4);font-size:12px;margin-left:8px}
   <div class="tb"><div>案件</div><div>证据库</div><div>时间线</div><div class="on">策略</div><div>报告</div></div>
 </div></div>
 <ul class="notes"><li><b>1</b>访谈：当事人陈述天然偏向自己，律师需要从零散材料里<i>主动找出不利证据</i>提前准备。每条附原文出处和应对。</li><li><b>2</b>保留原有的时效、证据缺口、利息等风险提示。</li></ul>
+</div>
+
+<!-- P14 -->
+<div class="pg"><div class="cap"><b>P14</b><span>录入对方新证据</span><em>调研新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>录入对方新证据</div>
+  <div class="bd">
+    <div class="box"><span class="mk">1</span><div class="t">被告补充证据（证人证言）.pdf</div>归属：李某诉张某…<br>提交方：<b>对方</b> · 收到 11-22 18:40 · 明天开庭</div>
+    <div class="box"><div class="t">脱敏方式</div><div class="rw" style="margin-top:4px"><span class="pill sp" style="text-align:center">掩码</span><span class="pill k sp" style="text-align:center">代号</span><span class="pill sp" style="text-align:center">泛化</span></div></div>
+    <div class="box" style="flex:1">证人：<u>证人C</u>，身份证号 <u>[身份证号#1]</u>…<div class="ln"></div><div class="ln m"></div></div>
+    <div class="btn">确认脱敏，生成应对方案</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>证据由代理律师录入，记为新一轮（第 N 轮）。访谈：对方可能在举证期限最后一天提交大量新证据，原有策略可能被推翻。</li></ul>
+</div>
+
+<!-- P15 -->
+<div class="pg"><div class="cap"><b>P15</b><span>庭前应对方案</span><em>调研新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>庭前应对方案</div>
+  <div class="bd">
+    <div class="box dk"><div class="t">李某诉张某民间借贷纠纷</div>开庭 11-23 09:30 · 约 12 小时<br><span class="pill" style="background:#fff">第1轮</span> <span class="pill" style="background:#fff">第2轮</span> <span class="pill k">第3轮</span></div>
+    <div class="box solid"><span class="mk">1</span><div class="t">① 本轮证据 · 质证意见</div><div class="rw"><span class="pill sp">真 有异议</span><span class="pill sp">合 有异议</span><span class="pill sp">关 有异议</span></div></div>
+    <div class="box"><span class="mk">2</span><div class="t">② 对我方主张的影响</div>借贷合意成立：<span class="pill">已具备</span> → <span class="pill k">受冲击</span></div>
+    <div class="box"><span class="mk">3</span><div class="t">③ 策略调整（对比上一轮）</div><span class="pill">新增</span> 不同意超期证据 <br><span class="pill">调整</span> 集中出示证据</div>
+    <div class="box"><span class="mk">4</span><div class="t">④ 开庭前要做的事</div>☐ 打印质证意见 ☐ 携带原件</div>
+    <div class="btn">采纳并写入庭审策略</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>直接给出三性结论和可当庭发表的意见。</li><li><b>2</b>重算证据链，标出被冲击的主张和可用于反驳的我方证据。</li><li><b>3</b>只列与上一轮的差异，律师不用重读整份策略。</li><li><b>4</b>当晚待办清单，可复制发给团队。</li></ul>
+</div>
+
+<!-- P16 -->
+<div class="pg"><div class="cap"><b>P16</b><span>律所空间</span><em>新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav">案件</div>
+  <div class="bd"><div class="box"><div class="ln"></div></div></div>
+  <div class="shade"></div>
+  <div class="sheet" style="height:84%">
+    <div class="rw"><div class="t">华衡律师事务所</div><div class="sp"></div>✕</div>
+    <div class="box"><span class="mk">1</span><div class="t">采购与席位</div>律所专业版 · 按席位年付<br>已用 8 / 10（律师 6 · 助理 2）</div>
+    <div class="box"><span class="mk">2</span><div class="t">归档方式</div>律所 → 部门 → 案件 → 证据轮次 → 证据</div>
+    <div class="box"><span class="mk">3</span><div class="t">角色权限</div>主任 · 承办 · 协办 · 助理</div>
+    <div class="box"><div class="t">数据存放</div>律所专属空间 / 私有化部署</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>购买方是律所，按机构开通、按席位计费；使用方是律师和助理。</li><li><b>2</b>案件不归个人：律师离职或换人承办可直接交接，结案整案只读归档。</li><li><b>3</b>按角色授权：助理可上传整理但不能导出。</li></ul>
 </div>
 
 <!-- P13 -->

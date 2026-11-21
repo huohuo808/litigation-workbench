@@ -314,20 +314,21 @@ body.web .screen .seg,body.web .screen .primary,body.web .screen .ghost{margin-l
     <div class="logo">策</div>
     <h1>诉讼策略工作台</h1>
     <div class="en">LITIGATION WORKBENCH · DEMO</div>
-    <p>把<strong>案件材料整理</strong>和<strong>庭审策略生成</strong>放进同一个律师工作台：材料上传即脱敏，证据按案件入库可检索，时间线按案件生成，对方庭前突然补充的证据也能当晚出质证意见。</p>
+    <p>面向<strong>律所</strong>的律师工作台：案件和材料按律所统一归档。把<strong>案件材料整理</strong>和<strong>庭审策略生成</strong>放进同一个工作台：材料上传即脱敏，证据按案件入库可检索，时间线按案件生成，证据可以分多轮录入；对方开庭前一天才交证据，律师录入后几分钟内就能拿到质证意见和当庭应对清单。</p>
     <div>
       <span class="tag">案件管理</span><span class="tag">证据链 ↔ 证据目录</span><span class="tag">攻防策略</span><span class="tag">质证意见</span>
       <span class="tag new">新 · 证据库检索</span><span class="tag new">新 · 先选案件再出时间线</span><span class="tag new">新 · 上传自动脱敏</span><span class="tag new">新 · 账号登录</span><span class="tag new">新 · 证据目录自动编号</span><span class="tag new">新 · 不利点排查</span>
     </div>
     <div class="steps">
       <h4>演示路线（可点击跳转）</h4>
-      <div class="s" data-s="login" onclick="jump('login')">① 登录</div>
-      <div class="s" data-s="home" onclick="jump('home')">② 案件首页 · 庭前预警</div>
-      <div class="s" data-s="mask" onclick="jump('mask')">③ 上传证据 · 自动脱敏</div>
+      <div class="s" data-s="login" onclick="jump('login')">① 登录律所空间</div>
+      <div class="s" data-s="home" onclick="jump('home')">② 案件首页 · 按律所归档</div>
+      <div class="s" data-s="mask" onclick="jump('mask')">③ 多轮上传 · 自动脱敏</div>
       <div class="s" data-s="evidence" onclick="jump('evidence')">④ 证据库检索（含录音 / 流水）</div>
       <div class="s" data-s="timeline" onclick="jump('timeline')">⑤ 选择案件 → 时间线</div>
-      <div class="s" data-s="strategy" onclick="jump('strategy')">⑥ 证据链 · 目录 · 质证意见</div>
-      <div class="s" data-s="report" onclick="jump('report')">⑦ 不利点排查与策略报告</div>
+      <div class="s" data-s="strategy" onclick="jump('strategy')">⑥ 证据链 · 证据目录 · 质证</div>
+      <div class="s" data-s="rush" onclick="jump('rush')">⑦ 开庭前一天对方交证据 → 快速应对</div>
+      <div class="s" data-s="report" onclick="jump('report')">⑧ 不利点排查与策略报告</div>
     </div>
     <button class="reset" onclick="resetAll()">↺ 重置演示</button>
     <div class="note">手机演示：用手机浏览器打开本页面，安卓选「安装应用 / 添加到主屏幕」，iPhone 用 Safari 点分享 →「添加到主屏幕」，即可像 App 一样全屏使用、断网可用。<br><br>全部为演示数据，人名、证件号、账号均为虚构。AI 输出仅为律师工作初稿，须人工核对。手机打开此页面会自动切换为全屏 App 视图。</div>
@@ -352,11 +353,11 @@ body.web .screen .seg,body.web .screen .primary,body.web .screen .ghost{margin-l
 // ================= 演示数据（全部虚构） =================
 var TODAY = new Date('2026-11-22T00:00:00');
 var BASE_CASES = [
- {id:'C1', no:'CASE-2026-001', type:'民间借贷纠纷', role:'原告', title:'李某诉张某民间借贷纠纷', court:'某区人民法院', hearing:'2026-12-03 09:30', done:true,
+ {id:'C1', no:'CASE-2026-001', type:'民间借贷纠纷', role:'原告', title:'李某诉张某民间借贷纠纷', court:'某区人民法院', hearing:'2026-11-23 09:30', done:true, owner:'演示律师', team:['助理 陈晓'], dept:'民商事争议解决部',
   goal:'主张返还本金 20 万元及逾期利息',
   facts:'2025年3月，张某以资金周转为由向李某借款20万元，李某银行转账交付，张某出具借条，约定2025年9月30日归还。到期后多次催收未还。',
   focus:[
-   {t:'借贷关系是否成立',lv:'高',why:'被告庭前提交证人证言，主张款项系合伙投资款，需先固定借贷合意与款项交付。',basis:'请求权基础：<b>借款返还请求权</b>。构成要件：①借贷合意 ②款项交付 ③到期未还。借条 E01 + 转账凭证 E02 相互印证。',
+   {t:'借贷关系是否成立',lv:'高',why:'被告可能主张款项性质不是借款，需先固定借贷合意与款项交付两条事实。',basis:'请求权基础：<b>借款返还请求权</b>。构成要件：①借贷合意 ②款项交付 ③到期未还。借条 E01 + 转账凭证 E02 相互印证。',
     src:{law:'《中华人民共和国民法典》第六百六十七条',full:'借款合同是借款人向贷款人借款，到期返还借款并支付利息的合同。',org:'全国人民代表大会',eff:'现行有效'}},
    {t:'被告主张的 5 万元是否为还款',lv:'高',why:'被告 11 月 18 日提交 5 万元转账截图，若被认定为还款将直接减少本金。',basis:'截图转账备注为「货款」，且转账时间早于借款发生日，与本案借款缺乏关联。',
     src:{law:'最高人民法院关于适用《中华人民共和国民事诉讼法》的解释 第九十条',full:'当事人对自己提出的诉讼请求所依据的事实或者反驳对方诉讼请求所依据的事实，应当提供证据加以证明。',org:'最高人民法院',eff:'现行有效'}},
@@ -364,14 +365,14 @@ var BASE_CASES = [
     src:{law:'最高人民法院关于审理民间借贷案件适用法律若干问题的规定 第二十八条',full:'借贷双方对逾期利率有约定的，从其约定，但以不超过合同成立时一年期贷款市场报价利率四倍为限。',org:'最高人民法院',eff:'现行有效'}}
   ],
   ours:['以「借条原件 E01 + 银行转账凭证 E02」证明借贷合意与款项交付','以「微信催收记录 E03 + 律师函签收 E04」证明到期未还并中断诉讼时效','主张本金 20 万元 + 自 2025-10-01 起按 LPR 计算的逾期利息'],
-  opp:[{d:'抗辩一：款项为合伙投资款（证人证言 E06）',c:'证人未出庭、与被告系同事有利害关系；借条载明「借到」，微信中被告多次承诺「下月还钱」。'},
+  opp:[{d:'抗辩一：款项为合伙投资款',c:'借条载明「借到」，微信中被告多次承诺「下月还钱」，电话录音 E18 中被告承认欠款。'},
        {d:'抗辩二：已归还 5 万元（转账截图 E05）',c:'备注为「货款」且发生于借款前；申请调取原告同期银行流水对照。'},
        {d:'抗辩三：否认借条签名',c:'当庭出示原件；必要时申请笔迹鉴定，转账金额时间与借条一致可佐证。'}],
-  late:['当庭明确不同意 E06 作为证据使用，申请证人出庭接受询问','对 E05 要求被告提交银行盖章流水原件，否则不认可真实性','如法院接受补充证据，可申请延长举证期限补充反证'],
+  late:['对 E05 要求被告提交银行盖章流水原件，否则不认可真实性','如对方开庭前再补交证据：录入后自动生成质证意见和当庭应对清单'],
   adverse:[{tx:'微信记录 E03 中，原告 2025-04 曾说「生意做起来了记得分我点」，可能被被告用来支持「合伙投资款」的说法。',ev:'E03',lv:'高',act:'庭前向当事人核实语境；准备说明这是朋友间玩笑，借条明确写的是「借到」。'},{tx:'原告在微信中说过「不着急，利息就算了」，可能影响逾期利息的主张。',ev:'E03',lv:'中',act:'只主张逾期后按 LPR 计算的逾期利息，不主张借期内利息。'}],
-  risks:[{ic:'⏳',tx:'<b>证据突袭</b>：被告于开庭前 12 天内两次补充证据，需当晚完成质证意见。',lv:'高'},{ic:'▣',tx:'<b>证据缺口</b>：反驳「已还款」缺少原告同期流水，建议庭前调取。',lv:'中'},{ic:'⚖',tx:'<b>利息主张</b>：未约定逾期利率，按 LPR 主张，避免被调减。',lv:'低'}],
+  risks:[{ic:'⏳',tx:'<b>举证节奏</b>：被告 11-18 已补充过一次证据，开庭前仍可能再补交，需预留当晚应对时间。',lv:'高'},{ic:'▣',tx:'<b>证据缺口</b>：反驳「已还款」缺少原告同期流水，建议庭前调取。',lv:'中'},{ic:'⚖',tx:'<b>利息主张</b>：未约定逾期利率，按 LPR 主张，避免被调减。',lv:'低'}],
   claims:[{c:'借贷合意成立',ev:['E01','E03']},{c:'款项已交付 20 万元',ev:['E02']},{c:'到期未还、已催收',ev:['E03','E04','E18']},{c:'诉讼时效中断',ev:['E04','E18']},{c:'5 万元非还款',ev:['E19']},{c:'借条签名真实',ev:[],sg:'借条原件当庭核对；必要时申请笔迹鉴定'},{c:'款项性质为借款而非投资',ev:['E01'],sg:''}]},
- {id:'C2', no:'CASE-2026-002', type:'买卖合同纠纷', role:'被告', title:'某建材公司诉某装饰公司买卖合同纠纷', court:'某区人民法院', hearing:'2026-12-10 14:00', done:true,
+ {id:'C2', no:'CASE-2026-002', type:'买卖合同纠纷', role:'被告', title:'某建材公司诉某装饰公司买卖合同纠纷', court:'某区人民法院', hearing:'2026-12-10 14:00', done:true, owner:'演示律师', team:['律师 周宁'], dept:'民商事争议解决部',
   goal:'抗辩货物质量不合格，主张减少价款并驳回违约金',
   facts:'2025年4月双方签订瓷砖采购合同，货款 38.6 万元。第二批货物到场后发现色差与开裂，我方在 7 日内书面提出异议并委托检测，结论为不合格。原告起诉主张全部货款及违约金。',
   focus:[
@@ -385,7 +386,7 @@ var BASE_CASES = [
   adverse:[{tx:'送货单 E08 的签收栏写有「已验收」字样，对方会据此主张我方已认可质量。',ev:'E08',lv:'高',act:'说明签收时只能核对数量与外观，开裂属隐蔽瑕疵，且 8 日内已书面异议（E10）。'}],
   risks:[{ic:'⚖',tx:'<b>检测报告证明力</b>：单方委托存在被质疑风险，建议准备鉴定申请。',lv:'中'},{ic:'▣',tx:'<b>业务员授权</b>：需提供岗位职责说明，否定其确认欠款的权限。',lv:'中'}],
   claims:[{c:'第二批货物质量不合格',ev:['E09','E12']},{c:'异议在检验期内提出',ev:['E10']},{c:'合同约定质量标准',ev:['E07']},{c:'业务员无权确认欠款',ev:[],sg:'岗位职责说明 / 授权书'}]},
- {id:'C3', no:'CASE-2026-003', type:'劳动争议', role:'原告', title:'王某诉某科技公司违法解除劳动合同纠纷', court:'某区人民法院', hearing:'2026-12-18 09:00', done:false,
+ {id:'C3', no:'CASE-2026-003', type:'劳动争议', role:'原告', title:'王某诉某科技公司违法解除劳动合同纠纷', court:'某区人民法院', hearing:'2026-12-18 09:00', done:false, owner:'李律师', team:['演示律师'], dept:'劳动与人事部',
   goal:'确认违法解除，主张赔偿金（2N）',
   facts:'王某 2022 年 3 月入职，2026 年 7 月公司以「绩效不合格、不能胜任」为由解除劳动合同，未经培训或调岗。仲裁部分支持，双方均起诉。',
   focus:[
@@ -405,9 +406,7 @@ var BASE_EV = [
  {id:'E03',c:'C1',name:'微信聊天及催收记录',type:'电子数据',side:'我方',round:1,date:'2025-10-08',purpose:'证明到期后多次催收，被告承诺「下月还钱」',text:'张*：「这个月手头紧，下月一定还钱。」李*：「借你的20万已经到期了。」',tags:['催收','微信','还款承诺'],mask:2},
  {id:'E04',c:'C1',name:'催款律师函及签收回执',type:'书证',side:'我方',round:2,date:'2025-11-20',purpose:'证明原告主张权利，诉讼时效中断',text:'致张*：请于收函后 15 日内归还借款本金 20 万元。签收人：张*，签收日期 2025-11-22。',tags:['律师函','时效中断','催收'],mask:2},
  {id:'E05',c:'C1',name:'被告提交：5 万元转账截图',type:'电子数据',side:'对方',round:2,date:'2026-11-18',late:true,purpose:'被告拟证明已归还部分借款 5 万元',text:'转账 50,000.00 元，收款人 李*，备注：货款，时间 2025-02-26。',tags:['还款','转账','截图'],mask:2,
-  op:{z:['有异议','p','截图非银行盖章流水'],h:['无异议','y',''],g:['有异议','n','备注为货款，早于借款日'],t:'对真实性有异议：截图非银行出具的盖章流水，无法核实；对关联性有异议：转账备注为「货款」，发生于 2025-02-26，早于本案借款日，与本案借款无关，不能证明被告已还款。'}},
- {id:'E06',c:'C1',name:'被告提交：证人李某某书面证言',type:'证人证言',side:'对方',round:3,date:'2026-11-21',late:true,purpose:'被告拟证明 20 万元系合伙投资款而非借款',text:'证人称：「听张*说过，那笔钱是两人合伙做生意的投资款。」证人与张*系同事。',tags:['证人证言','投资款','庭前新增'],mask:2,
-  op:{z:['有异议','n','证人未出庭'],h:['有异议','p','超过举证期限'],g:['有异议','n','传来证据'],t:'证人未出庭作证，书面证言不能单独作为认定事实的依据；证人与被告系同事，存在利害关系；证言内容为「听张某说」，属传来证据，证明力极低；且该证据于开庭前夜提交，已超过举证期限，请求法庭不予采纳。'},opDone:false},
+  op:{z:['有异议','p','截图非银行盖章流水'],h:['无异议','y',''],g:['有异议','n','备注为货款，早于借款日'],t:'对真实性有异议：截图非银行出具的盖章流水，无法核实；对关联性有异议：转账备注为「货款」，发生于 2025-02-26，早于本案借款日，与本案借款无关，不能证明被告已还款。'},opDone:true},
  {id:'E18',c:'C1',name:'电话录音（方言，已转写）',type:'录音',side:'我方',round:2,date:'2025-12-05',pg:4,purpose:'证明被告认可欠款 20 万元未归还，诉讼时效再次中断',text:'[录音 03:12 · 方言转写，置信度 0.91] 张*：「那 20 万我肯定还，就是现在手上没钱，年后一定给你。」李*：「你都拖了两个多月了。」',tags:['录音','转写','自认','时效中断'],mask:1},
  {id:'E19',c:'C1',name:'原告 2025 年银行流水（Excel 312 笔）',type:'财务流水',side:'我方',round:2,date:'2026-11-20',pg:6,purpose:'证明被告所称 5 万元系 2025-02-26 的货款往来，与本案借款无关',text:'流水已解析 312 笔。2025-02-26 收到 张* 50,000.00 元，摘要「货款」，对应 2025-02-20 销售合同；2025-03-12 转出 200,000.00 元至 张*，附言「借款」；借款后至今无张*入账记录。',tags:['银行流水','Excel','还款','货款'],mask:2},
  {id:'E07',c:'C2',name:'瓷砖采购合同',type:'书证',side:'我方',round:1,date:'2025-04-02',purpose:'证明约定质量标准为国标一等品、检验期 10 日',text:'第六条 质量标准：符合 GB/T 4100 一等品。第八条 买方应于到货后 10 日内检验并书面提出异议。',tags:['合同','质量标准','检验期'],mask:3},
@@ -430,15 +429,13 @@ var BASE_TL = {
  C1:[{d:'2025-02-26',t:'被告向原告转账 5 万元',x:'摘要为「货款」，对应另一笔销售合同，发生在借款之前。',ev:['E19']},
      {d:'2025-03-10',t:'借款协商',x:'张某微信提出借款 20 万元用于资金周转。',ev:['E03']},
      {d:'2025-03-12',t:'出具借条并转账交付',x:'张某出具借条，李某当日银行转账 20 万元。',ev:['E01','E02'],key:1},
-     {d:'2025-04 (日期不明)',t:'双方对款项性质说法冲突',x:'被告称 20 万元是合伙投资款，原告称是借款；证人证言所述事件无具体日期。',ev:['E06','E03'],conflict:1,fuzzy:1},
      {d:'2025-09-30',t:'约定还款期届满',x:'借条约定还款日，张某未归还。',ev:['E01'],key:1},
      {d:'2025-10-08',t:'首次催收',x:'微信催收，张某承诺下月还款。',ev:['E03']},
      {d:'2025-11-20',t:'发送催款律师函',x:'诉讼时效中断。',ev:['E04'],fd:'签收回执形成于 2025-11-22'},
      {d:'2025-12-05',t:'电话中被告承认欠款',x:'录音已转写，被告表示「年后一定给你」，时效再次中断。',ev:['E18'],key:1},
      {d:'2026-09-15',t:'提起诉讼',x:'向某区人民法院起诉。',proc:1,key:1},
      {d:'2026-11-18',t:'被告提交还款截图',x:'被告第一次补充证据（5 万元转账）。',ev:['E05'],proc:1},
-     {d:'2026-11-21',t:'被告庭前补充证人证言',x:'开庭前 12 天第二次补充证据，需尽快出质证意见。',ev:['E06'],proc:1,key:1,fd:'证言形成于 2026-11-20，所述事件发生在 2025-04'},
-     {d:'2026-12-03',t:'开庭',x:'09:30 某区人民法院第 3 法庭。',proc:1,key:1,future:1}],
+     {d:'2026-11-23',t:'开庭',x:'09:30 某区人民法院第 3 法庭。',proc:1,key:1,future:1}],
  C2:[{d:'2025-04-02',t:'签订采购合同',x:'约定国标一等品，检验期 10 日。',ev:['E07'],key:1},
      {d:'2025-05-28',t:'第二批货物送达',x:'1,200 箱到场，现场签收。',ev:['E08']},
      {d:'2025-06-03',t:'发现色差与开裂',x:'施工现场拍照留存。',ev:['E12']},
@@ -492,7 +489,7 @@ function lv(l){return l==='高'?'hi':(l==='中'?'mid':'low')}
 function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
 function hl(s){if(!S.q)return s;return s.replace(new RegExp('('+reEsc(S.q)+')','gi'),'<mark>$1</mark>')}
 function setBar(t,back,act,actFn){document.getElementById('barTitle').textContent=t;document.getElementById('back').style.display=back?'block':'none';var a=document.getElementById('barAct');a.textContent=act||'';a.onclick=actFn||null}
-function setTabs(active){var hide=['new','mask','parse','login'].indexOf(S.view)>=0;document.getElementById('tabs').style.display=hide?'none':'flex';document.getElementById('phone').classList.toggle('notabs',hide);document.querySelectorAll('.tabs > div').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-tab')===active)});document.getElementById('evDot').style.display=pendingOp().length?'block':'none'}
+function setTabs(active){var hide=['new','mask','parse','login','rushing'].indexOf(S.view)>=0;document.getElementById('tabs').style.display=hide?'none':'flex';document.getElementById('phone').classList.toggle('notabs',hide);document.querySelectorAll('.tabs > div').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-tab')===active)});document.getElementById('evDot').style.display=pendingOp().length?'block':'none'}
 function setStep(s){document.querySelectorAll('.steps .s').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-s')===s)})}
 function go(v,keep){if(!keep&&S.view!==v)S.hist.push(S.view);S.view=v;render();screen.scrollTop=0}
 function goBack(){if(S.view==='timeline'&&S.tl){S.tl=null;render();return}var v=S.hist.pop()||'home';S.view=v;render()}
@@ -506,7 +503,104 @@ function render(){
   if(v==='home')renderHome(); else if(v==='new')renderNew(); else if(v==='mask')renderMask();
   else if(v==='parse')renderParse(); else if(v==='evidence')renderEvidence(); else if(v==='timeline')renderTimeline();
   else if(v==='strategy')renderStrategy(); else if(v==='report')renderReport();
-  else if(v==='login')renderLogin();
+  else if(v==='login')renderLogin(); else if(v==='rushing')renderRushing(); else if(v==='respond')renderRespond();
+}
+
+
+// ================= 庭前快速应对：律师录入对方临时提交的证据 =================
+var FIRM={name:'华衡律师事务所',short:'华衡律所',plan:'律所版 · 演示空间'};
+var RUSH={
+ C1:{file:'被告补充证据（证人证言）.pdf',recv:'2026-11-22 18:40',ev:{id:'E06',name:'被告提交：证人李某某书面证言',type:'证人证言',purpose:'被告拟证明 20 万元系合伙投资款而非借款',tags:['证人证言','投资款','庭前新增']},
+  text:'证人证言\n证人：李建国，身份证号 110105197809083315，电话 13611112222\n住址：北京市海淀区学院路30号2单元601室\n证言：我听张伟说过，2025年3月李明转给他的20万元是两人合伙做生意的投资款，不是借款。\n证人与张伟系同事。',
+  items:{name:['李建国','张伟','李明'],id:['110105197809083315'],phone:['13611112222'],addr:['北京市海淀区学院路30号2单元601室'],bank:[]},code:{'李建国':'证人C','张伟':'借款人B','李明':'出借人A'},
+  op:{z:['有异议','n','证人未出庭'],h:['有异议','p','超过举证期限'],g:['有异议','n','传来证据'],t:'证人未出庭作证，书面证言不能单独作为认定事实的依据；证人与被告系同事，存在利害关系；证言内容为「听张某说」，属传来证据，证明力极低；且该证据在开庭前一天提交，已超过举证期限，请求法庭不予采纳。'},
+  impact:[{c:'借贷合意成立',before:'已具备',after:'受冲击',why:'对方用证人证言主张 20 万元是合伙投资款',counter:['E01','E03','E18']},{c:'款项性质为借款而非投资',before:'已具备',after:'需加强',why:'需要一组证据集中证明「借」的性质',counter:['E01','E02','E18']}],
+  adjust:[['新增','当庭明确不同意 E06 作为证据使用：超过举证期限，且证人未出庭'],['新增','申请证人出庭接受询问；证人不到庭时，书面证言不能单独作为定案依据'],['调整','把「借条写明借到 + 转账附言借款 + 录音中被告承认欠款」作为一组证据集中出示，回应投资款说法'],['不变','本金 20 万元及按 LPR 计算逾期利息的诉讼请求不变']],
+  todo:['打印书面质证意见（已生成）','开庭携带借条原件、手机原始微信记录、录音原始载体','准备询问证人的问题：何时、何地、听谁说的、与被告什么关系','如法院采纳该证据，当庭申请延长举证期限补充反证']},
+ C2:{file:'原告补充证据（监理情况说明）.pdf',recv:'2026-11-22 20:15',ev:{id:'E20',name:'原告提交：监理单位情况说明',type:'书证',purpose:'原告拟证明第二批瓷砖铺贴后无质量问题',tags:['监理','质量','庭前新增']},
+  text:'情况说明\n经现场查看，第二批瓷砖铺贴后无明显质量问题。\n监理：周建华，电话 13812349876\n某某工程监理有限公司（未盖章）\n日期：2026年11月20日',
+  items:{name:['周建华'],id:[],phone:['13812349876'],addr:[],bank:[]},code:{'周建华':'监理人员E'},
+  op:{z:['有异议','n','未盖章、无资质证明'],h:['有异议','p','超过举证期限'],g:['有异议','n','形成于诉讼期间'],t:'该说明未加盖监理单位公章，无法确认出具主体及资质；形成于 2026-11-20，属诉讼期间单方制作的材料，不能反映 2025 年到货验收时的状况；内容与第三方检测报告 E09 结论相矛盾；且在开庭前提交，超过举证期限，请求不予采纳。'},
+  impact:[{c:'第二批货物质量不合格',before:'已具备',after:'受冲击',why:'对方用监理说明否认质量问题',counter:['E09','E12','E10']}],
+  adjust:[['新增','当庭指出说明未盖章、形成于诉讼期间，证明力低于第三方检测报告'],['新增','如法院认为需要，当庭申请司法鉴定'],['不变','减少价款、驳回违约金的主张不变']],
+  todo:['打印书面质证意见','携带检测报告原件和检测机构资质证明','准备司法鉴定申请书']},
+ C3:{file:'被告补充证据（绩效面谈记录）.pdf',recv:'2026-11-22 21:05',ev:{id:'E21',name:'对方提交：绩效面谈记录',type:'书证',purpose:'对方拟证明曾安排王某参加培训，王某拒绝',tags:['面谈','培训','庭前新增']},
+  text:'绩效面谈记录\n时间：2026年5月10日\n面谈人：赵敏（HR），电话 13900001111\n员工：王磊\n内容：告知王磊可参加6月岗位培训，王磊表示不参加。\n员工签字：（空白）',
+  items:{name:['赵敏','王磊'],id:[],phone:['13900001111'],addr:[],bank:[]},code:{'赵敏':'人事F','王磊':'劳动者D'},
+  op:{z:['有异议','n','员工未签字'],h:['有异议','p','超过举证期限'],g:['有异议','n','告知不等于实施培训'],t:'记录员工签字栏空白，无法证明面谈真实发生；即使属实，也只是「告知可以参加培训」，不等于用人单位实际安排了培训；且该证据在开庭前提交，超过举证期限，请求不予采纳。'},
+  impact:[{c:'未经培训或调岗',before:'需补强',after:'受冲击',why:'对方主张曾安排培训被拒',counter:['E14']}],
+  adjust:[['新增','当庭指出员工未签字、内容只是告知'],['调整','要求对方提交培训通知、签到表等实际培训记录'],['不变','违法解除、主张 2N 赔偿金的诉请不变']],
+  todo:['打印书面质证意见','向当事人核实 2026 年 5 月是否有过面谈']}
+};
+RAWS.__rush={};
+function rushRaw(cid){var r=RUSH[cid];return {file:r.file,name:r.ev.name,purpose:r.ev.purpose,tags:r.ev.tags,text:r.text,items:r.items,code:r.code}}
+function startRush(cid){
+  if(!RUSH[cid]){toast('该案件暂无演示材料');return}
+  if(EV.some(function(e){return e.id===RUSH[cid].ev.id})){S.resp={cid:cid};S.hist=['home'];S.view='respond';render();toast('本轮证据已录入，显示应对方案');return}
+  RAWS['R_'+cid]=rushRaw(cid);
+  S.mask={ctx:'rush',cid:cid,raw:'R_'+cid,mode:'code',show:'after',on:{name:1,id:1,phone:1,addr:1,bank:1}};
+  S.hist=[S.view==='respond'?'home':S.view];S.view='mask';render();screen.scrollTop=0;
+}
+function rushConfirm(res){
+  var cid=S.mask.cid, r=RUSH[cid], c=C(cid);
+  var mine=evOf(cid), rd=Math.max.apply(null,mine.map(function(e){return e.round}))+1;
+  EV.push({id:r.ev.id,c:cid,name:r.ev.name,type:r.ev.type,side:'对方',round:rd,date:'2026-11-22',late:true,purpose:r.ev.purpose,text:res.plain.replace(/\n/g,' '),tags:r.ev.tags,mask:res.count,op:JSON.parse(JSON.stringify(r.op)),opDone:false});
+  var tl=TL[cid]; tl.splice(tl.length-1,0,{d:'2026-11-22',t:'对方开庭前补充证据（第 '+rd+' 轮）',x:r.ev.name.replace(/^.*：/,'')+'，律师 '+r.recv.slice(11)+' 收到并录入',ev:[r.ev.id],proc:1,key:1});
+  if(cid==='C1')tl.splice(4,0,{d:'2025-04 (日期不明)',t:'双方对款项性质说法冲突',x:'被告证人称 20 万元是合伙投资款，原告称是借款；证言所述事件无具体日期。',ev:['E06','E03'],conflict:1,fuzzy:1});
+  S.resp={cid:cid,round:rd}; S.hist=[]; S.view='rushing'; render();
+  var logs=['已脱敏 '+res.count+' 处，作为第 '+rd+' 轮证据入库','识别证据类型与证明目的','比对证据链：找出受冲击的主张','生成三性质证意见','对比上一轮策略，生成当庭应对清单'], i=0;
+  var t=setInterval(function(){var ds=document.querySelectorAll('.parse .log div');if(i<logs.length&&ds[i]){ds[i].textContent=logs[i];ds[i].classList.add('show');i++}else{clearInterval(t);setTimeout(function(){E(r.ev.id).opDone=true;if(S.view!=='rushing')return;S.view='respond';render();screen.scrollTop=0;toast('应对方案已生成，请逐条核对')},400)}},480);
+}
+function rushInstant(cid){
+  S.view='home';startRush(cid);var mk=S.mask,raw=RAWS[mk.raw],res=maskText(raw,mk,false),r=RUSH[cid];
+  rushConfirm(res);
+  var e=E(r.ev.id); if(e)e.opDone=true; S.view='respond'; render();
+}
+function renderRushing(){
+  setStep('rush');setTabs('');setBar('生成应对方案',false);
+  var c=C(S.resp.cid);
+  screen.innerHTML='<div class="parse"><div class="ring"></div><h3>正在生成庭前应对方案…</h3><p>'+c.title+'<br>开庭 '+c.hearing+'</p><div class="log"><div></div><div></div><div></div><div></div><div></div></div></div>';
+}
+function hoursLeft(c){var ms=new Date(c.hearing.replace(' ','T')+':00')-new Date('2026-11-22T21:30:00');return Math.max(0,Math.round(ms/36e5))}
+function renderRespond(){
+  setStep('rush');setTabs('strategy');setBar('庭前应对方案',true,'换案件',function(){pickCase('rush')});
+  var cid=S.resp.cid, c=C(cid), r=RUSH[cid], e=E(r.ev.id); if(!e){startRush(cid);return}
+  var chk=S.respChk||(S.respChk={});
+  var rounds=[]; evOf(cid).forEach(function(x){rounds[x.round]=(rounds[x.round]||0)+1});
+  screen.innerHTML=
+  '<div class="casebar"><div class="t">'+c.title+'</div><div class="m">开庭 '+c.hearing+' · 距开庭约 '+hoursLeft(c)+' 小时<br>本轮：第 '+e.round+' 轮 · 对方提交 · '+r.recv+' 收到</div></div>'+
+  '<div class="chips" style="margin:0 0 12px">'+rounds.map(function(n,i){return n?'<span class="'+(i===e.round?'on':'')+'">第 '+i+' 轮 · '+n+' 份</span>':''}).join('')+'</div>'+
+  '<div class="blk"><div class="h"><h4>① 本轮新证据 · 质证意见</h4><span class="bd hi">待律师核对</span></div>'+
+   '<div class="why"><b>'+e.id+' '+e.name+'</b><br>'+e.purpose+'</div>'+threeHtml(e.op)+'<div class="opin"><b>质证意见：</b>'+e.op.t+'</div>'+
+   '<div class="trace" onclick="openEv(\''+e.id+'\')">查看脱敏原文</div></div>'+
+  '<div class="blk"><div class="h"><h4>② 对我方主张的影响</h4><span class="bd mid">证据链已重算</span></div>'+
+   r.impact.map(function(m){return '<div class="risk"><span class="ic">!</span><span class="tx"><b>'+m.c+'</b>：<span class="bd ok">'+m.before+'</span> → <span class="bd hi">'+m.after+'</span><br>'+m.why+'<br><span style="color:var(--ok)">可用于反驳：</span>'+m.counter.map(function(id){var x=E(id);return '<span class="trace" style="display:inline;margin:0 4px 0 0" onclick="openEv(\''+id+'\')">'+id+(x?' '+x.name.replace(/^.*：/,'').slice(0,8):'')+'</span>'}).join('')+'</span></div>'}).join('')+'</div>'+
+  '<div class="blk"><div class="h"><h4>③ 策略调整（对比上一轮）</h4><span class="bd att">差异</span></div>'+
+   r.adjust.map(function(a){return '<div class="why" style="padding:4px 0"><span class="bd '+(a[0]==='新增'?'gold':(a[0]==='调整'?'mid':'low'))+'">'+a[0]+'</span> '+a[1]+'</div>'}).join('')+'</div>'+
+  '<div class="blk"><div class="h"><h4>④ 开庭前要做的事</h4><span class="bd low">'+Object.keys(chk).filter(function(k){return chk[k]&&k.indexOf(cid)===0}).length+' / '+r.todo.length+'</span></div>'+
+   r.todo.map(function(t,i){var k=cid+'_'+i;return '<label class="agree" style="margin:6px 0;color:#2c3642;font-size:12.5px"><input type="checkbox" '+(chk[k]?'checked':'')+' onchange="S.respChk[\''+k+'\']=this.checked;renderRespond()"><span>'+t+'</span></label>'}).join('')+'</div>'+
+  '<div class="disc">⚠ AI 生成初稿，律师核对后采纳。采纳后写入本案庭审策略和策略报告，并按律所归档。</div>'+
+  '<button class="primary" onclick="adoptRush()">采纳并写入庭审策略</button>'+
+  '<button class="ghost" onclick="copyText(respText(),\'应对清单已复制\')">复制应对清单（发给团队）</button>';
+}
+function adoptRush(){
+  var cid=S.resp.cid, c=C(cid), r=RUSH[cid];
+  r.adjust.forEach(function(a){if(a[0]!=='不变'&&c.late.indexOf(a[1])<0)c.late.unshift(a[1])});
+  if(!c.opp.some(function(o){return o.d.indexOf(r.ev.id)>=0}))c.opp.unshift({d:'对方开庭前补充 '+r.ev.id+'：'+r.ev.purpose.replace(/^.*拟证明/,'主张'),c:r.adjust[0][1]});
+  S.cur=cid;S.stTab='attack';S.hist=['respond'];S.view='strategy';render();screen.scrollTop=0;toast('已写入庭审策略 · 攻防策略');
+}
+function respText(){var cid=S.resp.cid,c=C(cid),r=RUSH[cid],e=E(r.ev.id);return '【庭前应对】'+c.title+'\n开庭：'+c.hearing+'\n本轮新证据：'+e.id+' '+e.name+'\n质证意见：'+e.op.t.replace(/<[^>]+>/g,'')+'\n\n受影响的主张：\n'+r.impact.map(function(m){return '· '+m.c+'：'+m.before+' → '+m.after+'；反驳证据 '+m.counter.join('、')}).join('\n')+'\n\n策略调整：\n'+r.adjust.map(function(a){return '· ['+a[0]+'] '+a[1]}).join('\n')+'\n\n开庭前要做：\n'+r.todo.map(function(t,i){return (i+1)+'. '+t}).join('\n')}
+// ================= 律所空间 =================
+function myCases(){return S.scope==='all'?CASES:CASES.filter(function(c){return !c.owner||c.owner===(S.user&&S.user.name)||c.owner==='演示律师'&&S.user&&S.user.name.indexOf('律师')>=0})}
+function openFirm(){
+  openSheet(FIRM.name,
+   '<div class="kv"><div class="k">当前空间</div><div class="v">'+FIRM.name+'（'+FIRM.plan+'）<br>'+(S.user?S.user.name:'')+' · 承办律师</div></div>'+
+   '<div class="kv"><div class="k">采购与席位（由律所购买，律师使用）</div><div class="v">版本：律所专业版 · 按席位年付<br>席位：已用 <b>8</b> / 10（律师 6 · 助理 2）<br>有效期至 2027-11-30 · 管理员：律所行政 王女士</div></div>'+
+   '<div class="kv"><div class="k">归档方式</div><div class="v">材料按「律所 → 部门 → 案件 → 证据轮次 → 证据」归档在律所空间，不存在个人账号下。律师离职或换人承办，案件跟着律所走，可直接交接。</div></div>'+
+   '<table class="mt"><tr><th>角色</th><th>能做什么</th></tr>'+
+   [['律所管理员 / 主任','管理成员与部门；查看全所案件；审批结案归档'],['承办律师','创建和编辑自己承办的案件；生成策略；导出报告'],['协办律师','查看、编辑被加入的案件'],['律师助理','上传与整理材料；不能导出报告']].map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td></tr>'}).join('')+'</table>'+
+   '<div class="kv" style="margin-top:10px"><div class="k">数据存放</div><div class="v">标准版：律所专属空间，与其他律所数据隔离、加密存储。<br>私有化版：整套部署在律所自己的服务器。<br>两种方式下，含个人信息的原件都先在本地脱敏。</div></div>'+
+   '<div class="kv"><div class="k">留痕与归档</div><div class="v">谁在什么时间上传、查看、导出了什么都有记录；结案后整案转为只读归档，按律所规定期限保存。</div></div>');
 }
 
 // ================= 1 案件首页 =================
@@ -515,29 +609,33 @@ function caseCard(c,opts){
   return '<div class="case'+(opts&&opts.sel?' sel':'')+'" onclick="'+(opts&&opts.click?opts.click:'openCase(\''+c.id+'\')')+'">'+
    '<div class="tt">'+c.title+'</div>'+
    '<div class="mt"><span>'+c.no+'</span><span class="bd '+(c.role==='原告'?'att':'def')+'">'+c.role+'</span><span class="bd low">'+c.type+'</span>'+(c.done?'<span class="bd ok">策略已生成</span>':'<span class="bd mid">待生成策略</span>')+'</div>'+
-   '<div class="ft"><span class="cd">开庭 '+c.hearing.slice(5,10)+' · <b>还有 '+d+' 天</b></span><span class="cd">证据 '+n+(lt?' · <b>庭前新增 '+lt+'</b>':'')+'</span></div>'+
+   (c.owner?'<div class="mt" style="margin-top:3px">承办 '+c.owner+(c.team&&c.team.length?' · 协办 '+c.team.join('、'):'')+' · '+(c.dept||'')+'</div>':'')+
+   '<div class="ft"><span class="cd">开庭 '+c.hearing.slice(5,10)+' · <b>'+(d<=1?'明天':'还有 '+d+' 天')+'</b></span><span class="cd">证据 '+n+(lt?' · <b>对方庭前 '+lt+'</b>':'')+'</span></div>'+
   '</div>';
 }
 function renderHome(){
   setStep('home');setTabs('home');setBar('诉讼策略工作台',false,'＋ 新建',function(){go('new')});
-  var late=lateOf(), pend=pendingOp();
+  var pend=pendingOp(), list=S.scope==='all'?CASES:CASES.filter(function(c){return c.owner!=='李律师'}), soon=CASES.filter(function(c){return days(c.hearing)<=1});
   screen.innerHTML=
-  '<div class="hero"><div class="who"><span>'+(S.user?S.user.name:'访客')+' · 2026 年 11 月 22 日 周日</span><a onclick="logout()">退出</a></div><div class="big">未来 30 天有 3 件案件开庭，<br>对方新增 '+late.length+' 份证据待质证</div>'+
+  '<div class="hero"><div class="who"><span onclick="openFirm()" style="cursor:pointer">'+FIRM.short+' ▾ · '+(S.user?S.user.name:'访客')+'</span><a onclick="logout()">退出</a></div><div class="big">'+(soon.length?'明天有 '+soon.length+' 件案件开庭':'未来 30 天有 '+CASES.length+' 件案件开庭')+'<br><span style="font-size:13px;font-weight:400;opacity:.85">2026 年 11 月 22 日 周日</span></div>'+
    '<div class="row"><div class="kp" onclick="switchTab(\'home\')"><b>'+CASES.length+'</b><span>在办案件</span></div><div class="kp" onclick="goEvidence({})"><b>'+EV.length+'</b><span>证据库</span></div><div class="kp" onclick="goEvidence({late:true})"><b>'+pend.length+'</b><span>待出质证意见</span></div></div></div>'+
-  (pend.length?'<div class="alert" onclick="goEvidence({late:true})"><div class="t"><b>庭前证据突袭预警</b>'+pend.map(function(e){return C(e.c).title.slice(0,8)+'…：'+e.name.replace(/^.*：/,'')}).slice(0,2).join('；')+'</div><span class="go">去质证 ›</span></div>':'')+
+  '<div class="alert" onclick="pickCase(\'rush\')"><div class="t"><b>对方开庭前突然交了证据？</b>拍照或上传 → 自动脱敏 → 几分钟内出质证意见和当庭应对清单</div><span class="go">录入 ›</span></div>'+
   '<div class="fakesearch" onclick="goEvidence({focus:true})">⌕　搜索证据：名称、证明目的、原文关键词…</div>'+
-  '<div class="sec">我的案件<a onclick="go(\'new\')">＋ 新建案件</a></div>'+
-  CASES.map(function(c){return caseCard(c)}).join('');
+  '<div class="sec">'+FIRM.short+' · 案件<a onclick="go(\'new\')">＋ 新建案件</a></div>'+
+  '<div class="seg sm" style="margin-bottom:10px"><button class="'+(S.scope!=='all'?'on':'')+'" onclick="S.scope=\'mine\';renderHome()">我参与的</button><button class="'+(S.scope==='all'?'on':'')+'" onclick="S.scope=\'all\';renderHome()">本所全部</button></div>'+
+  list.map(function(c){return caseCard(c)}).join('');
 }
 function openCase(id){
   S.cur=id;
   var c=C(id);
   openSheet(c.title,
    '<div class="kv"><div class="k">案件信息</div><div class="v">'+c.no+' · '+c.type+' · 我方'+c.role+'<br>'+c.court+' · 开庭 '+c.hearing+'<br>目标：'+c.goal+'</div></div>'+
+   '<div class="kv"><div class="k">归档</div><div class="v">'+FIRM.name+' / '+(c.dept||'')+'<br>承办 '+(c.owner||'')+(c.team&&c.team.length?' · 协办 '+c.team.join('、'):'')+'</div></div>'+
+   '<button class="primary" style="background:var(--dead)" onclick="closeSheet();startRush(\''+id+'\')">录入对方新证据 · 快速应对</button>'+
    '<button class="primary" onclick="closeSheet();S.hist=[\'home\'];S.view=\'strategy\';render()">'+(c.done?'查看庭审策略':'生成庭审策略')+'</button>'+
    '<button class="ghost" onclick="closeSheet();S.hist=[\'home\'];S.tl=\''+id+'\';S.view=\'timeline\';render()">查看案件时间线</button>'+
    '<button class="ghost" onclick="closeSheet();goEvidence({c:\''+id+'\'})">查看本案证据（'+evOf(id).length+'）</button>'+
-   '<button class="ghost" onclick="closeSheet();startUpload(\''+id+'\')">＋ 补充上传证据</button>');
+   '<button class="ghost" onclick="closeSheet();startUpload(\''+id+'\')">＋ 补充上传我方证据</button>');
 }
 
 // ================= 2 新建案件 =================
@@ -547,6 +645,7 @@ function renderNew(){
   '<div class="brand"><div class="lg">策</div><h2>新建案件</h2><p>用大白话描述案情，上传材料后先脱敏，再生成策略</p></div>'+
   '<div class="field"><label>案由 / 案件类型</label><select id="fType"><option>民间借贷纠纷</option><option>买卖合同纠纷</option><option>劳动争议</option><option>离婚纠纷</option><option>交通事故人身损害赔偿</option></select></div>'+
   '<div class="field"><label>我方诉讼地位与目标</label><div class="seg">'+['原告','被告','第三人'].map(function(r){return '<button class="'+(S.role===r?'on':'')+'" onclick="S.role=\''+r+'\';renderNew()">'+r+'</button>'}).join('')+'</div><input type="text" id="fGoal" value="主张返还借款本金 15 万元及逾期利息" style="margin-top:10px;border-top:1px solid #f0ede6;padding-top:10px"></div>'+
+  '<div class="field"><label>归档与团队</label><select id="fDept"><option>民商事争议解决部</option><option>劳动与人事部</option><option>公司与合规部</option></select><div class="up" style="margin-top:10px"><span class="filechip">承办：'+(S.user?S.user.name:'')+'</span><span class="filechip">协办：助理 陈晓</span><span class="upbtn">＋ 添加成员</span></div></div>'+
   '<div class="field"><label>案件事实描述</label><textarea id="fFacts">2025年6月，朋友刘某以装修为由向我借款15万元，我通过银行转账交付，刘某出具借条，约定2026年6月归还。到期后多次催收未还。</textarea></div>'+
   '<div class="field"><label>案件材料</label><div class="up">'+S.newFiles.map(function(f){return '<span class="filechip">▣ '+f+'</span>'}).join('')+'<span class="upbtn" onclick="addNewFile()">＋ 上传材料</span></div></div>'+
   '<div class="hint">● 上传后自动识别并脱敏：姓名、身份证号、手机号、住址、银行账号。原文仅本机加密留存，不进入模型。</div>'+
@@ -554,7 +653,7 @@ function renderNew(){
 }
 function addNewFile(){if(S.newFiles.length>=5){toast('演示最多添加 5 份材料');return}S.newFiles.push('证据材料'+(S.newFiles.length+1)+'.pdf');renderNew();toast('已添加材料（演示）')}
 function newToMask(){
-  S.newCase={type:document.getElementById('fType').value,goal:document.getElementById('fGoal').value,facts:document.getElementById('fFacts').value};
+  S.newCase={dept:(document.getElementById('fDept')||{}).value,type:document.getElementById('fType').value,goal:document.getElementById('fGoal').value,facts:document.getElementById('fFacts').value};
   S.mask={ctx:'new',cid:'C1',mode:'mask',show:'after',on:{name:1,id:1,phone:1,addr:1,bank:1}};
   go('mask');
 }
@@ -582,13 +681,13 @@ function maskText(raw,mk,showOrig){
   return {html:t,count:(function(){var c=0;pairs.forEach(function(p){c+=raw.text.split(p.v).length-1});return c})(),plain:t.replace(/<[^>]+>/g,'')};
 }
 function renderMask(){
-  setStep('mask');setTabs('');setBar('证据脱敏',true);
-  var mk=S.mask, raw=RAWS[mk.cid], c=C(mk.cid), total=0, cats=0;
+  setStep(S.mask&&S.mask.ctx==='rush'?'rush':'mask');setTabs('');setBar(S.mask&&S.mask.ctx==='rush'?'录入对方新证据':'证据脱敏',true);
+  var mk=S.mask, raw=RAWS[mk.raw||mk.cid], c=C(mk.cid), total=0, cats=0;
   CAT.forEach(function(ct){var n=(raw.items[ct.k]||[]).length;if(n){cats++;raw.items[ct.k].forEach(function(v){total+=raw.text.split(v).length-1})}});
   var res=maskText(raw,mk,mk.show==='before');
   screen.innerHTML=
   '<div class="mhead"><div class="f"><b>▣ '+(mk.ctx==='new'?'借条.jpg 等 '+S.newFiles.length+' 份材料':raw.file)+'</b><span class="bd ok">OCR 完成</span></div>'+
-   '<div class="s">'+(mk.ctx==='lib'?'归属案件：'+c.title+'<br>':'以下展示其中 1 份的识别结果<br>')+'识别到 <b>'+cats+' 类 '+total+' 处</b>敏感信息，已默认全部脱敏</div></div>'+
+   '<div class="s">'+(mk.ctx!=='new'?'归属案件：'+c.title+'<br>':'以下展示其中 1 份的识别结果<br>')+(mk.ctx==='rush'?'提交方：<b style="color:var(--def)">对方</b> · 收到时间 '+RUSH[mk.cid].recv+' · 开庭 '+c.hearing+'<br>':'')+'识别到 <b>'+cats+' 类 '+total+' 处</b>敏感信息，已默认全部脱敏</div></div>'+
   '<div class="field"><label>脱敏方式</label><div class="seg sm">'+[['mask','掩码 138****5678'],['code','代号 当事人A'],['gen','泛化 张某']].map(function(m){return '<button class="'+(mk.mode===m[0]?'on':'')+'" onclick="S.mask.mode=\''+m[0]+'\';renderMask()">'+m[1]+'</button>'}).join('')+'</div></div>'+
   '<div class="field" style="padding:4px 14px"><label style="margin:10px 0 0">识别结果（可逐类关闭）</label>'+
    CAT.filter(function(ct){return (raw.items[ct.k]||[]).length}).map(function(ct){var vs=raw.items[ct.k];return '<div class="cat"><div class="l"><b>'+ct.l+'<em>'+vs.length+' 项</em></b><div>'+vs[0]+' → '+(mk.on[ct.k]?repl(ct.k,vs[0],0,mk.mode,raw):'不脱敏')+'</div></div><div class="sw '+(mk.on[ct.k]?'on':'')+'" onclick="S.mask.on.'+ct.k+'=!S.mask.on.'+ct.k+';renderMask()"></div></div>'}).join('')+
@@ -596,10 +695,11 @@ function renderMask(){
   '<div class="seg sm" style="margin-top:4px"><button class="'+(mk.show==='after'?'on':'')+'" onclick="S.mask.show=\'after\';renderMask()">脱敏后预览</button><button class="'+(mk.show==='before'?'on':'')+'" onclick="S.mask.show=\'before\';renderMask()">原文对照</button></div>'+
   '<div class="doc">'+res.html+'</div>'+
   '<div class="lock">◆ 原文加密保存在本机，仅律师本人可解密查看；送入 AI 分析、证据库检索、导出报告均使用脱敏后文本。每次脱敏留有操作记录。</div>'+
-  '<button class="primary" onclick="confirmMask()">'+(mk.ctx==='new'?'确认脱敏，生成案件策略':'确认脱敏并存入证据库')+'</button>';
+  '<button class="primary" onclick="confirmMask()">'+(mk.ctx==='new'?'确认脱敏，生成案件策略':(mk.ctx==='rush'?'确认脱敏，生成应对方案':'确认脱敏并存入证据库'))+'</button>';
 }
 function confirmMask(){
-  var mk=S.mask, raw=RAWS[mk.cid], res=maskText(raw,mk,false);
+  var mk=S.mask, raw=RAWS[mk.raw||mk.cid], res=maskText(raw,mk,false);
+  if(mk.ctx==='rush'){rushConfirm(res);return}
   if(mk.ctx==='lib'){
     var mine=evOf(mk.cid), rd=Math.max.apply(null,mine.map(function(e){return e.round}))+1;
     var nid='E'+(EV.length+1<10?'0':'')+(EV.length+1);
@@ -610,7 +710,7 @@ function confirmMask(){
     toast('已脱敏 '+res.count+' 处，作为第 '+rd+' 轮证据入库');
   } else {
     var nc=JSON.parse(JSON.stringify(C('C1')));
-    nc.id='C4'; nc.no='CASE-2026-004'; nc.title='新建 · 刘某借款纠纷（'+S.newCase.type+'）'; nc.type=S.newCase.type; nc.role=S.role==='第三人'?'第三人':S.role; nc.goal=S.newCase.goal; nc.facts=S.newCase.facts; nc.hearing='2027-01-12 09:30'; nc.done=true;
+    nc.id='C4'; nc.no='CASE-2026-004'; nc.owner='演示律师'; nc.team=['助理 陈晓']; nc.dept=S.newCase.dept||'民商事争议解决部'; nc.title='新建 · 刘某借款纠纷（'+S.newCase.type+'）'; nc.type=S.newCase.type; nc.role=S.role==='第三人'?'第三人':S.role; nc.goal=S.newCase.goal; nc.facts=S.newCase.facts; nc.hearing='2027-01-12 09:30'; nc.done=true;
     nc.claims=[{c:'借贷合意成立',ev:['E90']},{c:'款项已交付 15 万元',ev:['E91']},{c:'到期未还、已催收',ev:['E92']},{c:'借条签名真实',ev:[],sg:'原件当庭核对'}];
     nc.ours=['以「借条 E90 + 转账凭证 E91」证明借贷合意与交付','以「微信催收记录 E92」证明到期未还','主张本金 15 万元及逾期利息'];
     nc.opp=[{d:'可能抗辩：款项为装修工程款',c:'借条载明「借到」，转账附言为「借款」。'},{d:'可能抗辩：否认借条签名',c:'出示原件，必要时申请笔迹鉴定。'}];
@@ -729,16 +829,17 @@ function renderTimeline(){
 }
 function chooseTl(id){S.tl=id;S.tlF='all';renderTimeline();screen.scrollTop=0}
 function pickCase(target){
-  var cur=target==='tl'?S.tl:(target==='st'?S.cur:null);
-  openSheet(target==='upload'?'上传证据到哪个案件？':'选择案件',
+  var cur=target==='tl'?S.tl:(target==='st'?S.cur:(target==='rush'&&S.resp?S.resp.cid:null));
+  openSheet(target==='upload'?'上传证据到哪个案件？':(target==='rush'?'对方给哪个案件交了新证据？':'选择案件'),
    CASES.map(function(c){return caseCard(c,{sel:c.id===cur,click:'pickDone(\''+target+'\',\''+c.id+'\')'})}).join('')+
-   (target==='upload'?'<div class="hint" style="margin-top:6px">上传后将先进入脱敏核对，再存入证据库。</div>':''));
+   (target==='upload'?'<div class="hint" style="margin-top:6px">上传后将先进入脱敏核对，再存入证据库。</div>':(target==='rush'?'<div class="hint" style="margin-top:6px">证据由你（代理律师）录入。录入后作为新一轮证据，自动重算证据链并生成应对方案。</div>':'')));
 }
 function pickDone(target,id){
   closeSheet();
   if(target==='tl'){S.tl=id;S.tlF='all';renderTimeline()}
   else if(target==='st'){S.cur=id;S.stTab='focus';S.checked={};S.flagged={};renderStrategy()}
   else if(target==='upload'){startUpload(id)}
+  else if(target==='rush'){startRush(id)}
   screen.scrollTop=0;
 }
 
@@ -755,7 +856,7 @@ function renderStrategy(){
   var tabs=[['focus','争议焦点'],['attack','攻防策略'],['chain','证据链'],['catalog','证据目录'],['op','质证意见'],['risk','不利点与风险']].map(function(t){return '<button class="'+(S.stTab===t[0]?'on':'')+'" onclick="S.stTab=\''+t[0]+'\';renderStrategy()">'+t[1]+(t[0]==='op'&&pend?'<i>'+pend+'</i>':'')+'</button>'}).join('');
   var body = S.stTab==='focus'?focusHtml(c):S.stTab==='attack'?attackHtml(c):S.stTab==='chain'?chainHtml(c):S.stTab==='catalog'?catalogHtml(c):S.stTab==='op'?opHtml(c):riskHtml(c);
   var n=Object.keys(S.checked).length;
-  screen.innerHTML=head+'<div class="disc">⚠ AI 生成初稿，法律依据与案例需律师逐条核对，不构成胜诉承诺。</div><div class="tabs2">'+tabs+'</div>'+body+
+  screen.innerHTML=head+'<div class="alert" style="margin-bottom:12px" onclick="startRush(\''+c.id+'\')"><div class="t"><b>对方又交了新证据？</b>录入后作为新一轮，自动重算证据链</div><span class="go">录入 ›</span></div><div class="disc">⚠ AI 生成初稿，法律依据与案例需律师逐条核对，不构成胜诉承诺。</div><div class="tabs2">'+tabs+'</div>'+body+
    '<button class="primary" onclick="S.hist=[\'strategy\'];S.view=\'report\';render();toast(\'策略报告已生成\')">核对完成 · 导出策略报告'+(n>=c.focus.length?' ✓':'（'+n+'/'+c.focus.length+' 已核对）')+'</button>';
 }
 function focusHtml(c){
@@ -861,7 +962,7 @@ function loadUser(){return load('lw_user')}
 function renderLogin(){
   setStep('login');setTabs('');setBar('诉讼策略工作台',false);
   var code=S.lg==='code';
-  screen.innerHTML='<div class="brand" style="padding-top:34px"><div class="lg">策</div><h2>诉讼策略工作台</h2><p>案件材料整理 · 证据脱敏 · 庭审策略</p></div>'+
+  screen.innerHTML='<div class="brand" style="padding-top:34px"><div class="lg">策</div><h2>诉讼策略工作台</h2><p>律所版 · 案件材料整理 · 证据脱敏 · 庭审策略</p></div>'+
   '<div class="seg sm" style="margin:20px 0 12px"><button class="'+(code?'on':'')+'" onclick="S.lg=\'code\';renderLogin()">验证码登录</button><button class="'+(!code?'on':'')+'" onclick="S.lg=\'pwd\';renderLogin()">账号密码登录</button></div>'+
   (code?
    '<div class="field"><label>手机号</label><input type="tel" id="lgP" maxlength="11" placeholder="请输入 11 位手机号"></div>'+
@@ -869,6 +970,7 @@ function renderLogin(){
   :
    '<div class="field"><label>账号</label><input type="text" id="lgU" placeholder="演示账号 demo"></div>'+
    '<div class="field"><label>密码</label><input type="password" id="lgW" placeholder="演示密码 123456"></div>')+
+  '<div class="hint">使用律所分配的账号登录。案件与材料统一归档在律所空间，按角色授权查看。</div>'+
   '<label class="agree"><input type="checkbox" id="lgA"><span>我已阅读并同意《用户协议》《隐私政策》，同意上传材料先在本机脱敏再进行 AI 分析</span></label>'+
   '<button class="primary" onclick="doLogin()">登录</button>'+
   '<button class="ghost" onclick="loginOk({name:\'演示律师\',phone:\'\'})">演示账号一键登录</button>'+
@@ -888,13 +990,13 @@ function doLogin(){
     var p=document.getElementById('lgP').value.trim(), c=document.getElementById('lgC').value.trim();
     if(!/^1\d{10}$/.test(p)){toast('请输入正确的 11 位手机号');return}
     if(!/^\d{6}$/.test(c)){toast('请输入 6 位验证码');return}
-    loginOk({name:'律师 '+p.slice(-4),phone:p.slice(0,3)+'****'+p.slice(-4)});
+    loginOk({name:'演示律师',phone:p.slice(0,3)+'****'+p.slice(-4)});
   } else {
     var u=document.getElementById('lgU').value.trim(), w=document.getElementById('lgW').value;
     if(u==='demo'&&w==='123456')loginOk({name:'演示律师',phone:''}); else toast('账号或密码错误（演示账号 demo / 123456）');
   }
 }
-function loginOk(u){S.user=u;store('lw_user',u);S.hist=[];S.view='home';render();screen.scrollTop=0;toast('登录成功，欢迎 '+u.name)}
+function loginOk(u){S.user=u;store('lw_user',u);S.hist=[];S.view='home';render();screen.scrollTop=0;toast('已进入 '+FIRM.name+' · '+u.name)}
 function logout(){store('lw_user',null);S.user=null;S.view='login';closeSheet();render();toast('已退出登录')}
 
 // ================= 演示路线跳转 =================
@@ -903,6 +1005,7 @@ function jump(s){
   if(!S.user&&s!=='login'){S.user={name:'演示律师',phone:''}}
   if(s==='login'){S.view='login';render()}
   else if(s==='home'){S.hist=[];S.view='home';render()}
+  else if(s==='rush'){S.hist=['home'];S.view='home';startRush('C1')}
   else if(s==='mask'){S.view='home';startUpload('C1')}
   else if(s==='evidence'){goEvidence({});S.q='还款';document.getElementById('q').value='还款';renderEvList()}
   else if(s==='timeline'){S.hist=[];S.tl=null;S.view='timeline';render()}
@@ -920,7 +1023,10 @@ init(); render();
  if(s==='login'){S.view='login';render()}
  else if(s==='home'||s==='mask'||s==='evidence'||s==='report'){jump(s)}
  else if(s==='search'){goEvidence({});S.q='还款';var i=document.getElementById('q');if(i)i.value='还款';renderEvList()}
- else if(s==='evdetail'){goEvidence({late:true});openEv('E06')}
+ else if(s==='evdetail'){goEvidence({late:true});openEv('E05')}
+ else if(s==='rush'){S.view='home';render();startRush('C1')}
+ else if(s==='respond'){rushInstant('C1')}
+ else if(s==='firm'){S.view='home';render();openFirm()}
  else if(s==='tlpick'){jump('timeline')}
  else if(s==='timeline'){S.hist=[];S.tl='C1';S.tlGen.C1=1;S.view='timeline';render()}
  else if(s==='new'){S.view='new';render()}
