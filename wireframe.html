@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诉讼策略工作台 · 低保真原型 v0.1</title>
+<style>
+:root{--k:#2b2b2b;--g1:#f4f4f2;--g2:#e2e2df;--g3:#c9c9c5;--g4:#8d8d88;--note:#2f62c9;--note-bg:#eaf0fb}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#fff;color:var(--k);padding:36px 32px 60px}
+header{max-width:1500px;margin:0 auto 26px;border-bottom:2px solid var(--k);padding-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+header h1{font-size:26px;letter-spacing:.5px}
+header p{font-size:13px;color:#555;margin-top:6px;line-height:1.7;max-width:760px}
+header .meta{font-size:12px;color:var(--g4);text-align:right;line-height:1.7;font-family:"SF Mono",Menlo,monospace}
+h2{font-size:16px;max-width:1500px;margin:30px auto 14px}
+h2 small{font-weight:400;color:var(--g4);font-size:12px;margin-left:8px}
+
+/* 信息架构 / 流程 */
+.flow{max-width:1500px;margin:0 auto;border:1.5px dashed var(--g3);border-radius:6px;padding:18px;overflow-x:auto}
+.flow .row{display:flex;align-items:center;gap:0;min-width:1100px;margin-bottom:14px}
+.flow .row:last-child{margin-bottom:0}
+.flow .lbl{width:92px;font-size:11.5px;color:var(--g4);flex-shrink:0}
+.fb{border:1.5px solid var(--k);border-radius:4px;padding:8px 10px;font-size:12px;background:#fff;text-align:center;min-width:104px;line-height:1.4}
+.fb small{display:block;font-size:10.5px;color:var(--g4)}
+.fb.new{border-color:var(--note);background:var(--note-bg)}
+.ar{flex:1;min-width:54px;max-width:120px;position:relative;height:30px;display:flex;align-items:center;justify-content:center}
+.ar:before{content:"";position:absolute;left:4px;right:8px;top:50%;border-top:1.5px solid var(--k)}
+.ar:after{content:"";position:absolute;right:2px;top:50%;margin-top:-5px;border-left:8px solid var(--k);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.ar span{position:relative;top:-11px;font-size:10.5px;color:#555;background:#fff;padding:0 3px;white-space:nowrap}
+.legend{display:flex;gap:16px;font-size:11.5px;color:#555;margin-top:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:10px;border:1.5px solid var(--k);vertical-align:-1px;margin-right:5px}
+.legend i.n{border-color:var(--note);background:var(--note-bg)}
+
+/* 页面网格 */
+.grid{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:34px 26px}
+.pg{min-width:0}
+.pg .cap{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.pg .cap b{font-family:"SF Mono",Menlo,monospace;font-size:12px;background:var(--k);color:#fff;padding:2px 6px;border-radius:3px}
+.pg .cap span{font-size:14px;font-weight:700}
+.pg .cap em{font-style:normal;font-size:10.5px;color:var(--note);border:1px solid var(--note);border-radius:3px;padding:0 4px}
+.ph{width:270px;height:540px;border:2px solid var(--k);border-radius:26px;padding:10px;position:relative;background:#fff;margin:0 auto}
+.ph .in{height:100%;border:1px solid var(--g3);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.nav{height:30px;border-bottom:1px solid var(--g3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;position:relative;flex-shrink:0}
+.nav .l{position:absolute;left:9px;font-weight:400}
+.nav .r{position:absolute;right:9px;font-weight:400;font-size:10px;color:#555}
+.bd{flex:1;padding:8px;overflow:hidden;display:flex;flex-direction:column;gap:6px}
+.tb{height:36px;border-top:1px solid var(--g3);display:flex;flex-shrink:0}
+.tb div{flex:1;font-size:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--g4);gap:2px}
+.tb div:before{content:"";width:12px;height:10px;border:1px solid var(--g3);border-radius:2px}
+.tb div.on{color:var(--k);font-weight:700}
+.tb div.on:before{background:var(--k);border-color:var(--k)}
+.box{border:1px solid var(--g3);border-radius:5px;padding:6px 7px;font-size:10px;line-height:1.5;color:#444;position:relative}
+.box.dk{background:var(--g2);border-color:var(--g2)}
+.box.solid{border:1.5px solid var(--k)}
+.box.dash{border-style:dashed}
+.t{font-size:10.5px;font-weight:700;color:var(--k)}
+.ln{height:6px;background:var(--g2);border-radius:3px;margin-top:4px}
+.ln.s{width:60%}.ln.m{width:80%}
+.rw{display:flex;gap:5px;align-items:center}
+.rw > *{min-width:0}
+.pill{font-size:9px;border:1px solid var(--g3);border-radius:9px;padding:1px 6px;white-space:nowrap;color:#444}
+.pill.k{background:var(--k);color:#fff;border-color:var(--k)}
+.btn{border:1.5px solid var(--k);background:var(--k);color:#fff;border-radius:6px;text-align:center;font-size:10.5px;padding:7px;font-weight:700}
+.btn.o{background:#fff;color:var(--k)}
+.img{background:repeating-linear-gradient(45deg,#fff,#fff 5px,var(--g1) 5px,var(--g1) 10px);border:1px solid var(--g3);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9.5px;color:var(--g4)}
+.sw{width:22px;height:12px;border-radius:6px;background:var(--k);position:relative;flex-shrink:0}
+.sw:after{content:"";position:absolute;right:2px;top:2px;width:8px;height:8px;border-radius:50%;background:#fff}
+.sw.off{background:var(--g3)}.sw.off:after{right:auto;left:2px}
+.sp{flex:1}
+.tl{border-left:1.5px solid var(--g3);margin-left:6px;padding-left:10px;display:flex;flex-direction:column;gap:6px}
+.tl .box:before{content:"";position:absolute;left:-15px;top:8px;width:7px;height:7px;border-radius:50%;background:#fff;border:1.5px solid var(--g4)}
+.tl .box.key:before{background:var(--k);border-color:var(--k)}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:62%;background:#fff;border-top:1.5px solid var(--k);border-radius:12px 12px 0 0;padding:8px;display:flex;flex-direction:column;gap:6px}
+.shade{position:absolute;inset:0;background:rgba(0,0,0,.18)}
+.mk{position:absolute;width:17px;height:17px;border-radius:50%;background:var(--note);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:3;right:-8px;top:-8px}
+.notes{margin:12px auto 0;width:270px;font-size:11.5px;line-height:1.65;color:#333}
+.notes li{list-style:none;padding-left:22px;position:relative;margin-bottom:5px}
+.notes li b{position:absolute;left:0;top:1px;width:16px;height:16px;border-radius:50%;background:var(--note);color:#fff;font-size:9.5px;display:flex;align-items:center;justify-content:center}
+.notes li i{font-style:normal;color:var(--note);font-weight:700}
+.spec{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.spec div{border:1.5px solid var(--k);border-radius:6px;padding:14px 16px}
+.spec h4{font-size:13.5px;margin-bottom:8px}
+.spec p,.spec li{font-size:12px;line-height:1.75;color:#333}
+.spec ul{padding-left:16px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>诉讼策略工作台 · 低保真原型</h1>
+    <p>以「诉讼策略助手」为主框架，并入「案件材料整理助手」的时间线、证据链匹配与质证意见。蓝色标注为新增能力：证据库检索、先选案件再生成时间线、上传后脱敏，以及根据学姐访谈和律师问卷补充的证据目录自动编号、待补材料清单、时间线冲突标注、不利点排查、录音与流水材料。</p>
+  </div>
+  <div class="meta">v1.0 · 2026-11-22<br>移动端 App · 14 个页面（P0–P13）<br>二组作业 · 高保真见 hifi.html</div>
+</header>
+
+<h2>页面流程：一条主线，三个新增节点 <small>箭头上的文字是用户动作</small></h2>
+<div class="flow">
+  <div class="row"><div class="lbl">新建案件主线</div>
+    <div class="fb new">P0 登录<small>验证码 / 账号</small></div><div class="ar"><span>登录</span></div><div class="fb">P1 案件首页<small>庭前预警</small></div><div class="ar"><span>新建</span></div>
+    <div class="fb">P2 新建案件<small>案由/地位/事实</small></div><div class="ar"><span>上传材料</span></div>
+    <div class="fb new">P3 脱敏核对<small>新增 ③</small></div><div class="ar"><span>确认脱敏</span></div>
+    <div class="fb">AI 解析<small>5 步进度</small></div><div class="ar"><span>生成完成</span></div>
+    <div class="fb">P8 证据链</div><div class="ar"><span>自动生成</span></div><div class="fb new">P9 证据目录<small>编号页码</small></div><div class="ar"><span>核对完成</span></div>
+    <div class="fb">P13 策略报告<small>复制/交付</small></div>
+  </div>
+  <div class="row"><div class="lbl">庭前证据突袭</div>
+    <div class="fb">P1 预警条<small>对方新增证据</small></div><div class="ar"><span>去质证</span></div>
+    <div class="fb new">P4 证据库<small>筛「庭前新增」</small></div><div class="ar"><span>点开证据</span></div>
+    <div class="fb">P5 证据详情<small>三性 + 意见</small></div><div class="ar"><span>一键生成</span></div>
+    <div class="fb">P11 质证意见<small>写回策略</small></div><div class="ar"><span>补强证据</span></div>
+    <div class="fb new">P3 脱敏核对<small>补充入库</small></div>
+  </div>
+  <div class="row"><div class="lbl">按案件看时间线</div>
+    <div class="fb">底部 Tab<small>时间线</small></div><div class="ar"><span>进入</span></div>
+    <div class="fb new">P6 选择案件<small>新增 ②</small></div><div class="ar"><span>选中案件</span></div>
+    <div class="fb new">P7 案件时间线<small>节点关联证据</small></div><div class="ar"><span>点证据</span></div>
+    <div class="fb">P5 证据详情</div><div class="ar"><span>看策略</span></div>
+    <div class="fb">P8 庭审策略</div>
+  </div>
+  <div class="row"><div class="lbl">多轮补材料</div>
+    <div class="fb">P8 证据链缺口</div><div class="ar"><span>生成清单</span></div>
+    <div class="fb new">P10 待补材料清单<small>发给当事人</small></div><div class="ar"><span>当事人补交</span></div>
+    <div class="fb new">P3 脱敏核对</div><div class="ar"><span>入库</span></div>
+    <div class="fb new">P9 目录自动重排</div><div class="ar"><span>开庭前</span></div>
+    <div class="fb new">P12 不利点排查</div>
+  </div>
+  <div class="legend"><span><i></i>沿用两个原 Demo 的页面</span><span><i class="n"></i>本次新增 / 改造的页面</span><span>底部 Tab：案件 · 证据库 · 时间线 · 策略 · 报告</span></div>
+</div>
+
+<h2>页面线框 <small>P0–P13，标注序号对应下方说明</small></h2>
+<div class="grid">
+
+<!-- P0 -->
+<div class="pg"><div class="cap"><b>P0</b><span>登录</span><em>新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav">诉讼策略工作台</div>
+  <div class="bd">
+    <div style="text-align:center;margin-top:18px"><div style="width:40px;height:40px;border:1.5px solid #000;border-radius:10px;margin:0 auto 6px"></div><div class="t">诉讼策略工作台</div><div class="ln s" style="margin:4px auto 0"></div></div>
+    <div class="rw" style="margin-top:10px"><span class="mk" style="position:static;flex-shrink:0">1</span><span class="pill k sp" style="text-align:center">验证码登录</span><span class="pill sp" style="text-align:center">账号密码</span></div>
+    <div class="box">手机号<div class="ln"></div></div>
+    <div class="box"><div class="rw"><span class="sp">验证码</span><span class="pill">获取验证码</span></div></div>
+    <div class="box dash"><span class="mk">2</span>☐ 同意用户协议、隐私政策，同意材料先在本机脱敏再交给 AI</div>
+    <div class="btn">登录</div>
+    <div class="btn o">演示账号一键登录</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>验证码 / 账号密码两种方式；演示环境验证码自动填入。</li><li><b>2</b>在登录时就讲清数据边界，回应问卷中「涉密，一般不直接用 AI」的顾虑。</li></ul>
+</div>
+
+<!-- P1 -->
+<div class="pg"><div class="cap"><b>P1</b><span>案件首页</span></div>
+<div class="ph"><div class="in">
+  <div class="nav">诉讼策略工作台<span class="r">＋新建</span></div>
+  <div class="bd">
+    <div class="box dk"><div class="t">未来 30 天 3 件开庭，对方新增 4 份证据</div><div class="rw" style="margin-top:6px"><div class="box sp" style="background:#fff">在办 3</div><div class="box sp" style="background:#fff">证据 17</div><div class="box sp" style="background:#fff">待质证 3</div></div></div>
+    <div class="box solid"><span class="mk">1</span><div class="t">庭前证据突袭预警</div><div class="ln m"></div><div style="text-align:right;font-size:9.5px">去质证 ›</div></div>
+    <div class="box"><span class="mk">2</span>⌕ 搜索证据：名称、证明目的、原文…</div>
+    <div class="rw"><div class="t">我的案件</div><div class="sp"></div><span style="font-size:9.5px">＋新建案件</span></div>
+    <div class="box"><span class="mk">3</span><div class="t">李某诉张某民间借贷纠纷</div><div class="rw" style="margin-top:3px"><span class="pill">CASE-001</span><span class="pill k">原告</span><span class="pill">策略已生成</span></div><div class="rw" style="margin-top:4px"><span>开庭 12-03 · 还有 11 天</span><div class="sp"></div><span>庭前新增 2</span></div></div>
+    <div class="box"><div class="t">某建材公司诉某装饰公司…</div><div class="ln m"></div><div class="ln s"></div></div>
+    <div class="box"><div class="t">王某诉某科技公司…</div><div class="ln m"></div><div class="ln s"></div></div>
+  </div>
+  <div class="tb"><div class="on">案件</div><div>证据库</div><div>时间线</div><div>策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>对方补充了证据且尚未出质证意见时出现，点击直达证据库并预置「庭前新增」筛选。</li><li><b>2</b>搜索入口，点击进入 P4 并自动聚焦输入框。</li><li><b>3</b>案件卡点击弹出操作面板：查看策略 / 时间线 / 本案证据 / 补充上传。</li></ul>
+</div>
+
+<!-- P2 -->
+<div class="pg"><div class="cap"><b>P2</b><span>新建案件</span></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>新建案件</div>
+  <div class="bd">
+    <div class="box"><div class="t">案由 / 案件类型</div><div class="box" style="margin-top:4px">民间借贷纠纷 ▾</div></div>
+    <div class="box"><span class="mk">1</span><div class="t">我方诉讼地位与目标</div><div class="rw" style="margin-top:4px"><span class="pill k sp" style="text-align:center">原告</span><span class="pill sp" style="text-align:center">被告</span><span class="pill sp" style="text-align:center">第三人</span></div><div class="ln m"></div></div>
+    <div class="box" style="height:84px"><div class="t">案件事实描述</div><div class="ln"></div><div class="ln"></div><div class="ln m"></div><div class="ln s"></div></div>
+    <div class="box"><div class="t">案件材料</div><div class="rw" style="margin-top:4px;flex-wrap:wrap"><span class="pill">借条.jpg</span><span class="pill">转账凭证.pdf</span><span class="pill" style="border-style:dashed">＋上传</span></div></div>
+    <div class="box dash"><span class="mk">2</span>上传后自动识别并脱敏姓名、身份证号、手机号、住址、银行账号</div>
+    <div class="sp"></div>
+    <div class="btn">下一步：脱敏核对</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>沿用策略助手的原告 / 被告 / 第三人切换，决定后续攻防视角。</li><li><b>2</b>提前告知会脱敏，<i>降低律师上传真实卷宗的顾虑</i>。</li></ul>
+</div>
+
+<!-- P3 -->
+<div class="pg"><div class="cap"><b>P3</b><span>证据脱敏核对</span><em>新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>证据脱敏</div>
+  <div class="bd">
+    <div class="box"><div class="rw"><div class="t">借款补充协议.pdf</div><div class="sp"></div><span class="pill">OCR 完成</span></div><div style="margin-top:3px">识别到 5 类 9 处敏感信息</div></div>
+    <div class="box"><span class="mk">1</span><div class="t">脱敏方式</div><div class="rw" style="margin-top:4px"><span class="pill k sp" style="text-align:center">掩码</span><span class="pill sp" style="text-align:center">代号</span><span class="pill sp" style="text-align:center">泛化</span></div></div>
+    <div class="box"><span class="mk">2</span>
+      <div class="rw"><span class="sp">姓名 2 项 · 李明→李*</span><span class="sw"></span></div>
+      <div class="rw" style="margin-top:5px"><span class="sp">身份证号 2 项</span><span class="sw"></span></div>
+      <div class="rw" style="margin-top:5px"><span class="sp">手机号 2 项</span><span class="sw"></span></div>
+      <div class="rw" style="margin-top:5px"><span class="sp">住址 1 项</span><span class="sw off"></span></div>
+      <div class="rw" style="margin-top:5px"><span class="sp">银行账号 1 项</span><span class="sw"></span></div>
+    </div>
+    <div class="rw"><span class="pill k sp" style="text-align:center">脱敏后预览</span><span class="pill sp" style="text-align:center">原文对照</span></div>
+    <div class="box" style="flex:1"><span class="mk">3</span>出借人：<u>李*</u>，身份证号 <u>110105********3456</u>…<div class="ln"></div><div class="ln m"></div><div class="ln"></div></div>
+    <div class="box dk"><span class="mk">4</span>原文本机加密，AI 与检索只用脱敏文本</div>
+    <div class="btn">确认脱敏并存入证据库</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>三种方式：掩码 138****5678 / 代号「出借人A」/ 泛化「张某」。代号便于在策略中区分当事人。</li><li><b>2</b>按类别逐项开关，每类显示一条「原值→结果」样例。</li><li><b>3</b>原文 / 脱敏后两种视图对照，被替换处高亮。</li><li><b>4</b>数据边界说明，并记录脱敏操作日志。</li></ul>
+</div>
+
+<!-- P4 -->
+<div class="pg"><div class="cap"><b>P4</b><span>证据库 · 检索</span><em>新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav">证据库<span class="r">＋上传</span></div>
+  <div class="bd">
+    <div class="box solid"><span class="mk">1</span>⌕ 还款 <span style="float:right">✕</span></div>
+    <div class="rw"><span class="mk" style="position:static;flex-shrink:0">2</span><span class="pill k">全部案件</span><span class="pill">001 借贷</span><span class="pill">002 买卖</span>…</div>
+    <div class="rw"><span class="pill">书证</span><span class="pill">录音</span><span class="pill">流水</span><span class="pill">我方</span><span class="pill">对方</span><span class="pill k">仅看庭前新增</span></div>
+    <div style="font-size:9.5px;color:#777">搜索「还款」共 3 份 · 已脱敏 3 份</div>
+    <div class="box solid"><span class="mk">3</span><div class="rw"><div class="t">E05 被告提交：5 万元转账截图</div><div class="sp"></div><span class="pill k">庭前新增</span></div><div class="ln m"></div><div class="box dk" style="margin-top:4px">原文命中：…备注：货款…</div><div class="rw" style="margin-top:4px"><span class="pill">电子数据</span><span class="pill">对方</span><span class="pill">已脱敏 2</span><span class="pill">待质证</span></div></div>
+    <div class="box"><div class="t">E03 微信聊天及催收记录</div><div class="ln m"></div><div class="ln s"></div></div>
+    <div class="box"><div class="t">E06 证人书面证言</div><div class="ln m"></div><div class="ln s"></div></div>
+  </div>
+  <div class="tb"><div>案件</div><div class="on">证据库</div><div>时间线</div><div>策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>实时检索：证据名称、证明目的、OCR 原文、标签、编号、案号，关键词高亮；空搜索时显示热词。</li><li><b>2</b>两行筛选：按案件；按证据类型（含访谈补充的录音、财务流水）/ 提交方 / 庭前新增，可与搜索叠加。</li><li><b>3</b>命中原文时显示上下文片段；卡片标注轮次、脱敏数、质证状态，庭前新增排在最前。</li></ul>
+</div>
+
+<!-- P5 -->
+<div class="pg"><div class="cap"><b>P5</b><span>证据详情 · 质证意见</span></div>
+<div class="ph"><div class="in">
+  <div class="nav">证据库</div>
+  <div class="bd"><div class="box"><div class="ln"></div></div><div class="box"><div class="ln"></div></div></div>
+  <div class="shade"></div>
+  <div class="sheet" style="height:84%">
+    <div class="rw"><div class="t">E06 · 证人书面证言</div><div class="sp"></div>✕</div>
+    <div class="rw"><span class="pill">证人证言</span><span class="pill">对方</span><span class="pill">第 3 轮</span><span class="pill k">庭前新增</span></div>
+    <div class="box"><div class="t">证明目的</div><div class="ln m"></div></div>
+    <div class="box"><span class="mk">1</span><div class="t">证据链 · 对应主张</div>▸ 借贷合意成立</div>
+    <div class="box"><div class="t">识别原文（脱敏后）</div><div class="ln"></div><div class="ln s"></div></div>
+    <div class="box solid"><span class="mk">2</span><div class="t">质证意见</div><div class="rw" style="margin-top:4px"><div class="box sp">真实性<br><b>有异议</b></div><div class="box sp">合法性<br><b>有异议</b></div><div class="box sp">关联性<br><b>有异议</b></div></div><div class="btn" style="margin-top:5px;background:#fff;color:#000;border-style:dashed">✦ 一键生成质证意见</div></div>
+    <div class="btn o">在时间线中查看</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>来自材料助手的「证据链 ↔ 证据目录」匹配结果，反向显示该证据支撑哪条主张。</li><li><b>2</b>对方证据才有此区块：按真实性 / 合法性 / 关联性三栏给结论，再给完整意见。<i>用于应对开庭前夜突然提交的证据</i>。</li></ul>
+</div>
+
+<!-- P6 -->
+<div class="pg"><div class="cap"><b>P6</b><span>时间线 · 选择案件</span><em>新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav">案件时间线</div>
+  <div class="bd">
+    <div class="t">第一步：选择案件</div>
+    <div style="font-size:9.5px;color:#777">时间线按案件独立生成，节点自动关联该案证据</div>
+    <div class="box solid"><span class="mk">1</span><div class="t">李某诉张某民间借贷纠纷</div><div class="rw" style="margin-top:3px"><span class="pill">CASE-001</span><span class="pill k">原告</span></div><div class="rw" style="margin-top:4px"><span>开庭 12-03</span><div class="sp"></div><span>证据 6</span></div></div>
+    <div class="box"><div class="t">某建材公司诉某装饰公司…</div><div class="ln m"></div><div class="ln s"></div></div>
+    <div class="box"><div class="t">王某诉某科技公司…</div><div class="ln m"></div><div class="ln s"></div></div>
+    <div class="sp"></div>
+    <div class="box dash"><span class="mk">2</span>首次进入某案件：显示「正在从 N 份证据中抽取时间节点」加载态，生成后缓存</div>
+  </div>
+  <div class="tb"><div>案件</div><div>证据库</div><div class="on">时间线</div><div>策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>这是新增的上级菜单：先选案件，避免多案件节点混在一起。复用 P1 案件卡样式。</li><li><b>2</b>生成一次后缓存；新证据入库时自动追加节点。</li></ul>
+</div>
+
+<!-- P7 -->
+<div class="pg"><div class="cap"><b>P7</b><span>案件时间线</span><em>新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>案件时间线<span class="r">切换</span></div>
+  <div class="bd">
+    <div class="box dk"><span class="mk">1</span><div class="t">李某诉张某民间借贷纠纷</div>共 9 个节点 · 开庭还有 11 天<div class="pill" style="display:inline-block;margin-top:3px;background:#fff">切换案件 ▾</div></div>
+    <div class="rw"><span class="mk" style="position:static;flex-shrink:0">2</span><span class="pill k sp" style="text-align:center">全部</span><span class="pill sp" style="text-align:center">关键</span><span class="pill sp" style="text-align:center">事实</span><span class="pill sp" style="text-align:center">程序</span></div>
+    <div class="tl">
+      <div class="box key"><div class="rw"><b>2025-03-12</b><div class="sp"></div><span class="pill">事实</span></div>出具借条并转账交付<div class="rw" style="margin-top:3px"><span class="pill">E01 借条</span><span class="pill">E02 转账</span></div></div>
+      <div class="box"><div class="rw"><b>2025-04 (日期不明)</b><div class="sp"></div><span class="pill k">陈述冲突</span></div>款项性质说法冲突 <span class="pill">时间存疑</span></div>
+      <div class="box key solid"><span class="mk">3</span><div class="rw"><b>2026-11-21</b><div class="sp"></div><span class="pill k">证据突袭</span></div>被告庭前夜补充证人证言</div>
+      <div class="box key"><b>2026-12-03 · 还有 11 天</b><br>开庭</div>
+    </div>
+  </div>
+  <div class="tb"><div>案件</div><div>证据库</div><div class="on">时间线</div><div>策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>顶部固定当前案件，可通过底部弹层切换，不必返回 P6。</li><li><b>2</b>按全部 / 关键 / 事实 / 程序筛选节点。</li><li><b>3</b>节点挂接证据编号，点击打开 P5；对方补充证据标「证据突袭」，双方说法不一致标「陈述冲突」，日期不明确标「时间存疑」，并分开显示事件时间和文件形成时间（问卷第 8 题）。</li></ul>
+</div>
+
+<!-- P8 -->
+<div class="pg"><div class="cap"><b>P8</b><span>庭审策略</span></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>庭审策略<span class="r">切换</span></div>
+  <div class="bd">
+    <div class="box dk"><div class="t">民间借贷纠纷 · 我方原告</div><div class="ln m" style="background:#fff"></div><div class="ln s" style="background:#fff"></div></div>
+    <div class="box dash">⚠ AI 初稿，需律师逐条核对</div>
+    <div class="rw"><span class="mk" style="position:static;flex-shrink:0">1</span><span class="pill">焦点</span><span class="pill k">证据链</span><span class="pill">目录</span><span class="pill">质证②</span><span class="pill">不利点</span></div>
+    <div class="box solid"><span class="mk">2</span><div class="t">证据链 ↔ 证据目录</div>
+      <div class="rw" style="margin-top:4px;border-bottom:1px solid #ddd;padding-bottom:3px"><span class="sp">借贷合意成立</span><span class="pill">E01 E03</span><span class="pill">已具备</span></div>
+      <div class="rw" style="margin-top:3px;border-bottom:1px solid #ddd;padding-bottom:3px"><span class="sp">款项已交付</span><span class="pill">E02</span><span class="pill">已具备</span></div>
+      <div class="rw" style="margin-top:3px"><span class="sp">5 万元非还款</span><span class="pill">—</span><span class="pill k">需补强</span></div>
+      <div class="btn" style="margin-top:5px;background:#fff;color:#000;border-style:dashed">＋ 上传补强证据（自动脱敏）</div><div class="btn" style="margin-top:4px;background:#fff;color:#000;border-style:dashed">✉ 生成待补充材料清单</div>
+    </div>
+    <div class="box"><span class="mk">3</span><div class="t">庭前新增证据 · 庭审应对</div><div class="ln"></div><div class="ln m"></div></div>
+    <div class="sp"></div>
+    <div class="btn">核对完成 · 导出策略报告（1/3）</div>
+  </div>
+  <div class="tb"><div>案件</div><div>证据库</div><div>时间线</div><div class="on">策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>六个标签：焦点 / 攻防 / 证据链 / 证据目录 / 质证意见 / 不利点。按访谈建议，<i>先理证据链，再生成目录</i>。</li><li><b>2</b>缺口直接引导上传补强证据，走 P3 脱敏后回填到链条。</li><li><b>3</b>位于攻防策略标签页内，针对对方庭前新增证据给出当庭应对动作。</li></ul>
+</div>
+
+
+<!-- P9 -->
+<div class="pg"><div class="cap"><b>P9</b><span>证据目录</span><em>调研新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>庭审策略</div>
+  <div class="bd">
+    <div class="rw"><span class="pill">证据链</span><span class="pill k">证据目录</span><span class="pill">质证</span></div>
+    <div class="box"><span class="mk">1</span><div class="rw"><div class="t">证据目录（原告）</div><div class="sp"></div><span class="pill">自动编号</span></div></div>
+    <div class="box"><div class="rw" style="border-bottom:1px solid #ddd;padding-bottom:3px"><b style="width:14px">序</b><span class="sp"><b>名称 / 证明目的</b></span><b>页码</b></div>
+      <div class="rw" style="margin-top:4px"><span style="width:14px">1</span><span class="sp">借条（原件扫描）<div class="ln m"></div></span><span>1–2</span></div>
+      <div class="rw" style="margin-top:4px"><span style="width:14px">2</span><span class="sp">银行转账凭证<div class="ln m"></div></span><span>3–4</span></div>
+      <div class="rw" style="margin-top:4px"><span style="width:14px">3</span><span class="sp">电话录音（已转写）<div class="ln m"></div></span><span>5–8</span></div>
+      <div class="rw" style="margin-top:4px"><span style="width:14px">…</span><span class="sp"><div class="ln s"></div></span><span>…</span></div>
+    </div>
+    <div class="box dash"><span class="mk">2</span>新证据入库 → 编号、页码自动重排，保留历史版本</div>
+    <div class="sp"></div>
+    <div class="btn o">复制证据目录（粘贴到 Word）</div>
+  </div>
+  <div class="tb"><div>案件</div><div>证据库</div><div>时间线</div><div class="on">策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>由 P8 证据链按主张顺序生成。访谈指出应<i>先梳理证据链和争议焦点，再编证据目录</i>。</li><li><b>2</b>问卷：「页码的调整是最大的困难」「证据编号及排序」是编目录最麻烦的环节。</li></ul>
+</div>
+
+<!-- P10 -->
+<div class="pg"><div class="cap"><b>P10</b><span>待补充材料清单</span><em>调研新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav">庭审策略</div>
+  <div class="bd"><div class="box"><div class="ln"></div></div><div class="box"><div class="ln"></div></div></div>
+  <div class="shade"></div>
+  <div class="sheet">
+    <div class="rw"><div class="t">待补充材料清单</div><div class="sp"></div>✕</div>
+    <div style="font-size:9.5px;color:#777"><span class="mk" style="position:static;display:inline-flex;margin-right:3px">1</span>根据证据链缺口自动生成</div>
+    <div class="box"><b>1. 借条签名真实</b><div class="ln m"></div></div>
+    <div class="box"><b>2. 借条原件</b><div class="ln s"></div></div>
+    <div class="box"><b>3. 微信原始载体</b><div class="ln s"></div></div>
+    <div class="sp"></div>
+    <div class="btn"><span class="mk" style="right:auto;left:-8px">2</span>复制清单发给当事人</div>
+  </div>
+</div></div>
+<ul class="notes"><li><b>1</b>访谈：当事人很少一次交齐，需要「挤牙膏式」反复补材料；问卷两位受访者都需要「待补充材料清单」。</li><li><b>2</b>生成微信可直接发送的话术；补交后回到 P3，形成回流闭环。</li></ul>
+</div>
+
+<!-- P11 -->
+<div class="pg"><div class="cap"><b>P11</b><span>质证意见</span></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>庭审策略</div>
+  <div class="bd">
+    <div class="rw"><span class="pill">目录</span><span class="pill k">质证意见 ②</span><span class="pill">不利点</span></div>
+    <div class="box solid"><span class="mk">1</span><div class="rw"><div class="t">E06 证人书面证言</div><div class="sp"></div><span class="pill k">庭前新增</span></div><div class="ln m"></div>
+      <div class="rw" style="margin-top:4px"><div class="box sp">真实性<br><b>有异议</b></div><div class="box sp">合法性<br><b>有异议</b></div><div class="box sp">关联性<br><b>有异议</b></div></div>
+      <div class="box dk" style="margin-top:4px">质证意见：<div class="ln" style="background:#fff"></div><div class="ln m" style="background:#fff"></div></div></div>
+    <div class="box"><span class="mk">2</span><div class="t">E11 对账单</div><div class="btn" style="margin-top:4px;background:#fff;color:#000;border-style:dashed">✦ 一键生成质证意见</div></div>
+  </div>
+  <div class="tb"><div>案件</div><div>证据库</div><div>时间线</div><div class="on">策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>访谈：收到对方证据后的核心动作是围绕<i>真实性、合法性、关联性</i>写质证意见。</li><li><b>2</b>未生成的显示按钮；生成后由律师复核采纳。技术路线见 AI 工作流说明。</li></ul>
+</div>
+
+<!-- P12 -->
+<div class="pg"><div class="cap"><b>P12</b><span>不利点排查</span><em>调研新增</em></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>庭审策略</div>
+  <div class="bd">
+    <div class="rw"><span class="pill">目录</span><span class="pill">质证</span><span class="pill k">不利点与风险</span></div>
+    <div class="box solid"><span class="mk">1</span><div class="t">AI 不利点排查</div><div style="font-size:9.5px;color:#777">当事人未主动说明的内容</div>
+      <div class="box" style="margin-top:4px"><div class="rw"><span class="sp">微信中原告曾说「分我点」</span><span class="pill k">高</span></div><div style="color:#555">应对：<span class="ln m" style="display:inline-block;width:60%"></span></div><u style="font-size:9.5px">查看原文 E03</u></div>
+      <div class="box" style="margin-top:4px"><div class="rw"><span class="sp">曾说「利息就算了」</span><span class="pill">中</span></div><div class="ln s"></div></div>
+    </div>
+    <div class="box"><span class="mk">2</span><div class="t">风险提示</div><div class="ln"></div><div class="ln m"></div></div>
+  </div>
+  <div class="tb"><div>案件</div><div>证据库</div><div>时间线</div><div class="on">策略</div><div>报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>访谈：当事人陈述天然偏向自己，律师需要从零散材料里<i>主动找出不利证据</i>提前准备。每条附原文出处和应对。</li><li><b>2</b>保留原有的时效、证据缺口、利息等风险提示。</li></ul>
+</div>
+
+<!-- P13 -->
+<div class="pg"><div class="cap"><b>P13</b><span>策略报告</span></div>
+<div class="ph"><div class="in">
+  <div class="nav"><span class="l">‹</span>策略报告</div>
+  <div class="bd">
+    <div style="text-align:center"><div style="width:28px;height:28px;border:1.5px solid #000;border-radius:50%;margin:2px auto 4px"></div><div class="t">策略报告已生成</div></div>
+    <div class="box" style="flex:1"><span class="mk">1</span>
+      <div class="t" style="text-align:center">庭审策略报告</div>
+      <div class="t" style="margin-top:6px">一、争议焦点</div><div class="ln"></div><div class="ln m"></div>
+      <div class="t" style="margin-top:6px">二、攻防策略</div><div class="ln"></div><div class="ln s"></div>
+      <div class="t" style="margin-top:6px">三、证据链</div><div class="ln m"></div>
+      <div class="t" style="margin-top:6px">四、质证意见</div><div class="ln"></div><div class="ln s"></div>
+      <div class="t" style="margin-top:6px">五、关键时间节点</div><div class="ln m"></div>
+      <div class="t" style="margin-top:6px">六、不利点与风险</div><div class="ln s"></div>
+    </div>
+    <div class="box dash"><span class="mk">2</span>本报告个人信息均已脱敏</div>
+    <div class="btn">复制报告全文</div>
+  </div>
+  <div class="tb"><div>案件</div><div>证据库</div><div>时间线</div><div>策略</div><div class="on">报告</div></div>
+</div></div>
+<ul class="notes"><li><b>1</b>在原报告基础上增加证据目录、质证意见、关键时间节点、不利点，内容来自 P7、P9、P11、P12。</li><li><b>2</b>导出只使用脱敏文本，可以直接转发给团队。</li></ul>
+</div>
+</div>
+
+<h2>交互与数据约定</h2>
+<div class="spec">
+  <div><h4>① 证据库检索</h4><ul><li>检索范围：名称、证明目的、OCR 原文、标签、证据编号、案号与案件名</li><li>筛选维度：案件、证据类型、提交方、庭前新增；可与关键词叠加</li><li>排序：刚入库 &gt; 庭前新增 &gt; 编号</li><li>空结果给出换词与清除筛选的提示</li></ul></div>
+  <div><h4>② 先选案件，再生成时间线</h4><ul><li>时间线 Tab 一级页面是案件列表，二级页面才是时间线</li><li>节点 = 日期 + 事件 + 关联证据，分事实 / 程序两类，标关键节点</li><li>新证据入库自动在开庭节点前插入一条程序节点</li></ul></div>
+  <div><h4>④ 调研新增</h4><ul><li>证据目录按证据链自动编号、算页码，补材料后自动重排</li><li>待补充材料清单：证据链缺口 → 发给当事人 → 回流</li><li>时间线标注陈述冲突、时间存疑、事件时间 ≠ 文件形成时间</li><li>不利点排查：附原文出处与应对</li><li>新增录音转写、Excel 财务流水两类材料</li></ul></div>
+  <div><h4>③ 上传后脱敏</h4><ul><li>识别 5 类：姓名、身份证号、手机号、住址、银行账号</li><li>3 种方式：掩码 / 代号 / 泛化；按类别开关</li><li>原文本机加密留存；AI 分析、检索、导出均只用脱敏文本；保留操作日志</li></ul></div>
+</div>
+</body>
+</html>

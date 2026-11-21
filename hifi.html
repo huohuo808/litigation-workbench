@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诉讼策略工作台 · 高保真原型 v1.0</title>
+<style>
+:root{--navy:#16243b;--navy2:#22354f;--gold:#b0843f;--gold-soft:#f3e9d6;--bg:#f5f3ef;--line:#e7e3da;--ink:#1d2733;--muted:#6b7683}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e9e5dc;color:var(--ink);padding:0 0 60px}
+header{background:var(--navy);color:#fff;padding:34px 40px 30px}
+header .w{max-width:1480px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+header h1{font-size:28px;letter-spacing:.5px}
+header p{font-size:13.5px;color:#cfd6e0;margin-top:8px;line-height:1.8;max-width:820px}
+header .meta{font-size:12px;color:var(--gold-soft);text-align:right;line-height:1.8}
+header a{color:var(--gold-soft)}
+.spec{max-width:1480px;margin:26px auto 0;padding:0 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.spec div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.spec h4{font-size:12px;color:var(--gold);margin-bottom:8px;letter-spacing:.5px}
+.spec p{font-size:12.5px;line-height:1.8;color:#3c4652}
+.sw{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px;border:1px solid rgba(0,0,0,.08)}
+h2{max-width:1480px;margin:34px auto 6px;padding:0 40px;font-size:18px;color:var(--navy)}
+h2 small{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:8px}
+.grid{max-width:1480px;margin:0 auto;padding:10px 40px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px 22px}
+.sc{min-width:0}
+.dev{width:290px;height:600px;margin:0 auto;border:8px solid var(--navy);border-radius:34px;overflow:hidden;background:var(--bg);box-shadow:0 14px 34px rgba(22,36,59,.22);position:relative}
+.dev iframe{width:375px;height:776px;border:0;transform:scale(.7413);transform-origin:0 0;position:absolute;left:0;top:0;pointer-events:auto}
+.cap{width:290px;margin:12px auto 0}
+.cap b{display:inline-block;font-size:11px;background:var(--navy);color:var(--gold-soft);border-radius:5px;padding:2px 7px;margin-right:6px;font-family:"SF Mono",Menlo,monospace}
+.cap span{font-size:14px;font-weight:700;color:var(--navy)}
+.cap em{font-style:normal;font-size:10.5px;color:#7a5a1e;background:var(--gold-soft);border-radius:4px;padding:1px 5px;margin-left:4px}
+.cap p{font-size:12px;color:#4a5563;line-height:1.7;margin-top:6px}
+.webgrid{max-width:1480px;margin:0 auto;padding:10px 40px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(560px,1fr));gap:26px}
+.web{height:400px;border:1px solid #cfc9bc;border-radius:10px;overflow:hidden;position:relative;background:#fff;box-shadow:0 10px 26px rgba(22,36,59,.14)}
+.web .chrome{height:26px;background:#dcd7cc;display:flex;align-items:center;gap:6px;padding-left:10px}
+.web .chrome i{width:9px;height:9px;border-radius:50%;background:#b9b2a4}
+.web iframe{width:1280px;height:800px;border:0;transform:scale(.4609);transform-origin:0 0;position:absolute;left:0;top:26px}
+.note{max-width:1480px;margin:24px auto 0;padding:0 40px;font-size:12px;color:var(--muted);line-height:1.8}
+@media (max-width:700px){header,.spec,h2,.grid,.webgrid,.note{padding-left:16px;padding-right:16px}.webgrid{grid-template-columns:1fr}.web{height:260px}.web iframe{transform:scale(.27)}}
+</style>
+</head>
+<body>
+<header><div class="w">
+  <div>
+    <h1>诉讼策略工作台 · 高保真原型</h1>
+    <p>每块屏幕都是真实运行的 App 页面（不是截图），可以直接在框里点击操作。页面与低保真原型 P0–P13 一一对应，标「调研新增」的是根据学姐访谈和问卷结论补充的功能。</p>
+  </div>
+  <div class="meta">v1.0 · 2026-11-22<br>移动端 375 × 776 · 网页端 1280 × 800<br><a href="wireframe.html">低保真原型</a> · <a href="index.html">App Demo</a> · <a href="web.html">网页版 Demo</a> · <a href="workflow.html">AI 工作流</a></div>
+</div></header>
+
+<div class="spec">
+  <div><h4>色彩</h4><p><span class="sw" style="background:#16243b"></span>主色 藏青 #16243B<br><span class="sw" style="background:#b0843f"></span>强调 金 #B0843F<br><span class="sw" style="background:#f5f3ef"></span>背景 #F5F3EF　<span class="sw" style="background:#e7e3da"></span>分隔 #E7E3DA</p></div>
+  <div><h4>状态色（只用于表达状态）</h4><p><span class="sw" style="background:#0f7a56"></span>已具备 / 无异议　<span class="sw" style="background:#9a6700"></span>待处理<br><span class="sw" style="background:#9b3b3b"></span>需补强 / 有异议 / 庭前新增<br><span class="sw" style="background:#334eac"></span>我方　<span class="sw" style="background:#8a4a8a"></span>对方</p></div>
+  <div><h4>字体与字号</h4><p>系统字体（苹方 / 微软雅黑）<br>页面标题 19 · 卡片标题 14 · 正文 12.5 · 辅助 11.5<br>行高 1.6–1.8，数字不加粗以免抢视觉</p></div>
+  <div><h4>组件</h4><p>卡片圆角 12–13 · 按钮圆角 12<br>底部 5 个标签：案件 / 证据库 / 时间线 / 策略 / 报告<br>二级操作一律用底部弹层，不跳新页面<br>AI 技术路线另见 <a href="workflow.html">AI 工作流说明</a></p></div>
+</div>
+
+<h2>主线一：登录与建案 <small>从触达到上传材料</small></h2>
+<div class="grid">
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=login&embed=1"></iframe></div><div class="cap"><b>P0</b><span>登录</span><p>验证码 / 账号密码两种方式；勾选协议时明确告知「材料先脱敏再给 AI」，回应问卷里「涉密不敢用 AI」的顾虑。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=home&embed=1"></iframe></div><div class="cap"><b>P1</b><span>案件首页</span><p>顶部汇总开庭倒计时和待质证数量；红色预警条直达对方新证据，AI 工作流入口紧随其后。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=new&embed=1"></iframe></div><div class="cap"><b>P2</b><span>新建案件</span><p>案由、诉讼地位（原告 / 被告 / 第三人）、大白话描述案情、上传材料。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=mask&embed=1"></iframe></div><div class="cap"><b>P3</b><span>上传脱敏</span><em>新增</em><p>识别 5 类敏感信息，掩码 / 代号 / 泛化三种方式可切换，原文对照高亮。对应问卷「隐去客户隐私才敢用 AI」。</p></div></div>
+</div>
+
+<h2>主线二：证据与时间线 <small>多轮补材料 → 证据库 → 时间线</small></h2>
+<div class="grid">
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=search&embed=1"></iframe></div><div class="cap"><b>P4</b><span>证据库检索</span><em>新增</em><p>按名称、证明目的、OCR 原文、标签检索，关键词高亮并显示原文片段；新增「录音」「财务流水」类型（访谈建议）。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=evdetail&embed=1"></iframe></div><div class="cap"><b>P5</b><span>证据详情</span><p>证明目的、对应主张、脱敏原文；对方证据显示质证意见区，一键进入 AI 工作流。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=tlpick&embed=1"></iframe></div><div class="cap"><b>P6</b><span>时间线 · 选择案件</span><em>新增</em><p>时间线一级页先选案件，避免多个案件的节点混在一起。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=timeline&embed=1"></iframe></div><div class="cap"><b>P7</b><span>案件时间线</span><em>调研新增</em><p>标出「陈述冲突」「时间存疑」，并区分事件时间与文件形成时间（问卷第 8 题两位受访者都选了的困难）。</p></div></div>
+</div>
+
+<h2>主线三：庭审策略 <small>证据链 → 证据目录 → 质证 → 不利点</small></h2>
+<div class="grid">
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=chain&embed=1"></iframe></div><div class="cap"><b>P8</b><span>证据链</span><p>按争议焦点把主张和证据配对，缺口直接上传补强，或生成待补材料清单。访谈指出要先理证据链，再编目录。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=catalog&embed=1"></iframe></div><div class="cap"><b>P9</b><span>证据目录</span><em>调研新增</em><p>由证据链自动生成，编号和页码在补充证据后自动重排。问卷：「页码的调整是最大的困难」。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=todo&embed=1"></iframe></div><div class="cap"><b>P10</b><span>待补充材料清单</span><em>调研新增</em><p>按证据链缺口生成，可复制发给当事人，对应访谈中的「挤牙膏式补材料」。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=op&embed=1"></iframe></div><div class="cap"><b>P11</b><span>质证意见</span><p>真实性、合法性、关联性三栏结论，加可直接当庭发表的完整意见。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=risk&embed=1"></iframe></div><div class="cap"><b>P12</b><span>不利点排查</span><em>调研新增</em><p>从全部材料中找出当事人没主动说的不利内容，附原文出处和应对建议。</p></div></div>
+  <div class="sc"><div class="dev"><iframe loading="lazy" src="index.html?s=report&embed=1"></iframe></div><div class="cap"><b>P13</b><span>策略报告</span><p>争议焦点、攻防、证据链、证据目录、质证意见、时间节点、不利点，一键复制。</p></div></div>
+</div>
+
+<h2>网页端 <small>同一套功能，左侧导航 + 宽屏内容区，适合在律所电脑上整理案卷</small></h2>
+<div class="webgrid">
+  <div class="web"><div class="chrome"><i></i><i></i><i></i></div><iframe loading="lazy" src="web.html?s=home"></iframe></div>
+  <div class="web"><div class="chrome"><i></i><i></i><i></i></div><iframe loading="lazy" src="web.html?s=search"></iframe></div>
+  <div class="web"><div class="chrome"><i></i><i></i><i></i></div><iframe loading="lazy" src="web.html?s=catalog"></iframe></div>
+  <div class="web"><div class="chrome"><i></i><i></i><i></i></div><iframe loading="lazy" src="web.html?s=report"></iframe></div>
+</div>
+
+<p class="note">所有人名、证件号、账号均为虚构演示数据。法条引用为演示样例，正式版接入权威法规库后逐条核验。</p>
+</body>
+</html>

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>诉讼策略工作台 · 网页版</title>
+<meta name="theme-color" content="#16243b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="策略工作台">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --navy:#16243b; --navy2:#22354f; --gold:#b0843f; --gold-soft:#f3e9d6;
+  --bg:#f5f3ef; --card:#ffffff; --ink:#1d2733; --muted:#6b7683; --line:#e7e3da;
+  --ok:#0f7a56; --ok-bg:#e6f4ee; --warn:#9a6700; --warn-bg:#fbf1d9; --dead:#9b3b3b; --dead-bg:#f8eaea;
+  --att:#334eac; --att-bg:#eef1fb; --def:#8a4a8a; --def-bg:#f5eef5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#d9d5cc;color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px 12px}
+button{font-family:inherit}
+.stage{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.intro{width:300px;padding-top:30px;position:sticky;top:24px}
+.intro .logo{width:54px;height:54px;border-radius:15px;background:var(--navy);color:var(--gold-soft);font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.intro h1{font-size:25px;color:var(--navy);font-weight:700;letter-spacing:.5px}
+.intro .en{font-size:12px;color:var(--gold);letter-spacing:2px;margin:4px 0 16px}
+.intro p{font-size:14px;line-height:1.8;color:#4a5563;margin-bottom:14px}
+.intro p strong{color:var(--navy)}
+.intro .tag{display:inline-block;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:5px 12px;margin:0 6px 6px 0;color:var(--navy2)}
+.intro .tag.new{border-color:var(--gold);color:#7a5a1e;background:var(--gold-soft)}
+.intro .note{font-size:12px;color:#8a9099;line-height:1.7;margin-top:14px;border-left:3px solid var(--gold);padding-left:10px}
+.steps{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.steps h4{font-size:12px;color:var(--gold);letter-spacing:.5px;margin-bottom:8px}
+.steps .s{font-size:12.5px;color:#4a5563;padding:5px 0 5px 22px;position:relative;line-height:1.5;cursor:pointer}
+.steps .s:before{content:"";position:absolute;left:4px;top:10px;width:8px;height:8px;border-radius:50%;background:var(--line)}
+.steps .s.on:before{background:var(--gold)}
+.steps .s.on{color:var(--navy);font-weight:600}
+.steps .s i{font-style:normal;font-size:10.5px;color:var(--gold);margin-left:4px}
+.reset{font-size:12px;color:#fff;background:var(--navy);border:0;border-radius:9px;padding:9px 14px;cursor:pointer;margin-top:14px}
+
+.phone{width:392px;height:800px;background:var(--bg);border-radius:40px;border:9px solid var(--navy);box-shadow:0 20px 50px rgba(0,0,0,.25);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.bar{height:46px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;flex-shrink:0;font-weight:600}
+.bar .back{position:absolute;left:14px;font-size:22px;cursor:pointer;line-height:1}
+.bar .act{position:absolute;right:14px;font-size:12px;color:var(--gold-soft);cursor:pointer;font-weight:500}
+.screen{flex:1;overflow-y:auto;padding:16px 16px 84px}
+.screen::-webkit-scrollbar{width:0}
+.tabs{position:absolute;bottom:0;left:0;right:0;height:66px;background:#fff;border-top:1px solid var(--line);display:flex;z-index:5}
+.tabs div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:var(--muted);gap:3px;cursor:pointer;position:relative}
+.tabs div.on{color:var(--navy);font-weight:600}
+.tabs .ic{font-size:18px;line-height:1}
+.tabs .rd{position:absolute;top:9px;left:56%;width:7px;height:7px;border-radius:50%;background:var(--dead)}
+
+/* 通用 */
+.brand{text-align:center;padding:14px 0 4px}
+.brand .lg{width:50px;height:50px;border-radius:14px;background:var(--navy);color:var(--gold-soft);font-size:25px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.brand h2{font-size:19px;color:var(--navy)}
+.brand p{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+.field{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600}
+.field select,.field textarea,.field input[type=text]{width:100%;border:0;outline:0;font-size:14px;color:var(--ink);background:transparent;font-family:inherit;resize:none}
+.field select{background:#faf9f6;border:1px solid var(--line);border-radius:8px;padding:8px}
+.field textarea{line-height:1.7;min-height:82px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;font-size:13px;padding:9px 4px;border:1px solid var(--line);background:#fff;border-radius:9px;color:var(--navy2);cursor:pointer}
+.seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.seg.sm button{font-size:12px;padding:7px 4px}
+.up{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filechip{font-size:12px;background:var(--gold-soft);color:#7a5a1e;border-radius:8px;padding:7px 10px}
+.upbtn{font-size:12px;border:1px dashed var(--gold);color:var(--gold);background:#fff;border-radius:8px;padding:7px 10px;cursor:pointer}
+.primary{width:100%;background:var(--navy);color:#fff;border:0;border-radius:12px;padding:15px;font-size:15px;cursor:pointer;font-weight:600;margin-top:6px}
+.ghost{width:100%;background:#fff;color:var(--navy);border:1px solid var(--navy);border-radius:12px;padding:13px;font-size:14px;cursor:pointer;font-weight:600;margin-top:8px}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.6;margin:-2px 2px 12px}
+.sec{font-size:13px;font-weight:700;color:var(--navy);margin:16px 2px 10px;display:flex;justify-content:space-between;align-items:center}
+.sec a{font-size:12px;color:var(--gold);font-weight:500;cursor:pointer}
+.bd{font-size:10.5px;padding:3px 7px;border-radius:6px;white-space:nowrap;font-weight:600;display:inline-block}
+.bd.hi{background:var(--dead-bg);color:var(--dead)} .bd.mid{background:var(--warn-bg);color:var(--warn)} .bd.low{background:#eef0f3;color:#56606c}
+.bd.ok{background:var(--ok-bg);color:var(--ok)} .bd.miss{background:var(--dead-bg);color:var(--dead)}
+.bd.att{background:var(--att-bg);color:var(--att)} .bd.def{background:var(--def-bg);color:var(--def)}
+.bd.gold{background:var(--gold-soft);color:#7a5a1e}
+.blk{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:12px}
+.blk .h{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.blk h4{font-size:14px;color:var(--navy);line-height:1.5}
+.why{font-size:12.5px;color:#4a5563;line-height:1.7}
+.why b{color:var(--navy)}
+.basis{font-size:12px;color:#4a5563;line-height:1.7;background:#faf9f6;border-radius:8px;padding:9px 10px;margin-top:8px}
+.trace{font-size:12px;color:var(--gold);margin-top:8px;cursor:pointer}
+.trace:before{content:"⌕ "}
+.disc{font-size:11.5px;color:var(--warn);background:var(--warn-bg);border-radius:9px;padding:9px 11px;line-height:1.6;margin-bottom:12px}
+.confirm{display:flex;gap:8px;margin-top:10px}
+.confirm button{flex:1;font-size:12px;padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;color:#4a5563}
+.confirm .yes.on{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.confirm .no.on{background:var(--dead-bg);color:var(--dead);border-color:var(--dead)}
+
+/* 首页 */
+.hero{background:var(--navy);color:#fff;border-radius:15px;padding:16px;margin-bottom:12px}
+.hero .g{font-size:12px;color:var(--gold-soft);opacity:.85}
+.hero .big{font-size:18px;font-weight:700;margin:6px 0 10px;line-height:1.45}
+.hero .row{display:flex;gap:8px}
+.hero .kp{flex:1;background:rgba(255,255,255,.08);border-radius:10px;padding:9px 10px;cursor:pointer}
+.hero .kp b{display:block;font-size:20px;color:var(--gold-soft)}
+.hero .kp span{font-size:11px;opacity:.8}
+.alert{display:flex;gap:10px;align-items:center;background:var(--dead-bg);border:1px solid #efd2d2;border-radius:12px;padding:11px 12px;margin-bottom:12px;cursor:pointer}
+.alert .t{font-size:12.5px;color:var(--dead);line-height:1.55;flex:1}
+.alert .t b{display:block;font-size:13px}
+.alert .go{font-size:12px;color:var(--dead);font-weight:700}
+.fakesearch{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:13px;color:#9aa1aa;cursor:pointer;margin-bottom:4px}
+.case{background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin-bottom:10px;cursor:pointer}
+.case .tt{font-size:14px;font-weight:700;color:var(--navy);line-height:1.5}
+.case .mt{font-size:11.5px;color:var(--muted);margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.case .ft{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid #f0ede6}
+.case .cd{font-size:12px;color:var(--navy2)} .case .cd b{color:var(--dead)}
+.case .ops{display:flex;gap:6px}
+.case .ops span{font-size:11.5px;border:1px solid var(--line);border-radius:7px;padding:4px 8px;color:var(--navy2)}
+.case.sel{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-soft)}
+
+/* 证据库 */
+.sbox{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--navy);border-radius:12px;padding:0 12px;height:44px}
+.sbox span{color:var(--muted);font-size:15px}
+.sbox input{flex:1;border:0;outline:0;font-size:14px;background:transparent;font-family:inherit;color:var(--ink)}
+.sbox .clr{cursor:pointer;font-size:13px}
+.hot{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px}
+.hot span{font-size:11.5px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px 10px;color:var(--navy2);cursor:pointer}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:10px 0 0;padding-bottom:2px}
+.chips::-webkit-scrollbar{height:0}
+.chips span{flex-shrink:0;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 10px;color:var(--navy2);cursor:pointer}
+.chips span.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chips span.late.on{background:var(--dead);border-color:var(--dead)}
+.cnt{font-size:11.5px;color:var(--muted);margin:12px 2px 8px;display:flex;justify-content:space-between}
+.ev{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:9px;cursor:pointer;position:relative}
+.ev.fresh{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-soft)}
+.ev .r1{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.ev .nm{font-size:13.5px;font-weight:700;color:var(--navy);line-height:1.5}
+.ev .id{font-size:11px;color:var(--gold);font-weight:700;margin-right:4px}
+.ev .ps{font-size:12px;color:#4a5563;line-height:1.6;margin-top:5px}
+.ev .tg{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.ev .src{font-size:11px;color:var(--muted);margin-top:7px}
+.ev .snip{font-size:11.5px;color:#6b7683;background:#faf9f6;border-radius:7px;padding:6px 8px;margin-top:7px;line-height:1.6}
+mark{background:#f6dfa9;color:inherit;border-radius:2px;padding:0 1px}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 10px;line-height:1.8}
+
+/* 脱敏 */
+.mhead{background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin-bottom:12px}
+.mhead .f{display:flex;justify-content:space-between;align-items:center}
+.mhead .f b{font-size:14px;color:var(--navy)}
+.mhead .s{font-size:12px;color:#4a5563;margin-top:6px;line-height:1.6}
+.mhead .s b{color:var(--dead)}
+.cat{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0ede6}
+.cat:last-child{border-bottom:0}
+.cat .l{flex:1;min-width:0}
+.cat .l b{font-size:13px;color:var(--navy)}
+.cat .l b em{font-style:normal;font-size:11px;color:var(--muted);font-weight:500;margin-left:4px}
+.cat .l div{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sw{width:40px;height:23px;border-radius:12px;background:#d6d2c9;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .2s}
+.sw.on{background:var(--ok)} .sw.on:after{left:20px}
+.doc{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;font-size:12.5px;line-height:1.95;color:#2c3642;white-space:pre-wrap;margin-top:10px}
+.doc .m{background:var(--ok-bg);color:var(--ok);border-radius:3px;padding:0 2px;font-weight:600}
+.doc .o{background:var(--dead-bg);color:var(--dead);border-radius:3px;padding:0 2px}
+.lock{font-size:11.5px;color:#4a5563;background:#eef0f3;border-radius:9px;padding:9px 11px;line-height:1.6;margin:12px 0}
+
+/* 解析 */
+.parse{padding-top:50px;text-align:center}
+.parse .ring{width:66px;height:66px;border-radius:50%;border:4px solid var(--gold-soft);border-top-color:var(--gold);margin:0 auto 22px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.parse h3{font-size:17px;color:var(--navy)}
+.parse p{font-size:13px;color:var(--muted);margin-top:8px}
+.parse .log{margin-top:26px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.parse .log div{font-size:13px;color:#4a5563;padding:7px 0 7px 24px;position:relative;opacity:0;transition:opacity .3s;line-height:1.5}
+.parse .log div.show{opacity:1}
+.parse .log div:before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:700}
+.mini{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--gold-soft);border-top-color:var(--gold);animation:spin .8s linear infinite;vertical-align:-2px;margin-right:6px}
+
+/* 时间线 */
+.pick{font-size:12px;color:var(--muted);margin:0 2px 10px;line-height:1.6}
+.tlhead{background:var(--navy);color:#fff;border-radius:13px;padding:13px 15px;margin-bottom:12px}
+.tlhead .t{font-size:14.5px;font-weight:600;line-height:1.5}
+.tlhead .m{font-size:11.5px;color:var(--gold-soft);margin-top:5px;line-height:1.6}
+.tlhead .sw2{display:inline-block;margin-top:9px;font-size:11.5px;background:rgba(255,255,255,.12);border-radius:7px;padding:4px 10px;cursor:pointer}
+.tl{position:relative;padding-left:22px;margin-top:6px}
+.tl:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.node{position:relative;margin-bottom:12px}
+.node:before{content:"";position:absolute;left:-20px;top:16px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid #b8b2a6}
+.node.key:before{background:var(--gold);border-color:var(--gold)}
+.node.proc:before{border-color:var(--att)}
+.node.future:before{background:var(--dead);border-color:var(--dead)}
+.node .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.node .d{font-size:11.5px;color:var(--gold);font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.node .t{font-size:13.5px;color:var(--navy);font-weight:700;margin-top:3px}
+.node .x{font-size:12px;color:#4a5563;line-height:1.6;margin-top:4px}
+.node .evs{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.node .evs span{font-size:11px;background:var(--gold-soft);color:#7a5a1e;border-radius:6px;padding:3px 7px;cursor:pointer}
+
+/* 策略 */
+.casebar{background:var(--navy);color:#fff;border-radius:13px;padding:14px 16px;margin-bottom:12px}
+.casebar .t{font-size:15px;font-weight:600;line-height:1.5}
+.casebar .m{font-size:11.5px;color:var(--gold-soft);margin-top:5px;line-height:1.6}
+.casebar .sw2{display:inline-block;margin-top:9px;font-size:11.5px;background:rgba(255,255,255,.12);border-radius:7px;padding:4px 10px;cursor:pointer}
+.tabs2{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}
+.tabs2::-webkit-scrollbar{height:0}
+.tabs2 button{flex-shrink:0;font-size:12.5px;padding:7px 12px;border-radius:18px;border:1px solid var(--line);background:#fff;color:var(--navy2);cursor:pointer;position:relative}
+.tabs2 button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tabs2 button i{font-style:normal;display:inline-block;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:var(--dead);color:#fff;font-size:10px;margin-left:4px}
+.duo .col{border-radius:10px;padding:11px 12px;margin-top:8px}
+.duo .att{background:var(--att-bg)} .duo .def{background:var(--def-bg)}
+.duo .lb{font-size:12px;font-weight:700;margin-bottom:6px}
+.duo .att .lb{color:var(--att)} .duo .def .lb{color:var(--def)}
+.duo ul{padding-left:16px} .duo li{font-size:12.5px;color:#2c3642;line-height:1.7;margin-bottom:3px}
+.counter{font-size:12px;color:#2c3642;background:#fff;border-radius:7px;padding:7px 9px;margin-top:5px;line-height:1.6}
+table.chain{width:100%;border-collapse:collapse;font-size:12px}
+table.chain th{text-align:left;color:var(--muted);font-weight:600;padding:7px 4px;border-bottom:1px solid var(--line);font-size:11.5px}
+table.chain td{padding:9px 4px;border-bottom:1px solid #f0ede6;vertical-align:top;line-height:1.55;color:#2c3642}
+table.chain td .e{display:inline-block;font-size:11px;background:var(--gold-soft);color:#7a5a1e;border-radius:5px;padding:2px 6px;margin:0 3px 3px 0;cursor:pointer}
+table.chain td .sg{font-size:11px;color:var(--dead);display:block;margin-top:2px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}
+.three div{background:#faf9f6;border-radius:8px;padding:7px 8px}
+.three b{display:block;font-size:11px;color:var(--muted);font-weight:600}
+.three span{font-size:12px;font-weight:700}
+.three .y{color:var(--ok)} .three .n{color:var(--dead)} .three .p{color:var(--warn)}
+.opin{font-size:12.5px;line-height:1.75;color:#2c3642;background:var(--att-bg);border-radius:9px;padding:9px 11px;margin-top:8px}
+.opin b{color:var(--att)}
+.genbtn{width:100%;margin-top:10px;font-size:13px;padding:10px;border-radius:9px;border:1px dashed var(--gold);background:#fffaf0;color:#7a5a1e;cursor:pointer;font-weight:600}
+.risk{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f0ede6}
+.risk:last-child{border-bottom:0}
+.risk .ic{font-size:15px;width:20px;text-align:center;color:var(--gold)}
+.risk .tx{flex:1;font-size:12.5px;line-height:1.65;color:#2c3642}
+.risk .tx b{color:var(--navy)}
+
+/* 报告 */
+.done{text-align:center;padding:12px 0 14px}
+.done .ck{width:52px;height:52px;border-radius:50%;background:var(--ok-bg);color:var(--ok);font-size:26px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-weight:700}
+.report{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px}
+.report h3{font-size:16px;color:var(--navy);text-align:center}
+.report .sub{font-size:11.5px;color:var(--muted);text-align:center;margin:5px 0 12px}
+.report h5{font-size:13px;color:var(--navy);margin:14px 0 6px;padding-left:8px;border-left:3px solid var(--gold)}
+.report ul{padding-left:16px} .report li,.report p{font-size:12.5px;line-height:1.75;color:#2c3642}
+
+/* 底部弹层 / toast */
+.sheet{position:absolute;inset:0;background:rgba(14,22,36,.45);display:none;align-items:flex-end;z-index:20}
+.sheet .inner{background:var(--bg);width:100%;border-radius:20px 20px 0 0;padding:16px 16px 24px;max-height:82%;overflow-y:auto}
+.sheet .inner::-webkit-scrollbar{width:0}
+.sheet .hh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sheet .hh h3{font-size:15px;color:var(--navy)}
+.sheet .x{font-size:22px;color:var(--muted);cursor:pointer;line-height:1}
+.kv{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:10px}
+.kv .k{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:5px}
+.kv .v{font-size:13px;color:#2c3642;line-height:1.7}
+.srcblk .art{font-size:14px;font-weight:700;color:var(--navy);line-height:1.5}
+.srcblk .full{font-size:13px;line-height:1.8;color:#2c3642;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
+.srcblk .meta{font-size:12px;color:#4a5563}
+.srcblk .link{font-size:12px;color:var(--gold);margin-top:8px}
+.toast{position:absolute;left:50%;bottom:86px;transform:translateX(-50%) translateY(10px);background:rgba(22,36,59,.94);color:#fff;font-size:12.5px;padding:9px 16px;border-radius:20px;opacity:0;transition:all .25s;pointer-events:none;z-index:30;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+
+/* 登录 */
+.field input[type=tel],.field input[type=password]{width:100%;border:0;outline:0;font-size:14px;color:var(--ink);background:transparent;font-family:inherit}
+.irow{display:flex;align-items:center;gap:8px}
+.codebtn{font-size:12px;color:var(--gold);border:1px solid var(--gold);border-radius:7px;padding:5px 9px;white-space:nowrap;cursor:pointer;background:#fff;flex-shrink:0}
+.agree{display:flex;gap:7px;font-size:11.5px;color:var(--muted);line-height:1.6;margin:2px 2px 12px;align-items:flex-start;cursor:pointer}
+.agree input{margin-top:3px;accent-color:var(--navy)}
+.primary:disabled{opacity:.55;cursor:default}
+.hero .who{display:flex;justify-content:space-between;font-size:12px;color:var(--gold-soft);opacity:.9}
+.hero .who a{cursor:pointer;text-decoration:underline}
+
+
+body.embed .intro{display:none}
+/* ===== 网页端（桌面工作台）布局 ===== */
+@media (min-width:761px){
+body.web{padding:0;background:#ece8df;display:block;min-height:100vh}
+body.web .stage{display:block}
+body.web .intro{display:none}
+body.web .phone{width:100%;height:100vh;border:0;border-radius:0;box-shadow:none;display:grid;grid-template-columns:232px 1fr;grid-template-rows:56px 1fr;background:var(--bg)}
+body.web .bar{grid-column:1 / 3;height:56px;justify-content:flex-start;padding-left:250px;font-size:15px}
+body.web .bar:before{content:"策  诉讼策略工作台 · 网页版";position:absolute;left:20px;color:var(--gold-soft);font-size:14px;letter-spacing:.5px;white-space:pre}
+body.web .bar .back{left:226px}
+body.web .bar .act{right:28px;font-size:13px;border:1px solid rgba(243,233,214,.4);border-radius:8px;padding:6px 12px}
+body.web .tabs{position:static;grid-row:2;grid-column:1;height:auto;flex-direction:column;justify-content:flex-start;border-top:0;border-right:1px solid var(--line);padding:18px 12px;gap:4px;background:#fff}
+body.web .tabs > div{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;font-size:14px;padding:12px 14px;border-radius:10px}
+body.web .tabs > div.on{background:var(--navy);color:#fff}
+body.web .tabs .rd{position:static;margin-left:auto}
+body.web .screen{grid-row:2;grid-column:2;padding:28px 40px 60px}
+body.web .screen > *{max-width:960px;margin-left:auto;margin-right:auto}
+body.web .screen .case,body.web .screen .ev{max-width:960px}
+body.web #evlist{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+body.web #evlist .cnt,body.web #evlist .empty{grid-column:1 / 3}
+body.web .tl{max-width:760px}
+body.web .sheet{position:fixed;justify-content:flex-end;align-items:stretch}
+body.web .sheet .inner{width:520px;max-height:100%;border-radius:0;padding:24px}
+body.web .toast{position:fixed;bottom:40px}
+body.web .parse{max-width:520px}
+body.web .brand{padding-top:30px}
+body.web .hero .row .kp b{font-size:24px}
+}
+
+@media (max-width:760px){
+  body{padding:0;background:var(--bg)}
+  .intro{display:none}
+  .stage{display:block;width:100%}
+  .phone{width:100vw;height:100vh;height:100dvh;border:0;border-radius:0;box-shadow:none}
+  .bar{padding-top:env(safe-area-inset-top);height:calc(46px + env(safe-area-inset-top))}
+}
+</style>
+</head>
+<body class="web">
+<div class="stage">
+  <div class="intro">
+    <div class="logo">策</div>
+    <h1>诉讼策略工作台</h1>
+    <div class="en">LITIGATION WORKBENCH · DEMO</div>
+    <p>把<strong>案件材料整理</strong>和<strong>庭审策略生成</strong>放进同一个律师工作台：材料上传即脱敏，证据按案件入库可检索，时间线按案件生成，对方庭前突然补充的证据也能当晚出质证意见。</p>
+    <div>
+      <span class="tag">案件管理</span><span class="tag">证据链 ↔ 证据目录</span><span class="tag">攻防策略</span><span class="tag">质证意见</span>
+      <span class="tag new">新 · 证据库检索</span><span class="tag new">新 · 先选案件再出时间线</span><span class="tag new">新 · 上传自动脱敏</span><span class="tag new">新 · 账号登录</span><span class="tag new">新 · 证据目录自动编号</span><span class="tag new">新 · 不利点排查</span>
+    </div>
+    <div class="steps">
+      <h4>演示路线（可点击跳转）</h4>
+      <div class="s" data-s="login" onclick="jump('login')">① 登录</div>
+      <div class="s" data-s="home" onclick="jump('home')">② 案件首页 · 庭前预警</div>
+      <div class="s" data-s="mask" onclick="jump('mask')">③ 上传证据 · 自动脱敏</div>
+      <div class="s" data-s="evidence" onclick="jump('evidence')">④ 证据库检索（含录音 / 流水）</div>
+      <div class="s" data-s="timeline" onclick="jump('timeline')">⑤ 选择案件 → 时间线</div>
+      <div class="s" data-s="strategy" onclick="jump('strategy')">⑥ 证据链 · 目录 · 质证意见</div>
+      <div class="s" data-s="report" onclick="jump('report')">⑦ 不利点排查与策略报告</div>
+    </div>
+    <button class="reset" onclick="resetAll()">↺ 重置演示</button>
+    <div class="note">手机演示：用手机浏览器打开本页面，安卓选「安装应用 / 添加到主屏幕」，iPhone 用 Safari 点分享 →「添加到主屏幕」，即可像 App 一样全屏使用、断网可用。<br><br>全部为演示数据，人名、证件号、账号均为虚构。AI 输出仅为律师工作初稿，须人工核对。手机打开此页面会自动切换为全屏 App 视图。</div>
+  </div>
+
+  <div class="phone" id="phone">
+    <div class="bar"><span class="back" id="back" onclick="goBack()">‹</span><span id="barTitle">诉讼策略工作台</span><span class="act" id="barAct"></span></div>
+    <div class="screen" id="screen"></div>
+    <div class="tabs" id="tabs">
+      <div data-tab="home" onclick="switchTab('home')"><span class="ic">▤</span>案件</div>
+      <div data-tab="evidence" onclick="switchTab('evidence')"><span class="ic">▦</span>证据库<span class="rd" id="evDot"></span></div>
+      <div data-tab="timeline" onclick="switchTab('timeline')"><span class="ic">┇</span>时间线</div>
+      <div data-tab="strategy" onclick="switchTab('strategy')"><span class="ic">◇</span>策略</div>
+      <div data-tab="report" onclick="switchTab('report')"><span class="ic">▧</span>报告</div>
+    </div>
+    <div class="sheet" id="sheet"></div>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+// ================= 演示数据（全部虚构） =================
+var TODAY = new Date('2026-11-22T00:00:00');
+var BASE_CASES = [
+ {id:'C1', no:'CASE-2026-001', type:'民间借贷纠纷', role:'原告', title:'李某诉张某民间借贷纠纷', court:'某区人民法院', hearing:'2026-12-03 09:30', done:true,
+  goal:'主张返还本金 20 万元及逾期利息',
+  facts:'2025年3月，张某以资金周转为由向李某借款20万元，李某银行转账交付，张某出具借条，约定2025年9月30日归还。到期后多次催收未还。',
+  focus:[
+   {t:'借贷关系是否成立',lv:'高',why:'被告庭前提交证人证言，主张款项系合伙投资款，需先固定借贷合意与款项交付。',basis:'请求权基础：<b>借款返还请求权</b>。构成要件：①借贷合意 ②款项交付 ③到期未还。借条 E01 + 转账凭证 E02 相互印证。',
+    src:{law:'《中华人民共和国民法典》第六百六十七条',full:'借款合同是借款人向贷款人借款，到期返还借款并支付利息的合同。',org:'全国人民代表大会',eff:'现行有效'}},
+   {t:'被告主张的 5 万元是否为还款',lv:'高',why:'被告 11 月 18 日提交 5 万元转账截图，若被认定为还款将直接减少本金。',basis:'截图转账备注为「货款」，且转账时间早于借款发生日，与本案借款缺乏关联。',
+    src:{law:'最高人民法院关于适用《中华人民共和国民事诉讼法》的解释 第九十条',full:'当事人对自己提出的诉讼请求所依据的事实或者反驳对方诉讼请求所依据的事实，应当提供证据加以证明。',org:'最高人民法院',eff:'现行有效'}},
+   {t:'逾期利息如何计算',lv:'中',why:'借条未约定逾期利率，需按法定规则主张，避免主张过高被调整。',basis:'可自 2025-10-01 起参照合同成立时一年期 LPR 主张逾期利息。',
+    src:{law:'最高人民法院关于审理民间借贷案件适用法律若干问题的规定 第二十八条',full:'借贷双方对逾期利率有约定的，从其约定，但以不超过合同成立时一年期贷款市场报价利率四倍为限。',org:'最高人民法院',eff:'现行有效'}}
+  ],
+  ours:['以「借条原件 E01 + 银行转账凭证 E02」证明借贷合意与款项交付','以「微信催收记录 E03 + 律师函签收 E04」证明到期未还并中断诉讼时效','主张本金 20 万元 + 自 2025-10-01 起按 LPR 计算的逾期利息'],
+  opp:[{d:'抗辩一：款项为合伙投资款（证人证言 E06）',c:'证人未出庭、与被告系同事有利害关系；借条载明「借到」，微信中被告多次承诺「下月还钱」。'},
+       {d:'抗辩二：已归还 5 万元（转账截图 E05）',c:'备注为「货款」且发生于借款前；申请调取原告同期银行流水对照。'},
+       {d:'抗辩三：否认借条签名',c:'当庭出示原件；必要时申请笔迹鉴定，转账金额时间与借条一致可佐证。'}],
+  late:['当庭明确不同意 E06 作为证据使用，申请证人出庭接受询问','对 E05 要求被告提交银行盖章流水原件，否则不认可真实性','如法院接受补充证据，可申请延长举证期限补充反证'],
+  adverse:[{tx:'微信记录 E03 中，原告 2025-04 曾说「生意做起来了记得分我点」，可能被被告用来支持「合伙投资款」的说法。',ev:'E03',lv:'高',act:'庭前向当事人核实语境；准备说明这是朋友间玩笑，借条明确写的是「借到」。'},{tx:'原告在微信中说过「不着急，利息就算了」，可能影响逾期利息的主张。',ev:'E03',lv:'中',act:'只主张逾期后按 LPR 计算的逾期利息，不主张借期内利息。'}],
+  risks:[{ic:'⏳',tx:'<b>证据突袭</b>：被告于开庭前 12 天内两次补充证据，需当晚完成质证意见。',lv:'高'},{ic:'▣',tx:'<b>证据缺口</b>：反驳「已还款」缺少原告同期流水，建议庭前调取。',lv:'中'},{ic:'⚖',tx:'<b>利息主张</b>：未约定逾期利率，按 LPR 主张，避免被调减。',lv:'低'}],
+  claims:[{c:'借贷合意成立',ev:['E01','E03']},{c:'款项已交付 20 万元',ev:['E02']},{c:'到期未还、已催收',ev:['E03','E04','E18']},{c:'诉讼时效中断',ev:['E04','E18']},{c:'5 万元非还款',ev:['E19']},{c:'借条签名真实',ev:[],sg:'借条原件当庭核对；必要时申请笔迹鉴定'},{c:'款项性质为借款而非投资',ev:['E01'],sg:''}]},
+ {id:'C2', no:'CASE-2026-002', type:'买卖合同纠纷', role:'被告', title:'某建材公司诉某装饰公司买卖合同纠纷', court:'某区人民法院', hearing:'2026-12-10 14:00', done:true,
+  goal:'抗辩货物质量不合格，主张减少价款并驳回违约金',
+  facts:'2025年4月双方签订瓷砖采购合同，货款 38.6 万元。第二批货物到场后发现色差与开裂，我方在 7 日内书面提出异议并委托检测，结论为不合格。原告起诉主张全部货款及违约金。',
+  focus:[
+   {t:'货物质量是否符合约定',lv:'高',why:'质量是否合格决定我方能否主张减价，是本案核心。',basis:'第三方检测报告 E09 显示第二批抗折强度不达标，与合同约定的国标等级不符。',src:{law:'《中华人民共和国民法典》第五百八十二条',full:'履行不符合约定的，应当按照当事人的约定承担违约责任……受损害方根据标的的性质以及损失的大小，可以合理选择请求对方承担修理、重作、更换、退货、减少价款或者报酬等违约责任。',org:'全国人民代表大会',eff:'现行有效'}},
+   {t:'质量异议是否在检验期内提出',lv:'高',why:'原告必然主张我方未及时提出异议，需证明异议时间。',basis:'到货 2025-05-28，异议邮件 E10 发出于 2025-06-05，在合同约定的 10 日检验期内。',src:{law:'《中华人民共和国民法典》第六百二十一条',full:'当事人约定检验期限的，买受人应当在检验期限内将标的物的数量或者质量不符合约定的情形通知出卖人。',org:'全国人民代表大会',eff:'现行有效'}},
+   {t:'对账单能否视为认可货款',lv:'中',why:'原告庭前补充对账单 E11，主张我方已确认欠款金额。',basis:'对账单仅由业务员签字，未加盖公章，且签署时间早于检测结论。',src:{law:'《中华人民共和国民法典》第一百七十条',full:'执行法人或者非法人组织工作任务的人员，就其职权范围内的事项，以法人或者非法人组织的名义实施的民事法律行为，对法人或者非法人组织发生效力。',org:'全国人民代表大会',eff:'现行有效'}}
+  ],
+  ours:['以检测报告 E09 + 现场照片 E12 证明第二批货物不合格','以异议邮件 E10 证明在检验期内提出质量异议','主张就不合格部分减少价款，违约金因原告先违约不应支持'],
+  opp:[{d:'原告主张：对账单 E11 证明我方确认欠款 38.6 万元',c:'业务员无确认欠款权限，对账单未盖章，且不涉及质量问题的放弃。'},{d:'原告主张：检测为单方委托，不具证明力',c:'可当庭申请法院委托司法鉴定，并说明检测机构资质。'}],
+  late:['对 E11 质证时重点打「授权范围」与「签署时间早于检测」','当庭提出司法鉴定申请，防止检测报告被否定'],
+  adverse:[{tx:'送货单 E08 的签收栏写有「已验收」字样，对方会据此主张我方已认可质量。',ev:'E08',lv:'高',act:'说明签收时只能核对数量与外观，开裂属隐蔽瑕疵，且 8 日内已书面异议（E10）。'}],
+  risks:[{ic:'⚖',tx:'<b>检测报告证明力</b>：单方委托存在被质疑风险，建议准备鉴定申请。',lv:'中'},{ic:'▣',tx:'<b>业务员授权</b>：需提供岗位职责说明，否定其确认欠款的权限。',lv:'中'}],
+  claims:[{c:'第二批货物质量不合格',ev:['E09','E12']},{c:'异议在检验期内提出',ev:['E10']},{c:'合同约定质量标准',ev:['E07']},{c:'业务员无权确认欠款',ev:[],sg:'岗位职责说明 / 授权书'}]},
+ {id:'C3', no:'CASE-2026-003', type:'劳动争议', role:'原告', title:'王某诉某科技公司违法解除劳动合同纠纷', court:'某区人民法院', hearing:'2026-12-18 09:00', done:false,
+  goal:'确认违法解除，主张赔偿金（2N）',
+  facts:'王某 2022 年 3 月入职，2026 年 7 月公司以「绩效不合格、不能胜任」为由解除劳动合同，未经培训或调岗。仲裁部分支持，双方均起诉。',
+  focus:[
+   {t:'解除是否符合「不能胜任」的法定程序',lv:'高',why:'用人单位以不能胜任解除，须经培训或调岗后仍不能胜任。',basis:'公司未提供培训、调岗记录，仅有一次绩效 C 的考核表 E16。',src:{law:'《中华人民共和国劳动合同法》第四十条',full:'劳动者不能胜任工作，经过培训或者调整工作岗位，仍不能胜任工作的，用人单位提前三十日以书面形式通知劳动者本人或者额外支付劳动者一个月工资后，可以解除劳动合同。',org:'全国人民代表大会常务委员会',eff:'现行有效'}},
+   {t:'员工手册能否作为解除依据',lv:'中',why:'对方庭前补充员工手册 E17，主张规章制度已公示。',basis:'需审查制定是否经民主程序、是否向王某公示送达。',src:{law:'《中华人民共和国劳动合同法》第四条',full:'用人单位在制定、修改或者决定有关劳动报酬、工作时间……等直接涉及劳动者切身利益的规章制度或者重大事项时，应当经职工代表大会或者全体职工讨论……',org:'全国人民代表大会常务委员会',eff:'现行有效'}}
+  ],
+  ours:['以解除通知 E14 固定解除理由为「不能胜任」','以缺少培训 / 调岗证据主张程序违法','以工资流水 E15 计算 12 个月平均工资，主张 2N 赔偿金'],
+  opp:[{d:'对方主张：员工手册规定连续绩效 C 可解除',c:'手册签收页签署日期晚于解除日，且未经民主程序。'}],
+  late:['对 E17 重点质证签收时间与民主程序'],
+  adverse:[{tx:'劳动合同 E13 附件约定「连续两次绩效 C 可调岗降薪」，对方可能据此主张解除有制度依据。',ev:'E13',lv:'中',act:'约定内容是调岗降薪而非解除，且王某只有一次绩效 C。'}],
+  risks:[{ic:'⏳',tx:'<b>赔偿金基数</b>：需核对是否包含年终奖，避免基数被压低。',lv:'中'}],
+  claims:[{c:'劳动关系及入职时间',ev:['E13']},{c:'解除理由为不能胜任',ev:['E14']},{c:'平均工资基数',ev:['E15']},{c:'未经培训或调岗',ev:[],sg:'申请对方提交培训记录（举证责任在用人单位）'}]}
+];
+var BASE_EV = [
+ {id:'E01',c:'C1',name:'借条（原件扫描）',type:'书证',side:'我方',round:1,date:'2025-03-12',purpose:'证明双方存在借贷合意，借款 20 万元，约定 2025-09-30 归还',text:'今借到李*人民币贰拾万元整（¥200,000），于2025年9月30日前归还。借款人：张*，身份证号 110108********7890。',tags:['借条','借款合意','原件'],mask:4},
+ {id:'E02',c:'C1',name:'银行转账凭证',type:'书证',side:'我方',round:1,date:'2025-03-12',purpose:'证明 20 万元已实际交付给被告',text:'付款账户 6222 **** **** *123，收款人 张*，金额 200,000.00，附言：借款。',tags:['转账','款项交付','银行'],mask:3},
+ {id:'E03',c:'C1',name:'微信聊天及催收记录',type:'电子数据',side:'我方',round:1,date:'2025-10-08',purpose:'证明到期后多次催收，被告承诺「下月还钱」',text:'张*：「这个月手头紧，下月一定还钱。」李*：「借你的20万已经到期了。」',tags:['催收','微信','还款承诺'],mask:2},
+ {id:'E04',c:'C1',name:'催款律师函及签收回执',type:'书证',side:'我方',round:2,date:'2025-11-20',purpose:'证明原告主张权利，诉讼时效中断',text:'致张*：请于收函后 15 日内归还借款本金 20 万元。签收人：张*，签收日期 2025-11-22。',tags:['律师函','时效中断','催收'],mask:2},
+ {id:'E05',c:'C1',name:'被告提交：5 万元转账截图',type:'电子数据',side:'对方',round:2,date:'2026-11-18',late:true,purpose:'被告拟证明已归还部分借款 5 万元',text:'转账 50,000.00 元，收款人 李*，备注：货款，时间 2025-02-26。',tags:['还款','转账','截图'],mask:2,
+  op:{z:['有异议','p','截图非银行盖章流水'],h:['无异议','y',''],g:['有异议','n','备注为货款，早于借款日'],t:'对真实性有异议：截图非银行出具的盖章流水，无法核实；对关联性有异议：转账备注为「货款」，发生于 2025-02-26，早于本案借款日，与本案借款无关，不能证明被告已还款。'}},
+ {id:'E06',c:'C1',name:'被告提交：证人李某某书面证言',type:'证人证言',side:'对方',round:3,date:'2026-11-21',late:true,purpose:'被告拟证明 20 万元系合伙投资款而非借款',text:'证人称：「听张*说过，那笔钱是两人合伙做生意的投资款。」证人与张*系同事。',tags:['证人证言','投资款','庭前新增'],mask:2,
+  op:{z:['有异议','n','证人未出庭'],h:['有异议','p','超过举证期限'],g:['有异议','n','传来证据'],t:'证人未出庭作证，书面证言不能单独作为认定事实的依据；证人与被告系同事，存在利害关系；证言内容为「听张某说」，属传来证据，证明力极低；且该证据于开庭前夜提交，已超过举证期限，请求法庭不予采纳。'},opDone:false},
+ {id:'E18',c:'C1',name:'电话录音（方言，已转写）',type:'录音',side:'我方',round:2,date:'2025-12-05',pg:4,purpose:'证明被告认可欠款 20 万元未归还，诉讼时效再次中断',text:'[录音 03:12 · 方言转写，置信度 0.91] 张*：「那 20 万我肯定还，就是现在手上没钱，年后一定给你。」李*：「你都拖了两个多月了。」',tags:['录音','转写','自认','时效中断'],mask:1},
+ {id:'E19',c:'C1',name:'原告 2025 年银行流水（Excel 312 笔）',type:'财务流水',side:'我方',round:2,date:'2026-11-20',pg:6,purpose:'证明被告所称 5 万元系 2025-02-26 的货款往来，与本案借款无关',text:'流水已解析 312 笔。2025-02-26 收到 张* 50,000.00 元，摘要「货款」，对应 2025-02-20 销售合同；2025-03-12 转出 200,000.00 元至 张*，附言「借款」；借款后至今无张*入账记录。',tags:['银行流水','Excel','还款','货款'],mask:2},
+ {id:'E07',c:'C2',name:'瓷砖采购合同',type:'书证',side:'我方',round:1,date:'2025-04-02',purpose:'证明约定质量标准为国标一等品、检验期 10 日',text:'第六条 质量标准：符合 GB/T 4100 一等品。第八条 买方应于到货后 10 日内检验并书面提出异议。',tags:['合同','质量标准','检验期'],mask:3},
+ {id:'E08',c:'C2',name:'原告提交：送货单（3 份）',type:'书证',side:'对方',round:1,date:'2025-05-28',purpose:'原告拟证明已交付全部货物',text:'收货人 陈*，电话 139****2201，第二批 1,200 箱，收货日期 2025-05-28。',tags:['送货单','交付'],mask:2,
+  op:{z:['无异议','y',''],h:['无异议','y',''],g:['部分认可','p','仅证明交付'],t:'对真实性、合法性无异议；送货单仅能证明货物交付数量，不能证明货物质量合格，收货人签收不代表验收合格。'},opDone:true},
+ {id:'E09',c:'C2',name:'第三方质量检测报告',type:'鉴定意见',side:'我方',round:1,date:'2025-06-20',purpose:'证明第二批瓷砖抗折强度不达标',text:'样品编号 2025-0618-03，抗折强度 21.4MPa，低于标准值 27MPa，判定：不合格。',tags:['检测','质量','不合格'],mask:0},
+ {id:'E10',c:'C2',name:'质量异议邮件',type:'电子数据',side:'我方',round:1,date:'2025-06-05',purpose:'证明在 10 日检验期内书面提出质量异议',text:'发件人 wang***@example.com：第二批货物存在明显色差和开裂，请贵司于 3 日内派人核查。',tags:['异议','邮件','检验期'],mask:1},
+ {id:'E11',c:'C2',name:'原告补充：对账单',type:'书证',side:'对方',round:2,date:'2026-11-19',late:true,purpose:'原告拟证明我方确认欠款 38.6 万元',text:'截至 2025-06-01 未付货款 386,000 元。确认人：刘*（业务员签字，未盖章）。',tags:['对账单','欠款确认','庭前新增'],mask:1,
+  op:{z:['无异议','y',''],h:['有异议','p','超过举证期限'],g:['有异议','n','签字人无授权'],t:'对签名真实性无异议，但签字人刘某系业务员，无权代表公司确认欠款；对账单未加盖公章，签署时间早于质量检测结论，不能视为我方放弃质量抗辩。'},opDone:false},
+ {id:'E12',c:'C2',name:'现场照片（色差、开裂）',type:'电子数据',side:'我方',round:2,date:'2026-11-15',purpose:'直观证明第二批货物存在色差与开裂',text:'照片 18 张，拍摄于施工现场 2025-06-03，含地址水印（已脱敏）。',tags:['照片','质量','现场'],mask:1},
+ {id:'E13',c:'C3',name:'劳动合同',type:'书证',side:'我方',round:1,date:'2022-03-01',purpose:'证明劳动关系及入职时间',text:'甲方：某科技公司；乙方：王*，身份证号 3201**********2234；合同期限 2022-03-01 至 2027-02-28。',tags:['劳动合同','入职'],mask:2},
+ {id:'E14',c:'C3',name:'解除劳动合同通知书',type:'书证',side:'我方',round:1,date:'2026-07-15',purpose:'证明公司以「不能胜任」为由单方解除',text:'王*：因你 2026 年上半年绩效考核为 C，不能胜任工作，公司决定自 2026-07-15 起解除劳动合同。',tags:['解除','不能胜任','通知'],mask:1},
+ {id:'E15',c:'C3',name:'工资银行流水（12 个月）',type:'书证',side:'我方',round:1,date:'2026-07-10',purpose:'证明解除前 12 个月平均工资',text:'账户 6217 **** **** *556，月均入账 18,650.00 元。',tags:['工资','流水','赔偿基数'],mask:1},
+ {id:'E16',c:'C3',name:'对方提交：绩效考核表',type:'书证',side:'对方',round:1,date:'2026-06-30',purpose:'对方拟证明王某绩效不合格',text:'考核周期 2026H1，结果 C，考核人 赵*。',tags:['绩效','考核'],mask:1,
+  op:{z:['无异议','y',''],h:['无异议','y',''],g:['有异议','p','单次考核'],t:'仅为单次考核结果，不能证明「不能胜任」，且公司未提供培训或调岗记录，不满足法定解除条件。'},opDone:true},
+ {id:'E17',c:'C3',name:'对方补充：员工手册及签收记录',type:'书证',side:'对方',round:2,date:'2026-11-20',late:true,purpose:'对方拟证明规章制度已公示，连续绩效 C 可解除',text:'签收人 王*，签收日期 2026-07-20。第五章 第十二条 绩效 C 者公司有权解除。',tags:['员工手册','规章制度','庭前新增'],mask:1,
+  op:{z:['有异议','p','签收真实性待核'],h:['有异议','n','未经民主程序'],g:['有异议','n','签收晚于解除'],t:'签收日期为 2026-07-20，晚于解除日 2026-07-15，不能证明解除前已公示；对方未提供职工代表大会或全体职工讨论的记录，该手册不能作为解除依据。'},opDone:false}
+];
+var BASE_TL = {
+ C1:[{d:'2025-02-26',t:'被告向原告转账 5 万元',x:'摘要为「货款」，对应另一笔销售合同，发生在借款之前。',ev:['E19']},
+     {d:'2025-03-10',t:'借款协商',x:'张某微信提出借款 20 万元用于资金周转。',ev:['E03']},
+     {d:'2025-03-12',t:'出具借条并转账交付',x:'张某出具借条，李某当日银行转账 20 万元。',ev:['E01','E02'],key:1},
+     {d:'2025-04 (日期不明)',t:'双方对款项性质说法冲突',x:'被告称 20 万元是合伙投资款，原告称是借款；证人证言所述事件无具体日期。',ev:['E06','E03'],conflict:1,fuzzy:1},
+     {d:'2025-09-30',t:'约定还款期届满',x:'借条约定还款日，张某未归还。',ev:['E01'],key:1},
+     {d:'2025-10-08',t:'首次催收',x:'微信催收，张某承诺下月还款。',ev:['E03']},
+     {d:'2025-11-20',t:'发送催款律师函',x:'诉讼时效中断。',ev:['E04'],fd:'签收回执形成于 2025-11-22'},
+     {d:'2025-12-05',t:'电话中被告承认欠款',x:'录音已转写，被告表示「年后一定给你」，时效再次中断。',ev:['E18'],key:1},
+     {d:'2026-09-15',t:'提起诉讼',x:'向某区人民法院起诉。',proc:1,key:1},
+     {d:'2026-11-18',t:'被告提交还款截图',x:'被告第一次补充证据（5 万元转账）。',ev:['E05'],proc:1},
+     {d:'2026-11-21',t:'被告庭前补充证人证言',x:'开庭前 12 天第二次补充证据，需尽快出质证意见。',ev:['E06'],proc:1,key:1,fd:'证言形成于 2026-11-20，所述事件发生在 2025-04'},
+     {d:'2026-12-03',t:'开庭',x:'09:30 某区人民法院第 3 法庭。',proc:1,key:1,future:1}],
+ C2:[{d:'2025-04-02',t:'签订采购合同',x:'约定国标一等品，检验期 10 日。',ev:['E07'],key:1},
+     {d:'2025-05-28',t:'第二批货物送达',x:'1,200 箱到场，现场签收。',ev:['E08']},
+     {d:'2025-06-03',t:'发现色差与开裂',x:'施工现场拍照留存。',ev:['E12']},
+     {d:'2025-06-05',t:'书面提出质量异议',x:'到货后第 8 天，在检验期内。',ev:['E10'],key:1},
+     {d:'2025-06-20',t:'检测结论：不合格',x:'抗折强度低于标准值。',ev:['E09'],key:1},
+     {d:'2026-08-20',t:'原告起诉',x:'主张货款 38.6 万元及违约金。',proc:1},
+     {d:'2026-11-19',t:'原告补充对账单',x:'庭前补充证据，主张已确认欠款。',ev:['E11'],proc:1,key:1},
+     {d:'2026-12-10',t:'开庭',x:'14:00 某区人民法院。',proc:1,key:1,future:1}],
+ C3:[{d:'2022-03-01',t:'入职',x:'签订五年期劳动合同。',ev:['E13']},
+     {d:'2026-06-30',t:'绩效考核为 C',x:'2026 上半年考核结果。',ev:['E16']},
+     {d:'2026-07-15',t:'公司单方解除',x:'以不能胜任为由，未经培训或调岗。',ev:['E14'],key:1},
+     {d:'2026-07-20',t:'员工手册签收（对方主张）',x:'签收时间晚于解除日。',ev:['E17']},
+     {d:'2026-08-01',t:'申请劳动仲裁',x:'主张违法解除赔偿金。',proc:1},
+     {d:'2026-10-20',t:'仲裁裁决',x:'部分支持，双方均不服。',proc:1,key:1},
+     {d:'2026-11-20',t:'对方补充员工手册',x:'庭前补充证据。',ev:['E17'],proc:1},
+     {d:'2026-12-18',t:'开庭',x:'09:00 某区人民法院。',proc:1,key:1,future:1}]
+};
+// 待上传的样例文件（含虚构敏感信息）
+var RAWS = {
+ C1:{file:'借款补充协议.pdf',name:'借款补充协议（被告签字）',purpose:'证明被告确认收到 20 万元借款并承诺分期归还，反驳「投资款」抗辩',tags:['补充协议','还款承诺','借款合意'],
+  text:'借款补充协议\n出借人：李明，身份证号 110105198806123456，电话 13912345678\n借款人：张伟，身份证号 110108199002157890，电话 13812345678\n住址：北京市朝阳区建国路88号3单元502室\n收款账户：中国工商银行 6222021234567890123\n双方确认：借款人张伟于2025年3月12日收到借款人民币贰拾万元整，约定于2026年1月31日前分两期归还。',
+  items:{name:['李明','张伟'],id:['110105198806123456','110108199002157890'],phone:['13912345678','13812345678'],addr:['北京市朝阳区建国路88号3单元502室'],bank:['6222021234567890123']},code:{'李明':'出借人A','张伟':'借款人B'}},
+ C2:{file:'岗位职责说明.pdf',name:'业务员岗位职责说明',purpose:'证明业务员刘某无权代表公司确认欠款',tags:['岗位职责','授权范围','对账单'],
+  text:'岗位职责说明\n员工：刘洋，身份证号 320102199105163318，电话 13770011234\n岗位：销售业务员\n职责：客户拜访、订单跟进、送货协调。\n权限说明：无权代表公司签署对账、确认欠款或放弃任何权利。\n办公地址：南京市鼓楼区中山北路200号12楼',
+  items:{name:['刘洋'],id:['320102199105163318'],phone:['13770011234'],addr:['南京市鼓楼区中山北路200号12楼'],bank:[]},code:{'刘洋':'业务员C'}},
+ C3:{file:'培训记录查询回函.pdf',name:'公司人事部回函（无培训记录）',purpose:'证明公司未对王某进行培训或调岗',tags:['培训','调岗','程序违法'],
+  text:'人事部回函\n关于员工王磊（身份证号 320106199308082234，电话 15850506789）的培训记录查询：\n经查，2026年1月至7月期间，公司未安排该员工参加岗位培训，亦未调整其工作岗位。\n工资卡：招商银行 6217001234567890556',
+  items:{name:['王磊'],id:['320106199308082234'],phone:['15850506789'],addr:[],bank:['6217001234567890556']},code:{'王磊':'劳动者D'}}
+};
+var CAT = [{k:'name',l:'姓名'},{k:'id',l:'身份证号'},{k:'phone',l:'手机号'},{k:'addr',l:'住址'},{k:'bank',l:'银行账号'}];
+
+var CASES, EV, TL, S;
+function init(){
+  CASES = JSON.parse(JSON.stringify(BASE_CASES));
+  EV = JSON.parse(JSON.stringify(BASE_EV));
+  TL = JSON.parse(JSON.stringify(BASE_TL));
+  S = {view:'home', hist:[], cur:'C1', tl:null, tlGen:{}, tlF:'all', q:'', fCase:'all', fType:'全部', fSide:'全部', fLate:false, stTab:'focus', checked:{}, flagged:{}, mask:null, fresh:null, newFiles:['借条.jpg','银行转账凭证.pdf','微信催收记录.png'], role:'原告', lg:'code'};
+  S.user=loadUser(); if(!S.user)S.view='login';
+}
+
+// ================= 工具函数 =================
+var screen=document.getElementById('screen'), sheetEl=document.getElementById('sheet'), toastEl=document.getElementById('toast'), toastTimer;
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){toastEl.classList.remove('show')},2300)}
+function C(id){return CASES.find(function(c){return c.id===id})}
+function E(id){return EV.find(function(e){return e.id===id})}
+function evOf(cid){return EV.filter(function(e){return e.c===cid})}
+function days(d){return Math.round((new Date(d.slice(0,10)+'T00:00:00')-TODAY)/864e5)}
+function lateOf(cid){return EV.filter(function(e){return e.late&&(!cid||e.c===cid)})}
+function pendingOp(cid){return EV.filter(function(e){return e.op&&!e.opDone&&(!cid||e.c===cid)})}
+function lv(l){return l==='高'?'hi':(l==='中'?'mid':'low')}
+function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+function hl(s){if(!S.q)return s;return s.replace(new RegExp('('+reEsc(S.q)+')','gi'),'<mark>$1</mark>')}
+function setBar(t,back,act,actFn){document.getElementById('barTitle').textContent=t;document.getElementById('back').style.display=back?'block':'none';var a=document.getElementById('barAct');a.textContent=act||'';a.onclick=actFn||null}
+function setTabs(active){var hide=['new','mask','parse','login'].indexOf(S.view)>=0;document.getElementById('tabs').style.display=hide?'none':'flex';document.querySelectorAll('.tabs > div').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-tab')===active)});document.getElementById('evDot').style.display=pendingOp().length?'block':'none'}
+function setStep(s){document.querySelectorAll('.steps .s').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-s')===s)})}
+function go(v,keep){if(!keep&&S.view!==v)S.hist.push(S.view);S.view=v;render();screen.scrollTop=0}
+function goBack(){if(S.view==='timeline'&&S.tl){S.tl=null;render();return}var v=S.hist.pop()||'home';S.view=v;render()}
+function switchTab(t){S.hist=[];if(t==='timeline'&&S.view==='timeline'&&S.tl){S.tl=null}S.view=t;render();screen.scrollTop=0}
+function closeSheet(){sheetEl.style.display='none'}
+sheetEl.addEventListener('click',function(e){if(e.target===sheetEl)closeSheet()});
+function openSheet(title,html){sheetEl.style.display='flex';sheetEl.innerHTML='<div class="inner"><div class="hh"><h3>'+title+'</h3><span class="x" onclick="closeSheet()">×</span></div>'+html+'</div>'}
+
+function render(){
+  var v=S.view;
+  if(v==='home')renderHome(); else if(v==='new')renderNew(); else if(v==='mask')renderMask();
+  else if(v==='parse')renderParse(); else if(v==='evidence')renderEvidence(); else if(v==='timeline')renderTimeline();
+  else if(v==='strategy')renderStrategy(); else if(v==='report')renderReport();
+  else if(v==='login')renderLogin();
+}
+
+// ================= 1 案件首页 =================
+function caseCard(c,opts){
+  var d=days(c.hearing), n=evOf(c.id).length, lt=lateOf(c.id).length;
+  return '<div class="case'+(opts&&opts.sel?' sel':'')+'" onclick="'+(opts&&opts.click?opts.click:'openCase(\''+c.id+'\')')+'">'+
+   '<div class="tt">'+c.title+'</div>'+
+   '<div class="mt"><span>'+c.no+'</span><span class="bd '+(c.role==='原告'?'att':'def')+'">'+c.role+'</span><span class="bd low">'+c.type+'</span>'+(c.done?'<span class="bd ok">策略已生成</span>':'<span class="bd mid">待生成策略</span>')+'</div>'+
+   '<div class="ft"><span class="cd">开庭 '+c.hearing.slice(5,10)+' · <b>还有 '+d+' 天</b></span><span class="cd">证据 '+n+(lt?' · <b>庭前新增 '+lt+'</b>':'')+'</span></div>'+
+  '</div>';
+}
+function renderHome(){
+  setStep('home');setTabs('home');setBar('诉讼策略工作台',false,'＋ 新建',function(){go('new')});
+  var late=lateOf(), pend=pendingOp();
+  screen.innerHTML=
+  '<div class="hero"><div class="who"><span>'+(S.user?S.user.name:'访客')+' · 2026 年 11 月 22 日 周日</span><a onclick="logout()">退出</a></div><div class="big">未来 30 天有 3 件案件开庭，<br>对方新增 '+late.length+' 份证据待质证</div>'+
+   '<div class="row"><div class="kp" onclick="switchTab(\'home\')"><b>'+CASES.length+'</b><span>在办案件</span></div><div class="kp" onclick="goEvidence({})"><b>'+EV.length+'</b><span>证据库</span></div><div class="kp" onclick="goEvidence({late:true})"><b>'+pend.length+'</b><span>待出质证意见</span></div></div></div>'+
+  (pend.length?'<div class="alert" onclick="goEvidence({late:true})"><div class="t"><b>庭前证据突袭预警</b>'+pend.map(function(e){return C(e.c).title.slice(0,8)+'…：'+e.name.replace(/^.*：/,'')}).slice(0,2).join('；')+'</div><span class="go">去质证 ›</span></div>':'')+
+  '<div class="fakesearch" onclick="goEvidence({focus:true})">⌕　搜索证据：名称、证明目的、原文关键词…</div>'+
+  '<div class="sec">我的案件<a onclick="go(\'new\')">＋ 新建案件</a></div>'+
+  CASES.map(function(c){return caseCard(c)}).join('');
+}
+function openCase(id){
+  S.cur=id;
+  var c=C(id);
+  openSheet(c.title,
+   '<div class="kv"><div class="k">案件信息</div><div class="v">'+c.no+' · '+c.type+' · 我方'+c.role+'<br>'+c.court+' · 开庭 '+c.hearing+'<br>目标：'+c.goal+'</div></div>'+
+   '<button class="primary" onclick="closeSheet();S.hist=[\'home\'];S.view=\'strategy\';render()">'+(c.done?'查看庭审策略':'生成庭审策略')+'</button>'+
+   '<button class="ghost" onclick="closeSheet();S.hist=[\'home\'];S.tl=\''+id+'\';S.view=\'timeline\';render()">查看案件时间线</button>'+
+   '<button class="ghost" onclick="closeSheet();goEvidence({c:\''+id+'\'})">查看本案证据（'+evOf(id).length+'）</button>'+
+   '<button class="ghost" onclick="closeSheet();startUpload(\''+id+'\')">＋ 补充上传证据</button>');
+}
+
+// ================= 2 新建案件 =================
+function renderNew(){
+  setStep('mask');setTabs('');setBar('新建案件',true);
+  screen.innerHTML=
+  '<div class="brand"><div class="lg">策</div><h2>新建案件</h2><p>用大白话描述案情，上传材料后先脱敏，再生成策略</p></div>'+
+  '<div class="field"><label>案由 / 案件类型</label><select id="fType"><option>民间借贷纠纷</option><option>买卖合同纠纷</option><option>劳动争议</option><option>离婚纠纷</option><option>交通事故人身损害赔偿</option></select></div>'+
+  '<div class="field"><label>我方诉讼地位与目标</label><div class="seg">'+['原告','被告','第三人'].map(function(r){return '<button class="'+(S.role===r?'on':'')+'" onclick="S.role=\''+r+'\';renderNew()">'+r+'</button>'}).join('')+'</div><input type="text" id="fGoal" value="主张返还借款本金 15 万元及逾期利息" style="margin-top:10px;border-top:1px solid #f0ede6;padding-top:10px"></div>'+
+  '<div class="field"><label>案件事实描述</label><textarea id="fFacts">2025年6月，朋友刘某以装修为由向我借款15万元，我通过银行转账交付，刘某出具借条，约定2026年6月归还。到期后多次催收未还。</textarea></div>'+
+  '<div class="field"><label>案件材料</label><div class="up">'+S.newFiles.map(function(f){return '<span class="filechip">▣ '+f+'</span>'}).join('')+'<span class="upbtn" onclick="addNewFile()">＋ 上传材料</span></div></div>'+
+  '<div class="hint">● 上传后自动识别并脱敏：姓名、身份证号、手机号、住址、银行账号。原文仅本机加密留存，不进入模型。</div>'+
+  '<button class="primary" onclick="newToMask()">下一步：脱敏核对</button>';
+}
+function addNewFile(){if(S.newFiles.length>=5){toast('演示最多添加 5 份材料');return}S.newFiles.push('证据材料'+(S.newFiles.length+1)+'.pdf');renderNew();toast('已添加材料（演示）')}
+function newToMask(){
+  S.newCase={type:document.getElementById('fType').value,goal:document.getElementById('fGoal').value,facts:document.getElementById('fFacts').value};
+  S.mask={ctx:'new',cid:'C1',mode:'mask',show:'after',on:{name:1,id:1,phone:1,addr:1,bank:1}};
+  go('mask');
+}
+
+// ================= 3 脱敏 =================
+function startUpload(cid){S.mask={ctx:'lib',cid:cid,mode:'mask',show:'after',on:{name:1,id:1,phone:1,addr:1,bank:1}};S.hist.push(S.view);S.view='mask';render();screen.scrollTop=0}
+function repl(cat,v,i,mode,raw){
+  if(mode==='code'){ if(cat==='name')return raw.code[v]||('当事人'+(i+1)); return '['+({id:'身份证号',phone:'电话',addr:'住址',bank:'账户'})[cat]+'#'+(i+1)+']'; }
+  if(mode==='gen'){ if(cat==='name')return v[0]+'某'; if(cat==='addr'){var m=v.match(/^(.*?[市])(.*?[区县])/);return m?m[1]+m[2]:'[住址]'} return '['+({id:'身份证号',phone:'手机号',bank:'银行账号'})[cat]+']'; }
+  if(cat==='name')return v[0]+new Array(v.length).join('*');
+  if(cat==='id')return v.slice(0,6)+'********'+v.slice(-4);
+  if(cat==='phone')return v.slice(0,3)+'****'+v.slice(-4);
+  if(cat==='addr'){var m2=v.match(/^(.*?[市])(.*?[区县])/);return (m2?m2[1]+m2[2]:'')+'****'}
+  if(cat==='bank')return v.slice(0,4)+' **** **** *'+v.slice(-3);
+  return v;
+}
+function maskText(raw,mk,showOrig){
+  var pairs=[];
+  CAT.forEach(function(ct){ if(!mk.on[ct.k])return; (raw.items[ct.k]||[]).forEach(function(v,i){pairs.push({v:v,r:repl(ct.k,v,i,mk.mode,raw)})}) });
+  pairs.sort(function(a,b){return b.v.length-a.v.length});
+  var t=raw.text, toks=[];
+  pairs.forEach(function(p){ t=t.split(p.v).join('\u0001'+toks.length+'\u0002'); toks.push(p); });
+  t=t.replace(/[<>]/g,'');
+  t=t.replace(/\u0001(\d+)\u0002/g,function(_,n){var p=toks[+n];return showOrig?'<span class="o">'+p.v+'</span>':'<span class="m">'+p.r+'</span>'});
+  return {html:t,count:(function(){var c=0;pairs.forEach(function(p){c+=raw.text.split(p.v).length-1});return c})(),plain:t.replace(/<[^>]+>/g,'')};
+}
+function renderMask(){
+  setStep('mask');setTabs('');setBar('证据脱敏',true);
+  var mk=S.mask, raw=RAWS[mk.cid], c=C(mk.cid), total=0, cats=0;
+  CAT.forEach(function(ct){var n=(raw.items[ct.k]||[]).length;if(n){cats++;raw.items[ct.k].forEach(function(v){total+=raw.text.split(v).length-1})}});
+  var res=maskText(raw,mk,mk.show==='before');
+  screen.innerHTML=
+  '<div class="mhead"><div class="f"><b>▣ '+(mk.ctx==='new'?'借条.jpg 等 '+S.newFiles.length+' 份材料':raw.file)+'</b><span class="bd ok">OCR 完成</span></div>'+
+   '<div class="s">'+(mk.ctx==='lib'?'归属案件：'+c.title+'<br>':'以下展示其中 1 份的识别结果<br>')+'识别到 <b>'+cats+' 类 '+total+' 处</b>敏感信息，已默认全部脱敏</div></div>'+
+  '<div class="field"><label>脱敏方式</label><div class="seg sm">'+[['mask','掩码 138****5678'],['code','代号 当事人A'],['gen','泛化 张某']].map(function(m){return '<button class="'+(mk.mode===m[0]?'on':'')+'" onclick="S.mask.mode=\''+m[0]+'\';renderMask()">'+m[1]+'</button>'}).join('')+'</div></div>'+
+  '<div class="field" style="padding:4px 14px"><label style="margin:10px 0 0">识别结果（可逐类关闭）</label>'+
+   CAT.filter(function(ct){return (raw.items[ct.k]||[]).length}).map(function(ct){var vs=raw.items[ct.k];return '<div class="cat"><div class="l"><b>'+ct.l+'<em>'+vs.length+' 项</em></b><div>'+vs[0]+' → '+(mk.on[ct.k]?repl(ct.k,vs[0],0,mk.mode,raw):'不脱敏')+'</div></div><div class="sw '+(mk.on[ct.k]?'on':'')+'" onclick="S.mask.on.'+ct.k+'=!S.mask.on.'+ct.k+';renderMask()"></div></div>'}).join('')+
+  '</div>'+
+  '<div class="seg sm" style="margin-top:4px"><button class="'+(mk.show==='after'?'on':'')+'" onclick="S.mask.show=\'after\';renderMask()">脱敏后预览</button><button class="'+(mk.show==='before'?'on':'')+'" onclick="S.mask.show=\'before\';renderMask()">原文对照</button></div>'+
+  '<div class="doc">'+res.html+'</div>'+
+  '<div class="lock">◆ 原文加密保存在本机，仅律师本人可解密查看；送入 AI 分析、证据库检索、导出报告均使用脱敏后文本。每次脱敏留有操作记录。</div>'+
+  '<button class="primary" onclick="confirmMask()">'+(mk.ctx==='new'?'确认脱敏，生成案件策略':'确认脱敏并存入证据库')+'</button>';
+}
+function confirmMask(){
+  var mk=S.mask, raw=RAWS[mk.cid], res=maskText(raw,mk,false);
+  if(mk.ctx==='lib'){
+    var mine=evOf(mk.cid), rd=Math.max.apply(null,mine.map(function(e){return e.round}))+1;
+    var nid='E'+(EV.length+1<10?'0':'')+(EV.length+1);
+    EV.push({id:nid,c:mk.cid,name:raw.name,type:'书证',side:'我方',round:rd,date:'2026-11-22',purpose:raw.purpose,text:res.plain.replace(/\n/g,' '),tags:raw.tags,mask:res.count});
+    var cl=C(mk.cid).claims.find(function(x){return !x.ev.length}); if(cl){cl.ev.push(nid);}
+    TL[mk.cid].splice(TL[mk.cid].length-1,0,{d:'2026-11-22',t:'我方补充证据',x:raw.name+'（已脱敏 '+res.count+' 处）',ev:[nid],proc:1});
+    S.fresh=nid; S.q=''; S.fCase=mk.cid; S.fType='全部'; S.fSide='全部'; S.fLate=false; S.hist=[]; S.view='evidence'; render(); screen.scrollTop=0;
+    toast('已脱敏 '+res.count+' 处，作为第 '+rd+' 轮证据入库');
+  } else {
+    var nc=JSON.parse(JSON.stringify(C('C1')));
+    nc.id='C4'; nc.no='CASE-2026-004'; nc.title='新建 · 刘某借款纠纷（'+S.newCase.type+'）'; nc.type=S.newCase.type; nc.role=S.role==='第三人'?'第三人':S.role; nc.goal=S.newCase.goal; nc.facts=S.newCase.facts; nc.hearing='2027-01-12 09:30'; nc.done=true;
+    nc.claims=[{c:'借贷合意成立',ev:['E90']},{c:'款项已交付 15 万元',ev:['E91']},{c:'到期未还、已催收',ev:['E92']},{c:'借条签名真实',ev:[],sg:'原件当庭核对'}];
+    nc.ours=['以「借条 E90 + 转账凭证 E91」证明借贷合意与交付','以「微信催收记录 E92」证明到期未还','主张本金 15 万元及逾期利息'];
+    nc.opp=[{d:'可能抗辩：款项为装修工程款',c:'借条载明「借到」，转账附言为「借款」。'},{d:'可能抗辩：否认借条签名',c:'出示原件，必要时申请笔迹鉴定。'}];
+    nc.late=['如对方庭前补充证据，上传后可一键生成质证意见'];
+    CASES=CASES.filter(function(x){return x.id!=='C4'}); CASES.unshift(nc);
+    EV=EV.filter(function(e){return e.c!=='C4'});
+    var nm=S.newFiles;
+    EV.push({id:'E90',c:'C4',name:nm[0].replace(/\.\w+$/,''),type:'书证',side:'我方',round:1,date:'2025-06-08',purpose:'证明借贷合意，借款 15 万元',text:'今借到 [出借人A] 人民币壹拾伍万元整，借款人 刘*。',tags:['借条','新建案件'],mask:3});
+    EV.push({id:'E91',c:'C4',name:(nm[1]||'转账凭证').replace(/\.\w+$/,''),type:'书证',side:'我方',round:1,date:'2025-06-08',purpose:'证明 15 万元已交付',text:'付款账户 6222 **** **** *123，收款人 刘*，金额 150,000.00。',tags:['转账','新建案件'],mask:2});
+    EV.push({id:'E92',c:'C4',name:(nm[2]||'催收记录').replace(/\.\w+$/,''),type:'电子数据',side:'我方',round:1,date:'2026-07-02',purpose:'证明到期后催收',text:'刘*：「再宽限一个月。」',tags:['催收','新建案件'],mask:1});
+    TL.C4=[{d:'2025-06-08',t:'出具借条并转账',x:'借款 15 万元。',ev:['E90','E91'],key:1},{d:'2026-06-30',t:'约定还款期届满',x:'未归还。',key:1},{d:'2026-07-02',t:'催收',x:'对方请求宽限。',ev:['E92']},{d:'2027-01-12',t:'开庭（拟）',x:'待法院排期。',proc:1,key:1,future:1}];
+    S.cur='C4'; S.checked={}; S.flagged={}; S.stTab='focus';
+    startParse(res.count+4);
+  }
+}
+
+// ================= 解析动画 =================
+function startParse(mn){
+  S.hist=[]; S.view='parse'; render();
+  var logs=['读取材料，已完成脱敏（遮蔽 '+(mn||9)+' 处敏感信息）…','抽取时间节点，生成案件时间线…','证据链与证据目录自动匹配…','定位争议焦点，召回权威法条与类案…','生成攻防路径、质证意见与风险提示…'], i=0;
+  var t=setInterval(function(){var ds=document.querySelectorAll('.parse .log div');if(i<logs.length&&ds[i]){ds[i].textContent=logs[i];ds[i].classList.add('show');i++}else{clearInterval(t);setTimeout(function(){C(S.cur).done=true;S.tlGen[S.cur]=1;S.view='strategy';render();toast('策略草案已生成，请逐条核对')},450)}},520);
+}
+function renderParse(){
+  setStep('strategy');setTabs('');setBar('AI 解析中',false);
+  screen.innerHTML='<div class="parse"><div class="ring"></div><h3>正在分析案件…</h3><p>将脱敏后的材料整理成可审查的策略初稿</p><div class="log"><div></div><div></div><div></div><div></div><div></div></div></div>';
+}
+
+// ================= 4 证据库（检索） =================
+function goEvidence(o){S.hist=[];S.q='';S.fCase=o.c||'all';S.fType='全部';S.fSide='全部';S.fLate=!!o.late;S.fresh=null;S.view='evidence';render();screen.scrollTop=0;if(o.focus){setTimeout(function(){var i=document.getElementById('q');i&&i.focus()},50)}}
+function renderEvidence(){
+  setStep('evidence');setTabs('evidence');setBar('证据库',false,'＋ 上传',function(){pickCase('upload')});
+  var types=['全部','书证','电子数据','录音','财务流水','证人证言','鉴定意见'];
+  screen.innerHTML=
+  '<div class="sbox"><span>⌕</span><input id="q" placeholder="搜索名称、证明目的、原文、标签、编号" value="'+S.q+'" oninput="S.q=this.value.trim();renderEvList()"><span class="clr" id="clr" onclick="S.q=\'\';document.getElementById(\'q\').value=\'\';renderEvList()" style="display:'+(S.q?'inline':'none')+'">✕</span></div>'+
+  '<div class="hot" id="hot">'+['还款','录音','流水','质量','解除','庭前'].map(function(k){return '<span onclick="S.q=\''+k+'\';document.getElementById(\'q\').value=\''+k+'\';renderEvList()">'+k+'</span>'}).join('')+'</div>'+
+  '<div class="chips">'+[['all','全部案件']].concat(CASES.map(function(c){return [c.id,c.no.slice(-3)+' '+c.type]})).map(function(x){return '<span class="'+(S.fCase===x[0]?'on':'')+'" onclick="S.fCase=\''+x[0]+'\';renderEvidence()">'+x[1]+'</span>'}).join('')+'</div>'+
+  '<div class="chips">'+types.map(function(t){return '<span class="'+(S.fType===t?'on':'')+'" onclick="S.fType=\''+t+'\';renderEvidence()">'+t+'</span>'}).join('')+
+   ['我方','对方'].map(function(t){return '<span class="'+(S.fSide===t?'on':'')+'" onclick="S.fSide=(S.fSide===\''+t+'\'?\'全部\':\''+t+'\');renderEvidence()">'+t+'提交</span>'}).join('')+
+   '<span class="late '+(S.fLate?'on':'')+'" onclick="S.fLate=!S.fLate;renderEvidence()">仅看庭前新增</span></div>'+
+  '<div id="evlist"></div>';
+  renderEvList();
+}
+function evMatch(e){
+  if(S.fCase!=='all'&&e.c!==S.fCase)return false;
+  if(S.fType!=='全部'&&e.type!==S.fType)return false;
+  if(S.fSide!=='全部'&&e.side!==S.fSide)return false;
+  if(S.fLate&&!e.late)return false;
+  if(!S.q)return true;
+  var q=S.q.toLowerCase(), c=C(e.c);
+  if(q==='庭前')return !!e.late;
+  if(q==='流水')q='银行流水';
+  return [e.id,e.name,e.purpose,e.text,e.tags.join(' '),e.type,c.title,c.no].join(' ').toLowerCase().indexOf(q)>=0;
+}
+function renderEvList(){
+  var box=document.getElementById('evlist'); if(!box)return;
+  document.getElementById('clr').style.display=S.q?'inline':'none';
+  document.getElementById('hot').style.display=S.q?'none':'flex';
+  var list=EV.filter(evMatch).sort(function(a,b){return (b.id===S.fresh)-(a.id===S.fresh)||(b.late?1:0)-(a.late?1:0)||a.id.localeCompare(b.id)});
+  var masked=list.filter(function(e){return e.mask>0}).length;
+  if(!list.length){box.innerHTML='<div class="empty">没有找到与「'+S.q+'」相关的证据<br>试试换个关键词，或清除筛选条件</div>';return}
+  box.innerHTML='<div class="cnt"><span>'+(S.q?'搜索「'+S.q+'」':'')+'共 '+list.length+' 份 · 已脱敏 '+masked+' 份</span><span>按庭前新增优先</span></div>'+
+  list.map(function(e){
+    var c=C(e.c), inText=S.q&&e.text.toLowerCase().indexOf(S.q.toLowerCase())>=0&&e.name.toLowerCase().indexOf(S.q.toLowerCase())<0;
+    return '<div class="ev'+(e.id===S.fresh?' fresh':'')+'" onclick="openEv(\''+e.id+'\')">'+
+     '<div class="r1"><div class="nm"><span class="id">'+e.id+'</span>'+hl(e.name)+'</div>'+(e.id===S.fresh?'<span class="bd gold">刚入库</span>':(e.late?'<span class="bd hi">庭前新增</span>':''))+'</div>'+
+     '<div class="ps">'+hl(e.purpose)+'</div>'+
+     (inText?'<div class="snip">原文命中：…'+hl(e.text.slice(Math.max(0,e.text.toLowerCase().indexOf(S.q.toLowerCase())-14),e.text.toLowerCase().indexOf(S.q.toLowerCase())+30))+'…</div>':'')+
+     '<div class="tg"><span class="bd low">'+e.type+'</span><span class="bd '+(e.side==='我方'?'att':'def')+'">'+e.side+'</span><span class="bd low">第 '+e.round+' 轮</span>'+(e.mask?'<span class="bd ok">已脱敏 '+e.mask+' 处</span>':'')+(e.op?(e.opDone?'<span class="bd ok">已出质证意见</span>':'<span class="bd mid">待质证</span>'):'')+'</div>'+
+     '<div class="src">'+c.no+' · '+c.title+' · '+e.date+'</div></div>';
+  }).join('');
+}
+function threeHtml(op){return '<div class="three">'+[['真实性',op.z],['合法性',op.h],['关联性',op.g]].map(function(x){return '<div><b>'+x[0]+'</b><span class="'+x[1][1]+'">'+x[1][0]+'</span></div>'}).join('')+'</div>'}
+function openEv(id){
+  var e=E(id), c=C(e.c), claim=c.claims.filter(function(x){return x.ev.indexOf(id)>=0}).map(function(x){return x.c});
+  openSheet(e.id+' · '+e.name,
+   '<div class="tg" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px"><span class="bd low">'+e.type+'</span><span class="bd '+(e.side==='我方'?'att':'def')+'">'+e.side+'提交</span><span class="bd low">第 '+e.round+' 轮 · '+e.date+'</span>'+(e.late?'<span class="bd hi">庭前新增</span>':'')+(e.mask?'<span class="bd ok">已脱敏 '+e.mask+' 处</span>':'')+'</div>'+
+   '<div class="kv"><div class="k">所属案件</div><div class="v">'+c.title+'（'+c.no+'）</div></div>'+
+   '<div class="kv"><div class="k">证明目的</div><div class="v">'+e.purpose+'</div></div>'+
+   (claim.length?'<div class="kv"><div class="k">证据链 · 对应主张</div><div class="v">'+claim.map(function(x){return '▸ '+x}).join('<br>')+'</div></div>':'')+
+   '<div class="kv"><div class="k">识别原文（脱敏后）</div><div class="v" style="font-size:12.5px">'+e.text+'</div></div>'+
+   (e.op?'<div class="kv" id="opbox"><div class="k">质证意见</div>'+(e.opDone?threeHtml(e.op)+'<div class="opin"><b>意见：</b>'+e.op.t+'</div>':'<div class="v" style="color:var(--muted)">尚未生成。对方于 '+e.date+' 提交，距开庭仅 '+days(c.hearing.slice(0,10))+' 天。</div><button class="genbtn" onclick="genOp(\''+id+'\',\'sheet\')">✦ 一键生成质证意见</button>')+'</div>':'')+
+   '<button class="ghost" onclick="closeSheet();S.hist=[S.view];S.tl=\''+e.c+'\';S.view=\'timeline\';render()">在时间线中查看</button>');
+}
+function genOp(id,where){
+  var host=where==='sheet'?document.getElementById('opbox'):document.getElementById('op_'+id);
+  var btn=host&&host.querySelector('.genbtn'); if(btn){btn.innerHTML='<span class="mini"></span>正在比对己方证据与法条…';btn.disabled=true}
+  setTimeout(function(){E(id).opDone=true; if(where==='sheet'){openEv(id); if(S.view==='evidence')renderEvList();} else renderStrategy(); setTabs(S.view==='strategy'?'strategy':'evidence'); toast('质证意见已生成，请律师复核')},1100);
+}
+
+// ================= 5 时间线（先选案件） =================
+function renderTimeline(){
+  setStep('timeline');setTabs('timeline');
+  if(!S.tl){
+    setBar('案件时间线',false);
+    screen.innerHTML='<div class="sec" style="margin-top:4px">第一步：选择案件</div><div class="pick">时间线按案件独立生成，节点自动关联该案证据。</div>'+
+     CASES.map(function(c){return caseCard(c,{click:'chooseTl(\''+c.id+'\')'})}).join('');
+    return;
+  }
+  var c=C(S.tl);
+  setBar('案件时间线',true,'切换',function(){pickCase('tl')});
+  if(!S.tlGen[S.tl]){
+    screen.innerHTML='<div class="tlhead"><div class="t">'+c.title+'</div><div class="m">'+c.no+' · '+c.type+'</div></div><div class="parse" style="padding-top:30px"><div class="ring"></div><h3>正在生成时间线…</h3><p>从 '+evOf(c.id).length+' 份证据中抽取时间节点</p></div>';
+    setTimeout(function(){S.tlGen[S.tl]=1; if(S.view==='timeline')renderTimeline()},1300);
+    return;
+  }
+  var all=TL[c.id]||[], list=all.filter(function(n){return S.tlF==='all'||(S.tlF==='key'&&n.key)||(S.tlF==='proc'&&n.proc)||(S.tlF==='fact'&&!n.proc)});
+  screen.innerHTML=
+  '<div class="tlhead"><div class="t">'+c.title+'</div><div class="m">'+c.no+' · 共 '+all.length+' 个节点 · 开庭还有 '+days(c.hearing)+' 天</div><span class="sw2" onclick="pickCase(\'tl\')">切换案件 ▾</span></div>'+
+  '<div class="seg sm" style="margin-bottom:12px">'+[['all','全部'],['key','关键节点'],['fact','事实'],['proc','程序']].map(function(x){return '<button class="'+(S.tlF===x[0]?'on':'')+'" onclick="S.tlF=\''+x[0]+'\';renderTimeline()">'+x[1]+'</button>'}).join('')+'</div>'+
+  '<div class="tl">'+list.map(function(n){
+    var late=(n.ev||[]).some(function(id){var e=E(id);return e&&e.late});
+    return '<div class="node'+(n.future?' future':(n.key?' key':(n.proc?' proc':'')))+'"><div class="card"><div class="d"><span>'+n.d+(n.future?' · 还有 '+days(n.d)+' 天':'')+'</span>'+(n.conflict?'<span class="bd hi">陈述冲突</span>':(late?'<span class="bd hi">证据突袭</span>':(n.proc?'<span class="bd att">程序</span>':'<span class="bd low">事实</span>')))+'</div><div class="t">'+n.t+(n.fuzzy?' <span class="bd mid">时间存疑</span>':'')+'</div><div class="x">'+n.x+'</div>'+(n.fd?'<div class="x" style="color:var(--muted);font-size:11px">⌛ 事件时间 ≠ 文件形成时间：'+n.fd+'</div>':'')+
+     ((n.ev||[]).length?'<div class="evs">'+n.ev.map(function(id){var e=E(id);return e?'<span onclick="openEv(\''+id+'\')">'+id+' '+e.name.replace(/^.*：/,'').slice(0,10)+'</span>':''}).join('')+'</div>':'')+'</div></div>';
+  }).join('')+'</div>'+
+  '<button class="ghost" onclick="S.cur=\''+c.id+'\';S.hist=[\'timeline\'];S.view=\'strategy\';render()">查看本案庭审策略</button>';
+}
+function chooseTl(id){S.tl=id;S.tlF='all';renderTimeline();screen.scrollTop=0}
+function pickCase(target){
+  var cur=target==='tl'?S.tl:(target==='st'?S.cur:null);
+  openSheet(target==='upload'?'上传证据到哪个案件？':'选择案件',
+   CASES.map(function(c){return caseCard(c,{sel:c.id===cur,click:'pickDone(\''+target+'\',\''+c.id+'\')'})}).join('')+
+   (target==='upload'?'<div class="hint" style="margin-top:6px">上传后将先进入脱敏核对，再存入证据库。</div>':''));
+}
+function pickDone(target,id){
+  closeSheet();
+  if(target==='tl'){S.tl=id;S.tlF='all';renderTimeline()}
+  else if(target==='st'){S.cur=id;S.stTab='focus';S.checked={};S.flagged={};renderStrategy()}
+  else if(target==='upload'){startUpload(id)}
+  screen.scrollTop=0;
+}
+
+// ================= 6 庭审策略 =================
+function renderStrategy(){
+  setStep('strategy');setTabs('strategy');setBar('庭审策略',S.hist.length>0,'切换',function(){pickCase('st')});
+  var c=C(S.cur);
+  var head='<div class="casebar"><div class="t">'+c.type+' · 我方'+c.role+'</div><div class="m">'+c.title+'<br>目标：'+c.goal+'<br>'+c.no+' · 开庭 '+c.hearing+'（还有 '+days(c.hearing)+' 天）</div><span class="sw2" onclick="pickCase(\'st\')">切换案件 ▾</span></div>';
+  if(!c.done){
+    screen.innerHTML=head+'<div class="blk"><div class="h"><h4>该案件尚未生成策略</h4><span class="bd mid">待生成</span></div><div class="why">已入库 '+evOf(c.id).length+' 份证据（均已脱敏），其中对方庭前新增 '+lateOf(c.id).length+' 份。生成后将同步产出证据链匹配与质证意见。</div></div><button class="primary" onclick="startParse(9)">✦ 生成庭审策略草案</button>';
+    return;
+  }
+  var pend=pendingOp(c.id).length;
+  var tabs=[['focus','争议焦点'],['attack','攻防策略'],['chain','证据链'],['catalog','证据目录'],['op','质证意见'],['risk','不利点与风险']].map(function(t){return '<button class="'+(S.stTab===t[0]?'on':'')+'" onclick="S.stTab=\''+t[0]+'\';renderStrategy()">'+t[1]+(t[0]==='op'&&pend?'<i>'+pend+'</i>':'')+'</button>'}).join('');
+  var body = S.stTab==='focus'?focusHtml(c):S.stTab==='attack'?attackHtml(c):S.stTab==='chain'?chainHtml(c):S.stTab==='catalog'?catalogHtml(c):S.stTab==='op'?opHtml(c):riskHtml(c);
+  var n=Object.keys(S.checked).length;
+  screen.innerHTML=head+'<div class="disc">⚠ AI 生成初稿，法律依据与案例需律师逐条核对，不构成胜诉承诺。</div><div class="tabs2">'+tabs+'</div>'+body+
+   '<button class="primary" onclick="S.hist=[\'strategy\'];S.view=\'report\';render();toast(\'策略报告已生成\')">核对完成 · 导出策略报告'+(n>=c.focus.length?' ✓':'（'+n+'/'+c.focus.length+' 已核对）')+'</button>';
+}
+function focusHtml(c){
+  return c.focus.map(function(f,i){var ck=S.checked[i],fl=S.flagged[i];
+   return '<div class="blk"><div class="h"><h4>'+(i+1)+'. '+f.t+'</h4><span class="bd '+lv(f.lv)+'">'+f.lv+'优先级</span></div><div class="why"><b>为什么重要：</b>'+f.why+'</div><div class="basis">'+f.basis+'</div>'+
+   '<div class="trace" onclick="openSrc('+i+')">查看依据原文与来源</div>'+
+   '<div class="confirm"><button class="yes '+(ck?'on':'')+'" onclick="chk('+i+',1)">✓ 已核对无误</button><button class="no '+(fl?'on':'')+'" onclick="chk('+i+',0)">⚑ 有疑问</button></div>'+
+   (fl?'<div class="basis" style="color:var(--dead)">已标记疑问，可在证据库补充材料后重新生成。</div>':'')+'</div>'}).join('');
+}
+function chk(i,ok){if(ok){S.checked[i]=1;delete S.flagged[i];toast('已标记为「核对无误」')}else{S.flagged[i]=1;delete S.checked[i];toast('已标记疑问')}renderStrategy()}
+function openSrc(i){var s=C(S.cur).focus[i].src;openSheet('依据溯源','<div class="srcblk"><div class="art">'+s.law+'</div><div class="full">'+s.full+'</div><div class="meta">发布机关：<b>'+s.org+'</b>　效力：<b style="color:var(--ok)">'+s.eff+'</b></div><div class="link">⌁ 国家法律法规数据库 · 全文链接（演示占位）</div></div>')}
+function attackHtml(c){
+  return '<div class="blk"><div class="h"><h4>攻防策略草案</h4><span class="bd ok">双视角</span></div><div class="duo">'+
+   '<div class="col att"><div class="lb">▸ 我方主张路径（'+c.role+'）</div><ul>'+c.ours.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>'+
+   '<div class="col def"><div class="lb">▸ 对方可能主张 / 抗辩 + 应对</div>'+c.opp.map(function(o){return '<div style="margin-bottom:9px"><div style="font-size:12.5px;color:#5a3a5a;line-height:1.6">'+o.d+'</div><div class="counter"><b>应对：</b>'+o.c+'</div></div>'}).join('')+'</div></div></div>'+
+   '<div class="blk"><div class="h"><h4>庭前新增证据 · 庭审应对</h4><span class="bd hi">证据突袭</span></div>'+c.late.map(function(x){return '<div class="why" style="padding:3px 0">▸ '+x+'</div>'}).join('')+'</div>';
+}
+function chainHtml(c){
+  var gap=c.claims.filter(function(x){return !x.ev.length}).length;
+  return '<div class="blk"><div class="h"><h4>证据链 ↔ 证据目录</h4><span class="bd mid">自动匹配</span></div><table class="chain"><tr><th style="width:38%">待证主张</th><th>匹配证据</th><th style="width:58px">状态</th></tr>'+
+   c.claims.map(function(x){return '<tr><td>'+x.c+'</td><td>'+(x.ev.length?x.ev.map(function(id){var e=E(id);return '<span class="e" onclick="openEv(\''+id+'\')">'+id+' '+(e?e.name.replace(/^.*：/,'').slice(0,8):'')+'</span>'}).join(''):'—<span class="sg">建议：'+x.sg+'</span>')+'</td><td><span class="bd '+(x.ev.length?'ok':'miss')+'">'+(x.ev.length?'已具备':'需补强')+'</span></td></tr>'}).join('')+
+   '</table><div class="why" style="margin-top:10px">共 '+c.claims.length+' 项主张，'+(gap?'<b style="color:var(--dead)">'+gap+' 项需补强</b>——这是开庭前最该补的材料。':'证据链已闭合。')+'</div>'+
+   (gap?'<button class="genbtn" onclick="startUpload(\''+c.id+'\')">＋ 上传补强证据（自动脱敏）</button><button class="genbtn" onclick="openTodo(\''+c.id+'\')">✉ 生成待补充材料清单（发给当事人）</button>':'')+'</div>'+
+   '<div class="hint" style="margin-top:-2px">顺序：先按争议焦点理清证据链，再生成证据目录，新材料进来会自动回到这一步重新匹配。</div>';
+}
+function opHtml(c){
+  var list=EV.filter(function(e){return e.c===c.id&&e.op}).sort(function(a,b){return (b.late?1:0)-(a.late?1:0)});
+  if(!list.length)return '<div class="empty">对方暂未提交证据<br>对方补充证据后上传，可一键生成质证意见</div>';
+  return list.map(function(e){return '<div class="blk" id="op_'+e.id+'"><div class="h"><h4>'+e.id+' '+e.name+'</h4>'+(e.late?'<span class="bd hi">庭前新增</span>':'<span class="bd low">第 '+e.round+' 轮</span>')+'</div><div class="why">'+e.date+' 提交 · '+e.purpose+'</div>'+
+   (e.opDone?threeHtml(e.op)+'<div class="opin"><b>质证意见：</b>'+e.op.t+'</div>':'<button class="genbtn" onclick="genOp(\''+e.id+'\',\'st\')">✦ 一键生成质证意见</button>')+'</div>'}).join('');
+}
+function riskHtml(c){var ad=c.adverse||[];return '<div class="blk"><div class="h"><h4>AI 不利点排查</h4><span class="bd hi">当事人未主动说明</span></div><div class="why" style="margin-bottom:6px">从已上传的全部材料中找出对己方不利的内容，开庭前先做准备。</div>'+(ad.length?ad.map(function(a){var e=E(a.ev);return '<div class="risk"><span class="ic">!</span><span class="tx">'+a.tx+'<br><span style="color:var(--ok)">应对：'+a.act+'</span><br><a class="trace" style="display:inline-block;margin-top:2px" onclick="openEv(\''+a.ev+'\')">查看原文 '+a.ev+' '+(e?e.name.slice(0,10):'')+'</a></span><span class="bd '+lv(a.lv)+'">'+a.lv+'</span></div>'}).join(''):'<div class="why">暂未发现</div>')+'</div>'+riskHtml0(c)}
+function riskHtml0(c){return '<div class="blk"><div class="h"><h4>风险提示</h4><span class="bd mid">不构成胜诉承诺</span></div>'+c.risks.map(function(r){return '<div class="risk"><span class="ic">'+r.ic+'</span><span class="tx">'+r.tx+'</span><span class="bd '+lv(r.lv)+'">'+r.lv+'</span></div>'}).join('')+'</div>'}
+
+// ================= 7 报告 =================
+
+// ================= 证据目录（由证据链自动生成，编号/页码随新证据自动重排） =================
+function pgOf(e){return e.pg||({书证:2,电子数据:3,录音:4,财务流水:6,证人证言:2,鉴定意见:5})[e.type]||2}
+function catalogOf(c){
+  var seen={},list=[];
+  c.claims.forEach(function(cl){cl.ev.forEach(function(id){var e=E(id);if(e&&e.side==='我方'&&!seen[id]){seen[id]=1;list.push({e:e,claim:cl.c})}})});
+  EV.filter(function(e){return e.c===c.id&&e.side==='我方'&&!seen[e.id]}).forEach(function(e){list.push({e:e,claim:'其他'})});
+  var p=1;list.forEach(function(x,i){x.no=i+1;x.p1=p;x.p2=p+pgOf(x.e)-1;p=x.p2+1});
+  return list;
+}
+function catalogHtml(c){
+  var L=catalogOf(c);
+  return '<div class="blk"><div class="h"><h4>证据目录（'+c.role+'）</h4><span class="bd ok">自动编号</span></div>'+
+  '<div class="why" style="margin-bottom:8px">按证据链中主张的顺序排列。新证据入库后编号和页码会自动重排，不用手动改。</div>'+
+  '<table class="chain"><tr><th style="width:26px">序号</th><th>证据名称 / 证明目的</th><th style="width:52px">页码</th></tr>'+
+  L.map(function(x){return '<tr><td><b>'+x.no+'</b></td><td><span class="e" onclick="openEv(\''+x.e.id+'\')">'+x.e.id+'</span><b style="color:var(--navy)">'+x.e.name+'</b><br><span style="color:#5a6470">'+x.e.purpose+'</span><br><span style="color:var(--muted);font-size:11px">'+x.e.type+' · 形成于 '+x.e.date+' · 对应：'+x.claim+'</span></td><td>'+x.p1+(x.p2>x.p1?'–'+x.p2:'')+'</td></tr>'}).join('')+
+  '</table><div class="why" style="margin-top:8px">共 '+L.length+' 份，'+(L.length?L[L.length-1].p2:0)+' 页。</div>'+
+  '<button class="genbtn" onclick="copyText(catalogText(C(S.cur)),\'证据目录已复制，可粘贴到 Word\')">复制证据目录</button></div>';
+}
+function catalogText(c){return c.title+'\n证据目录（提交人：'+c.role+'）\n'+catalogOf(c).map(function(x){return x.no+'. '+x.e.name+'｜证明目的：'+x.e.purpose+'｜第 '+x.p1+(x.p2>x.p1?'-'+x.p2:'')+' 页'}).join('\n')}
+function todoOf(c){
+  var t=c.claims.filter(function(x){return !x.ev.length}).map(function(x){return {k:x.c,v:x.sg}});
+  var extra={C1:[{k:'借条原件',v:'开庭当天携带原件，供法庭核对'},{k:'微信聊天原始载体',v:'保留手机原始记录，不要删除，以便当庭出示'}],C2:[{k:'业务员劳动合同',v:'证明刘某的岗位与授权范围'}],C3:[{k:'2026 年上半年考核办法',v:'核对公司是否公示过考核规则'}]}[c.id]||[];
+  return t.concat(extra);
+}
+function openTodo(cid){
+  var c=C(cid), t=todoOf(c);
+  openSheet('待补充材料清单',
+   '<div class="hint">根据证据链缺口自动生成，可直接发给当事人。当事人补交后上传，系统会重新匹配证据链和目录。</div>'+
+   t.map(function(x,i){return '<div class="kv"><div class="k">'+(i+1)+'. '+x.k+'</div><div class="v">'+x.v+'</div></div>'}).join('')+
+   '<button class="primary" onclick="copyText(todoText(\''+cid+'\'),\'清单已复制，可发到微信\')">复制清单发给当事人</button>');
+}
+function todoText(cid){var c=C(cid);return '您好，关于「'+c.title+'」，开庭前还需要您补充以下材料：\n'+todoOf(c).map(function(x,i){return (i+1)+'. '+x.k+'：'+x.v}).join('\n')+'\n收到后我会尽快更新证据目录。'}
+function copyText(t,msg){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast(msg)}).catch(function(){toast('复制失败，请手动选择')})}else toast('当前环境不支持自动复制')}
+function reportText(c){
+  var t=c.title+'\n'+c.no+' · '+c.type+' · 我方'+c.role+'\n目标：'+c.goal+'\n\n一、争议焦点\n'+c.focus.map(function(f,i){return (i+1)+'. '+f.t+'（'+f.lv+'）：'+f.why}).join('\n');
+  t+='\n\n二、攻防策略\n我方路径：'+c.ours.join('；')+'\n对方抗辩及应对：\n'+c.opp.map(function(o){return o.d+' → '+o.c}).join('\n');
+  t+='\n\n三、证据链\n'+c.claims.map(function(x){return x.c+' → '+(x.ev.join('、')||'需补强：'+x.sg)}).join('\n');
+  t+='\n\n四、质证意见\n'+EV.filter(function(e){return e.c===c.id&&e.op}).map(function(e){return e.id+' '+e.name+'：'+(e.opDone?e.op.t:'（待生成）')}).join('\n');
+  t+='\n\n附：证据目录\n'+catalogText(c);
+  t+='\n\n五、关键时间节点\n'+(TL[c.id]||[]).filter(function(n){return n.key}).map(function(n){return n.d+' '+n.t}).join('\n');
+  t+='\n\n六、风险提示\n'+c.risks.map(function(r){return r.tx.replace(/<[^>]+>/g,'')}).join('\n')+'\n\n本报告所含个人信息均已脱敏。AI 生成初稿，须律师逐条核对。';
+  return t;
+}
+function renderReport(){
+  setStep('report');setTabs('report');setBar('策略报告',S.hist.length>0,'切换',function(){pickCase('st')});
+  var c=C(S.cur);
+  if(!c.done){screen.innerHTML='<div class="empty">该案件尚未生成策略<br><a style="color:var(--gold);cursor:pointer" onclick="S.view=\'strategy\';render()">去生成 ›</a></div>';return}
+  var ops=EV.filter(function(e){return e.c===c.id&&e.op});
+  screen.innerHTML='<div class="done"><div class="ck">✓</div><h3 style="color:var(--navy);font-size:16px">策略报告已生成</h3><p style="font-size:12px;color:var(--muted);margin-top:6px">个人信息已脱敏，可直接交付团队讨论</p></div>'+
+  '<div class="report"><h3>庭审策略报告</h3><div class="sub">'+c.title+'<br>'+c.no+' · 我方'+c.role+' · 开庭 '+c.hearing+'</div>'+
+  '<h5>一、争议焦点</h5><ul>'+c.focus.map(function(f){return '<li><b>'+f.t+'</b>（'+f.lv+'）：'+f.why+'</li>'}).join('')+'</ul>'+
+  '<h5>二、攻防策略</h5><p><b>我方路径：</b>'+c.ours.join('；')+'</p><p><b>对方抗辩预判：</b>'+c.opp.map(function(o){return o.d}).join('；')+'</p>'+
+  '<h5>三、证据链</h5><ul>'+c.claims.map(function(x){return '<li>'+x.c+' → '+(x.ev.join('、')||'<span style="color:var(--dead)">需补强：'+x.sg+'</span>')+'</li>'}).join('')+'</ul>'+
+  '<h5>四、质证意见</h5><ul>'+(ops.length?ops.map(function(e){return '<li>'+e.id+' '+e.name+'：'+(e.opDone?e.op.t:'<span style="color:var(--warn)">待生成</span>')+'</li>'}).join(''):'<li>暂无对方证据</li>')+'</ul>'+
+  '<h5>四之二、证据目录</h5><ul>'+catalogOf(c).map(function(x){return '<li>'+x.no+'. '+x.e.name+'（第 '+x.p1+(x.p2>x.p1?'–'+x.p2:'')+' 页）</li>'}).join('')+'</ul>'+
+  '<h5>五、关键时间节点</h5><ul>'+(TL[c.id]||[]).filter(function(n){return n.key}).map(function(n){return '<li>'+n.d+'　'+n.t+'</li>'}).join('')+'</ul>'+
+  '<h5>六、不利点与风险提示</h5><ul>'+(c.adverse||[]).map(function(a){return '<li><b>不利点：</b>'+a.tx+' 应对：'+a.act+'</li>'}).join('')+c.risks.map(function(r){return '<li>'+r.tx.replace(/<[^>]+>/g,'')+'</li>'}).join('')+'</ul>'+
+  '<div class="disc" style="margin:14px 0 0">⚠ 本报告个人信息均已脱敏。AI 生成初稿，须律师逐条核对。</div></div>'+
+  '<button class="primary" onclick="copyReport()">复制报告全文</button>';
+}
+function copyReport(){var t=reportText(C(S.cur));if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('报告已复制到剪贴板')}).catch(function(){toast('复制失败，请手动选择')})}else toast('当前环境不支持自动复制')}
+
+// ================= 登录（演示账号体系，前端本地校验） =================
+function store(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function load(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+function loadUser(){return load('lw_user')}
+function renderLogin(){
+  setStep('login');setTabs('');setBar('诉讼策略工作台',false);
+  var code=S.lg==='code';
+  screen.innerHTML='<div class="brand" style="padding-top:34px"><div class="lg">策</div><h2>诉讼策略工作台</h2><p>案件材料整理 · 证据脱敏 · 庭审策略</p></div>'+
+  '<div class="seg sm" style="margin:20px 0 12px"><button class="'+(code?'on':'')+'" onclick="S.lg=\'code\';renderLogin()">验证码登录</button><button class="'+(!code?'on':'')+'" onclick="S.lg=\'pwd\';renderLogin()">账号密码登录</button></div>'+
+  (code?
+   '<div class="field"><label>手机号</label><input type="tel" id="lgP" maxlength="11" placeholder="请输入 11 位手机号"></div>'+
+   '<div class="field"><label>验证码</label><div class="irow"><input type="text" id="lgC" maxlength="6" placeholder="6 位验证码"><span class="codebtn" id="cbtn" onclick="getCode()">获取验证码</span></div></div>'
+  :
+   '<div class="field"><label>账号</label><input type="text" id="lgU" placeholder="演示账号 demo"></div>'+
+   '<div class="field"><label>密码</label><input type="password" id="lgW" placeholder="演示密码 123456"></div>')+
+  '<label class="agree"><input type="checkbox" id="lgA"><span>我已阅读并同意《用户协议》《隐私政策》，同意上传材料先在本机脱敏再进行 AI 分析</span></label>'+
+  '<button class="primary" onclick="doLogin()">登录</button>'+
+  '<button class="ghost" onclick="loginOk({name:\'演示律师\',phone:\'\'})">演示账号一键登录</button>'+
+  '<div class="hint" style="text-align:center;margin-top:16px">演示环境：任意 11 位手机号 + 获取验证码即可登录；<br>或账号 demo / 密码 123456。不会发送真实短信。</div>';
+}
+function getCode(){
+  var p=document.getElementById('lgP').value.trim();
+  if(!/^1\d{10}$/.test(p)){toast('请输入正确的 11 位手机号');return}
+  var b=document.getElementById('cbtn'); if(b.dataset.busy)return; b.dataset.busy=1; b.textContent='发送中…';
+  setTimeout(function(){var c=String(Math.floor(100000+Math.random()*900000));var i=document.getElementById('lgC');if(i)i.value=c;S.sentCode=c;var n=60;b.textContent=n+'s';
+    var t=setInterval(function(){n--;if(!document.getElementById('cbtn')){clearInterval(t);return}b.textContent=n>0?n+'s':'重新获取';if(n<=0){clearInterval(t);delete b.dataset.busy}},1000);
+    toast('演示验证码 '+c+' 已自动填入')},600);
+}
+function doLogin(){
+  if(!document.getElementById('lgA').checked){toast('请先勾选同意用户协议与隐私政策');return}
+  if(S.lg==='code'){
+    var p=document.getElementById('lgP').value.trim(), c=document.getElementById('lgC').value.trim();
+    if(!/^1\d{10}$/.test(p)){toast('请输入正确的 11 位手机号');return}
+    if(!/^\d{6}$/.test(c)){toast('请输入 6 位验证码');return}
+    loginOk({name:'律师 '+p.slice(-4),phone:p.slice(0,3)+'****'+p.slice(-4)});
+  } else {
+    var u=document.getElementById('lgU').value.trim(), w=document.getElementById('lgW').value;
+    if(u==='demo'&&w==='123456')loginOk({name:'演示律师',phone:''}); else toast('账号或密码错误（演示账号 demo / 123456）');
+  }
+}
+function loginOk(u){S.user=u;store('lw_user',u);S.hist=[];S.view='home';render();screen.scrollTop=0;toast('登录成功，欢迎 '+u.name)}
+function logout(){store('lw_user',null);S.user=null;S.view='login';closeSheet();render();toast('已退出登录')}
+
+// ================= 演示路线跳转 =================
+function jump(s){
+  closeSheet();
+  if(!S.user&&s!=='login'){S.user={name:'演示律师',phone:''}}
+  if(s==='login'){S.view='login';render()}
+  else if(s==='home'){S.hist=[];S.view='home';render()}
+  else if(s==='mask'){S.view='home';startUpload('C1')}
+  else if(s==='evidence'){goEvidence({});S.q='还款';document.getElementById('q').value='还款';renderEvList()}
+  else if(s==='timeline'){S.hist=[];S.tl=null;S.view='timeline';render()}
+  else if(s==='strategy'){S.hist=[];S.cur='C1';S.stTab='chain';S.view='strategy';render()}
+  else if(s==='report'){S.hist=[];S.cur='C1';S.view='report';render()}
+  screen.scrollTop=0;
+}
+function resetAll(){closeSheet();init();render();toast('已重置演示')}
+
+init(); render();
+(function(){var q={};location.search.replace(/^\?/,'').split('&').forEach(function(kv){var a=kv.split('=');if(a[0])q[a[0]]=decodeURIComponent(a[1]||'')});
+ if(q.embed){document.body.classList.add('embed')}
+ var s=q.s; if(!s)return;
+ if(s!=='login'){S.user=S.user||{name:'演示律师',phone:''}}
+ if(s==='login'){S.view='login';render()}
+ else if(s==='home'||s==='mask'||s==='evidence'||s==='report'){jump(s)}
+ else if(s==='search'){goEvidence({});S.q='还款';var i=document.getElementById('q');if(i)i.value='还款';renderEvList()}
+ else if(s==='evdetail'){goEvidence({late:true});openEv('E06')}
+ else if(s==='tlpick'){jump('timeline')}
+ else if(s==='timeline'){S.hist=[];S.tl='C1';S.tlGen.C1=1;S.view='timeline';render()}
+ else if(s==='new'){S.view='new';render()}
+
+ else if(['focus','attack','chain','catalog','op','risk'].indexOf(s)>=0){S.hist=[];S.cur='C1';S.stTab=s;S.view='strategy';render()}
+ else if(s==='todo'){S.hist=[];S.cur='C1';S.stTab='chain';S.view='strategy';render();openTodo('C1')}
+})();
+if('serviceWorker' in navigator && location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(function(){})}
+</script>
+</body>
+</html>
