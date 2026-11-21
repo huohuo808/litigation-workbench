@@ -460,7 +460,7 @@ function lv(l){return l==='高'?'hi':(l==='中'?'mid':'low')}
 function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
 function hl(s){if(!S.q)return s;return s.replace(new RegExp('('+reEsc(S.q)+')','gi'),'<mark>$1</mark>')}
 function setBar(t,back,act,actFn){document.getElementById('barTitle').textContent=t;document.getElementById('back').style.display=back?'block':'none';var a=document.getElementById('barAct');a.textContent=act||'';a.onclick=actFn||null}
-function setTabs(active){var hide=['new','mask','parse','login'].indexOf(S.view)>=0;document.getElementById('tabs').style.display=hide?'none':'flex';document.querySelectorAll('.tabs > div').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-tab')===active)});document.getElementById('evDot').style.display=pendingOp().length?'block':'none'}
+function setTabs(active){var hide=['new','mask','parse','login'].indexOf(S.view)>=0;document.getElementById('tabs').style.display=hide?'none':'flex';document.getElementById('phone').classList.toggle('notabs',hide);document.querySelectorAll('.tabs > div').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-tab')===active)});document.getElementById('evDot').style.display=pendingOp().length?'block':'none'}
 function setStep(s){document.querySelectorAll('.steps .s').forEach(function(el){el.classList.toggle('on',el.getAttribute('data-s')===s)})}
 function go(v,keep){if(!keep&&S.view!==v)S.hist.push(S.view);S.view=v;render();screen.scrollTop=0}
 function goBack(){if(S.view==='timeline'&&S.tl){S.tl=null;render();return}var v=S.hist.pop()||'home';S.view=v;render()}
