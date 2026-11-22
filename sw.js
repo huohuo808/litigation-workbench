@@ -1,5 +1,5 @@
 // 离线缓存：首次打开后，断网也能演示
-const CACHE = 'zm-v6';
+const CACHE = 'zm-v7';
 const ASSETS = ['./', './index.html', './manifest.json', './web.html', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
