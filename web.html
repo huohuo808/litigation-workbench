@@ -1134,9 +1134,9 @@ function reportText(c){
   t+='\n\n二、攻防策略\n我方路径：'+c.ours.join('；')+'\n对方抗辩及应对：\n'+c.opp.map(function(o){return o.d+' → '+o.c}).join('\n');
   t+='\n\n三、证据链\n'+c.claims.map(function(x){return x.c+' → '+(x.ev.join('、')||'需补强：'+x.sg)}).join('\n');
   t+='\n\n四、质证意见\n'+EV.filter(function(e){return e.c===c.id&&e.op}).map(function(e){return e.id+' '+e.name+'：'+(e.opDone?e.op.t:'（待生成）')}).join('\n');
-  t+='\n\n附：证据目录\n'+catalogText(c);
-  t+='\n\n五、关键时间节点\n'+(TL[c.id]||[]).filter(function(n){return n.key}).map(function(n){return n.d+' '+n.t}).join('\n');
-  t+='\n\n六、风险提示\n'+c.risks.map(function(r){return r.tx.replace(/<[^>]+>/g,'')}).join('\n')+'\n\n本报告所含个人信息均已脱敏。AI 生成初稿，须律师逐条核对。';
+  t+='\n\n五、证据目录\n'+catalogText(c);
+  t+='\n\n六、关键时间节点\n'+(TL[c.id]||[]).filter(function(n){return n.key}).map(function(n){return n.d+' '+n.t}).join('\n');
+  t+='\n\n七、不利点与风险提示\n'+(c.adverse||[]).map(function(a){return '不利点：'+a.tx+' 应对：'+a.act+'\n'}).join('')+c.risks.map(function(r){return r.tx.replace(/<[^>]+>/g,'')}).join('\n')+'\n\n本报告所含个人信息均已脱敏。AI 生成初稿，须律师逐条核对。';
   return t;
 }
 function renderReport(){
@@ -1150,9 +1150,9 @@ function renderReport(){
   '<h5>二、攻防策略</h5><p><b>我方路径：</b>'+c.ours.join('；')+'</p><p><b>对方抗辩预判：</b>'+c.opp.map(function(o){return o.d}).join('；')+'</p>'+
   '<h5>三、证据链</h5><ul>'+c.claims.map(function(x){return '<li>'+x.c+' → '+(x.ev.join('、')||'<span style="color:var(--dead)">需补强：'+x.sg+'</span>')+'</li>'}).join('')+'</ul>'+
   '<h5>四、质证意见</h5><ul>'+(ops.length?ops.map(function(e){return '<li>'+e.id+' '+e.name+'：'+(e.opDone?e.op.t:'<span style="color:var(--warn)">待生成</span>')+'</li>'}).join(''):'<li>暂无对方证据</li>')+'</ul>'+
-  '<h5>四之二、证据目录</h5><ul>'+catalogOf(c).map(function(x){return '<li>'+x.no+'. '+x.e.name+'（第 '+x.p1+(x.p2>x.p1?'–'+x.p2:'')+' 页）</li>'}).join('')+'</ul>'+
-  '<h5>五、关键时间节点</h5><ul>'+(TL[c.id]||[]).filter(function(n){return n.key}).map(function(n){return '<li>'+n.d+'　'+n.t+'</li>'}).join('')+'</ul>'+
-  '<h5>六、不利点与风险提示</h5><ul>'+(c.adverse||[]).map(function(a){return '<li><b>不利点：</b>'+a.tx+' 应对：'+a.act+'</li>'}).join('')+c.risks.map(function(r){return '<li>'+r.tx.replace(/<[^>]+>/g,'')+'</li>'}).join('')+'</ul>'+
+  '<h5>五、证据目录</h5><ul>'+catalogOf(c).map(function(x){return '<li>'+x.no+'. '+x.e.name+'（第 '+x.p1+(x.p2>x.p1?'–'+x.p2:'')+' 页）</li>'}).join('')+'</ul>'+
+  '<h5>六、关键时间节点</h5><ul>'+(TL[c.id]||[]).filter(function(n){return n.key}).map(function(n){return '<li>'+n.d+'　'+n.t+'</li>'}).join('')+'</ul>'+
+  '<h5>七、不利点与风险提示</h5><ul>'+(c.adverse||[]).map(function(a){return '<li><b>不利点：</b>'+a.tx+' 应对：'+a.act+'</li>'}).join('')+c.risks.map(function(r){return '<li>'+r.tx.replace(/<[^>]+>/g,'')+'</li>'}).join('')+'</ul>'+
   '<div class="disc" style="margin:14px 0 0">⚠ 本报告个人信息均已脱敏。AI 生成初稿，须律师逐条核对。</div></div>'+
   '<button class="primary" onclick="copyReport()">复制报告全文</button>';
 }
