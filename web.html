@@ -830,7 +830,7 @@ function renderHome(){
    '<div class="nt"><b class="'+(d<=1?'soon':'')+'">'+(d<=1?'明天':d+' 天后')+'</b>'+nx.hearing.slice(11,16)+'</div>'+
    '<div class="nc">'+nx.title+'</div><div class="nm">'+nx.court+' · 我方'+nx.role+'</div>'+
    '<div class="ns"><span class="'+(po?'on':'')+'"><b>'+po+'</b>份待质证</span><span class="'+(gap?'on':'')+'"><b>'+gap+'</b>项需补强</span><span class="'+(ad?'on':'')+'"><b>'+ad+'</b>个不利点</span><i>›</i></div></div>'+
-  '<div class="alert" onclick="pickCase(\'rush\')"><div class="t"><b>对方开庭前突然交了证据？</b>拍照或上传 → 自动脱敏 → 几分钟内出质证意见和当庭应对清单</div><span class="go">录入 ›</span></div>'+
+  '<div class="alert" onclick="pickCase(\'rush\')"><div class="t"><b>庭前新证据应对</b>判断是否逾期 · 生成三性质证意见 · 调整庭审策略</div><span class="go">录入 ›</span></div>'+
   (todo.length?'<div class="sec">待出质证意见<span class="n">'+todo.length+'</span></div>'+todo.map(function(e){var c=C(e.c);return '<div class="trow" onclick="openEv(\''+e.id+'\')"><span class="tid">'+e.id+'</span><span class="ttx"><b>'+e.name+'</b><em>'+c.type+' · '+(e.late?'对方庭前提交':'第 '+e.round+' 轮')+' · 开庭 '+c.hearing.slice(5,10)+'</em></span><span class="tgo">›</span></div>'}).join(''):'')+
   '<div class="sec">其他案件<span class="n">'+list.length+'</span></div>'+
   '<div class="seg sm" style="margin-bottom:4px"><button class="'+(S.scope!=='all'?'on':'')+'" onclick="S.scope=\'mine\';renderHome()">我参与的</button><button class="'+(S.scope==='all'?'on':'')+'" onclick="S.scope=\'all\';renderHome()">本所全部</button></div>'+
