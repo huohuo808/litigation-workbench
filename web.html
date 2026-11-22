@@ -78,7 +78,7 @@ button:active,.case:active,.ev:active{opacity:.82}
 .field{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px}
 .field:focus-within{border-color:#9FB1C3}
 .field label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:8px;font-weight:500;letter-spacing:.3px}
-.field select,.field textarea,.field input[type=text]{width:100%;border:0;outline:0;font-size:14px;color:var(--ink);background:transparent;font-family:inherit;resize:none}
+.field select,.field textarea,.field input[type=text],.field input[type=date]{width:100%;border:0;outline:0;font-size:14px;color:var(--ink);background:transparent;font-family:inherit;resize:none}
 .field select{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:8px}
 .field textarea{line-height:1.75;min-height:82px}
 .seg{display:flex;gap:8px}
@@ -533,7 +533,7 @@ body.web .trow,body.web .next{max-width:960px}
 // ================= 演示数据（全部虚构） =================
 var TODAY = new Date('2026-11-22T00:00:00');
 var BASE_CASES = [
- {id:'C1', no:'CASE-2026-001', type:'民间借贷纠纷', role:'原告', title:'李某诉张某民间借贷纠纷', court:'某区人民法院', hearing:'2026-11-23 09:30', done:true, owner:'演示律师', team:['助理 陈晓'], dept:'民商事争议解决部',
+ {id:'C1', no:'CASE-2026-001', type:'民间借贷纠纷', role:'原告', title:'李某诉张某民间借贷纠纷', court:'某区人民法院', hearing:'2026-11-23 09:30', proofDue:'2026-11-18', done:true, owner:'演示律师', team:['助理 陈晓'], dept:'民商事争议解决部',
   goal:'主张返还本金 20 万元及逾期利息',
   facts:'2025年3月，张某以资金周转为由向李某借款20万元，李某银行转账交付，张某出具借条，约定2025年9月30日归还。到期后多次催收未还。',
   focus:[
@@ -552,7 +552,7 @@ var BASE_CASES = [
   adverse:[{tx:'微信记录 E03 中，原告 2025-04 曾说「生意做起来了记得分我点」，可能被被告用来支持「合伙投资款」的说法。',ev:'E03',lv:'高',act:'庭前向当事人核实语境；准备说明这是朋友间玩笑，借条明确写的是「借到」。'},{tx:'原告在微信中说过「不着急，利息就算了」，可能影响逾期利息的主张。',ev:'E03',lv:'中',act:'只主张逾期后按 LPR 计算的逾期利息，不主张借期内利息。'}],
   risks:[{ic:'⏳',tx:'<b>举证节奏</b>：被告 11-18 已补充过一次证据，开庭前仍可能再补交，需预留当晚应对时间。',lv:'高'},{ic:'▣',tx:'<b>证据缺口</b>：反驳「已还款」缺少原告同期流水，建议庭前调取。',lv:'中'},{ic:'⚖',tx:'<b>利息主张</b>：未约定逾期利率，按 LPR 主张，避免被调减。',lv:'低'}],
   claims:[{c:'借贷合意成立',ev:['E01','E03']},{c:'款项已交付 20 万元',ev:['E02']},{c:'到期未还、已催收',ev:['E03','E04','E18']},{c:'诉讼时效中断',ev:['E04','E18']},{c:'5 万元非还款',ev:['E19']},{c:'借条签名真实',ev:[],sg:'借条原件当庭核对；必要时申请笔迹鉴定'},{c:'款项性质为借款而非投资',ev:['E01'],sg:''}]},
- {id:'C2', no:'CASE-2026-002', type:'买卖合同纠纷', role:'被告', title:'某建材公司诉某装饰公司买卖合同纠纷', court:'某区人民法院', hearing:'2026-12-10 14:00', done:true, owner:'演示律师', team:['律师 周宁'], dept:'民商事争议解决部',
+ {id:'C2', no:'CASE-2026-002', type:'买卖合同纠纷', role:'被告', title:'某建材公司诉某装饰公司买卖合同纠纷', court:'某区人民法院', hearing:'2026-12-10 14:00', proofDue:'2026-11-16', done:true, owner:'演示律师', team:['律师 周宁'], dept:'民商事争议解决部',
   goal:'抗辩货物质量不合格，主张减少价款并驳回违约金',
   facts:'2025年4月双方签订瓷砖采购合同，货款 38.6 万元。第二批货物到场后发现色差与开裂，我方在 7 日内书面提出异议并委托检测，结论为不合格。原告起诉主张全部货款及违约金。',
   focus:[
@@ -566,7 +566,7 @@ var BASE_CASES = [
   adverse:[{tx:'送货单 E08 的签收栏写有「已验收」字样，对方会据此主张我方已认可质量。',ev:'E08',lv:'高',act:'说明签收时只能核对数量与外观，开裂属隐蔽瑕疵，且 8 日内已书面异议（E10）。'}],
   risks:[{ic:'⚖',tx:'<b>检测报告证明力</b>：单方委托存在被质疑风险，建议准备鉴定申请。',lv:'中'},{ic:'▣',tx:'<b>业务员授权</b>：需提供岗位职责说明，否定其确认欠款的权限。',lv:'中'}],
   claims:[{c:'第二批货物质量不合格',ev:['E09','E12']},{c:'异议在检验期内提出',ev:['E10']},{c:'合同约定质量标准',ev:['E07']},{c:'业务员无权确认欠款',ev:[],sg:'岗位职责说明 / 授权书'}]},
- {id:'C3', no:'CASE-2026-003', type:'劳动争议', role:'原告', title:'王某诉某科技公司违法解除劳动合同纠纷', court:'某区人民法院', hearing:'2026-12-18 09:00', done:false, owner:'李律师', team:['演示律师'], dept:'劳动与人事部',
+ {id:'C3', no:'CASE-2026-003', type:'劳动争议', role:'原告', title:'王某诉某科技公司违法解除劳动合同纠纷', court:'某区人民法院', hearing:'2026-12-18 09:00', proofDue:'2026-12-04', done:false, owner:'李律师', team:['演示律师'], dept:'劳动与人事部',
   goal:'确认违法解除，主张赔偿金（2N）',
   facts:'王某 2022 年 3 月入职，2026 年 7 月公司以「绩效不合格、不能胜任」为由解除劳动合同，未经培训或调岗。仲裁部分支持，双方均起诉。',
   focus:[
@@ -707,7 +707,7 @@ var RUSH={
  C3:{file:'被告补充证据（绩效面谈记录）.pdf',recv:'2026-11-22 21:05',ev:{id:'E21',name:'对方提交：绩效面谈记录',type:'书证',purpose:'对方拟证明曾安排王某参加培训，王某拒绝',tags:['面谈','培训','庭前新增']},
   text:'绩效面谈记录\n时间：2026年5月10日\n面谈人：赵敏（HR），电话 13900001111\n员工：王磊\n内容：告知王磊可参加6月岗位培训，王磊表示不参加。\n员工签字：（空白）',
   items:{name:['赵敏','王磊'],id:[],phone:['13900001111'],addr:[],bank:[]},code:{'赵敏':'人事F','王磊':'劳动者D'},
-  op:{z:['有异议','n','员工未签字'],h:['有异议','p','超过举证期限'],g:['有异议','n','告知不等于实施培训'],t:'记录员工签字栏空白，无法证明面谈真实发生；即使属实，也只是「告知可以参加培训」，不等于用人单位实际安排了培训；且该证据在开庭前提交，超过举证期限，请求不予采纳。'},
+  op:{z:['有异议','n','员工未签字'],h:['无异议','y',''],g:['有异议','n','告知不等于实施培训'],t:'记录员工签字栏空白，无法证明面谈真实发生；即使属实，也只是「告知可以参加培训」，不等于用人单位实际安排了培训，不能证明已履行培训或调岗义务。'},
   impact:[{c:'未经培训或调岗',before:'需补强',after:'受冲击',why:'对方主张曾安排培训被拒',counter:['E14']}],
   adjust:[['新增','当庭指出员工未签字、内容只是告知'],['调整','要求对方提交培训通知、签到表等实际培训记录'],['不变','违法解除、主张 2N 赔偿金的诉请不变']],
   todo:['打印书面质证意见','向当事人核实 2026 年 5 月是否有过面谈']}
@@ -736,6 +736,28 @@ function rushInstant(cid){
   rushConfirm(res);
   var e=E(r.ev.id); if(e)e.opDone=true; S.view='respond'; render();
 }
+function ymd(s){return new Date(s.slice(0,10)+'T00:00:00')}
+function dueCheck(c,date){if(!c||!c.proofDue||!date)return null;var n=Math.round((ymd(date)-ymd(c.proofDue))/864e5);return {due:c.proofDue,sub:date.slice(0,10),late:n>0,n:n}}
+function dueBadge(c,e){if(!e||e.side!=='对方')return '';var d=dueCheck(c,e.date);if(!d)return '';return d.late?'<span class="bd hi">逾期 '+d.n+' 天</span>':''}
+function dueAdvice(d){
+  if(d.late)return [
+   ['当庭指出','举证期限至 '+d.due+'，对方 '+d.sub+' 提交，逾期 '+d.n+' 天；请求法庭责令对方说明逾期理由。'],
+   ['主张不采纳','对方拒不说明理由或理由不成立的，请求法庭不予采纳该证据。'],
+   ['退一步','如法庭认为该证据与案件基本事实有关而采纳，请求对其训诫、罚款，并给予我方质证准备时间或延期开庭。'],
+   ['费用','因对方逾期举证增加的交通、误工等必要费用，可请求由对方负担。']];
+  return [
+   ['不以逾期抗辩','该证据在举证期限内提交（期限至 '+d.due+'），不能以逾期为由请求不予采纳，重点放在三性质证。'],
+   ['准备时间','如距开庭时间不足以准备，可申请法庭另行安排质证或延期开庭。'],
+   ['我方反证','需补充反证的，在举证期限届满前提交，来不及的提前申请延长举证期限。']];
+}
+function dueHtml(c,date){
+  var d=dueCheck(c,date);
+  if(!d)return '<div class="blk"><div class="h"><h4>举证期限对照</h4><span class="bd mid">未录入期限</span></div><div class="why">本案尚未录入举证期限，请在案件信息中补录，系统将自动判断对方证据是否逾期。</div></div>';
+  return '<div class="blk"><div class="h"><h4>举证期限对照 · 程序应对</h4>'+(d.late?'<span class="bd hi">逾期 '+d.n+' 天</span>':'<span class="bd ok">期限内提交</span>')+'</div>'+
+   '<div class="three"><div><b>举证期限届满</b><span class="y">'+d.due+'</span></div><div><b>对方提交</b><span class="'+(d.late?'n':'y')+'">'+d.sub+'</span></div><div><b>结论</b><span class="'+(d.late?'n':'y')+'">'+(d.late?'逾期':'未逾期')+'</span></div></div>'+
+   dueAdvice(d).map(function(a){return '<div class="why" style="padding:4px 0"><span class="bd '+(d.late?'gold':'low')+'">'+a[0]+'</span> '+a[1]+'</div>'}).join('')+
+   '<div class="why" style="font-size:11px;color:var(--muted);padding-top:6px">依据：《中华人民共和国民事诉讼法》第六十八条；最高人民法院关于适用《中华人民共和国民事诉讼法》的解释 第一百零一条、第一百零二条。演示引用，正式版以法规库检索结果为准。</div></div>';
+}
 function renderRushing(){
   setStep('rush');setTabs('');setBar('生成应对方案',false);
   var c=C(S.resp.cid);
@@ -750,6 +772,7 @@ function renderRespond(){
   screen.innerHTML=
   '<div class="casebar"><div class="t">'+c.title+'</div><div class="m">开庭 '+c.hearing+' · 距开庭约 '+hoursLeft(c)+' 小时<br>本轮：第 '+e.round+' 轮 · 对方提交 · '+r.recv+' 收到</div></div>'+
   '<div class="chips" style="margin:0 0 12px">'+rounds.map(function(n,i){return n?'<span class="'+(i===e.round?'on':'')+'">第 '+i+' 轮 · '+n+' 份</span>':''}).join('')+'</div>'+
+  dueHtml(c,r.recv)+
   '<div class="blk"><div class="h"><h4>① 本轮新证据 · 质证意见</h4><span class="bd hi">待律师核对</span></div>'+
    '<div class="why"><b>'+e.id+' '+e.name+'</b><br>'+e.purpose+'</div>'+threeHtml(e.op)+'<div class="opin"><b>质证意见：</b>'+e.op.t+'</div>'+
    '<div class="trace" onclick="openEv(\''+e.id+'\')">查看脱敏原文</div></div>'+
@@ -769,7 +792,7 @@ function adoptRush(){
   if(!c.opp.some(function(o){return o.d.indexOf(r.ev.id)>=0}))c.opp.unshift({d:'对方开庭前补充 '+r.ev.id+'：'+r.ev.purpose.replace(/^.*拟证明/,'主张'),c:r.adjust[0][1]});
   S.cur=cid;S.stTab='attack';S.hist=['respond'];S.view='strategy';render();screen.scrollTop=0;toast('已写入庭审策略 · 攻防策略');
 }
-function respText(){var cid=S.resp.cid,c=C(cid),r=RUSH[cid],e=E(r.ev.id);return '【庭前应对】'+c.title+'\n开庭：'+c.hearing+'\n本轮新证据：'+e.id+' '+e.name+'\n质证意见：'+e.op.t.replace(/<[^>]+>/g,'')+'\n\n受影响的主张：\n'+r.impact.map(function(m){return '· '+m.c+'：'+m.before+' → '+m.after+'；反驳证据 '+m.counter.join('、')}).join('\n')+'\n\n策略调整：\n'+r.adjust.map(function(a){return '· ['+a[0]+'] '+a[1]}).join('\n')+'\n\n开庭前要做：\n'+r.todo.map(function(t,i){return (i+1)+'. '+t}).join('\n')}
+function respText(){var cid=S.resp.cid,c=C(cid),r=RUSH[cid],e=E(r.ev.id);return '【庭前应对】'+c.title+'\n开庭：'+c.hearing+'\n本轮新证据：'+e.id+' '+e.name+(function(){var d=dueCheck(c,r.recv);return d?'\n举证期限：'+d.due+'，对方 '+d.sub+' 提交，'+(d.late?'逾期 '+d.n+' 天':'期限内')+'\n程序应对：'+dueAdvice(d).map(function(a){return a[0]+'——'+a[1]}).join('；'):''})()+'\n质证意见：'+e.op.t.replace(/<[^>]+>/g,'')+'\n\n受影响的主张：\n'+r.impact.map(function(m){return '· '+m.c+'：'+m.before+' → '+m.after+'；反驳证据 '+m.counter.join('、')}).join('\n')+'\n\n策略调整：\n'+r.adjust.map(function(a){return '· ['+a[0]+'] '+a[1]}).join('\n')+'\n\n开庭前要做：\n'+r.todo.map(function(t,i){return (i+1)+'. '+t}).join('\n')}
 // ================= 律所空间 =================
 function myCases(){return S.scope==='all'?CASES:CASES.filter(function(c){return !c.owner||c.owner===(S.user&&S.user.name)||c.owner==='演示律师'&&S.user&&S.user.name.indexOf('律师')>=0})}
 function openFirm(){
@@ -825,6 +848,7 @@ function renderNew(){
   '<div class="field"><label>案由 / 案件类型</label><select id="fType"><option>民间借贷纠纷</option><option>买卖合同纠纷</option><option>劳动争议</option><option>离婚纠纷</option><option>交通事故人身损害赔偿</option></select></div>'+
   '<div class="field"><label>我方诉讼地位与目标</label><div class="seg">'+['原告','被告','第三人'].map(function(r){return '<button class="'+(S.role===r?'on':'')+'" onclick="S.role=\''+r+'\';renderNew()">'+r+'</button>'}).join('')+'</div><input type="text" id="fGoal" value="主张返还借款本金 15 万元及逾期利息" style="margin-top:10px;border-top:1px solid #EDF0F2;padding-top:10px"></div>'+
   '<div class="field"><label>归档与团队</label><select id="fDept"><option>民商事争议解决部</option><option>劳动与人事部</option><option>公司与合规部</option></select><div class="up" style="margin-top:10px"><span class="filechip">承办：'+(S.user?S.user.name:'')+'</span><span class="filechip">协办：助理 陈晓</span><span class="upbtn">＋ 添加成员</span></div></div>'+
+  '<div class="field"><label>举证期限届满日（见法院举证通知书）</label><input type="date" id="fDue" value="2026-12-28"></div>'+
   '<div class="field"><label>案件事实描述</label><textarea id="fFacts">2025年6月，朋友刘某以装修为由向我借款15万元，我通过银行转账交付，刘某出具借条，约定2026年6月归还。到期后多次催收未还。</textarea></div>'+
   '<div class="field"><label>案件材料</label><div class="up">'+S.newFiles.map(function(f){return '<span class="filechip">▣ '+f+'</span>'}).join('')+'<span class="upbtn" onclick="addNewFile()">＋ 上传材料</span></div></div>'+
   '<div class="hint">● 上传后自动识别并脱敏：姓名、身份证号、手机号、住址、银行账号。原文仅本机加密留存，不进入模型。</div>'+
@@ -832,7 +856,7 @@ function renderNew(){
 }
 function addNewFile(){if(S.newFiles.length>=5){toast('演示最多添加 5 份材料');return}S.newFiles.push('证据材料'+(S.newFiles.length+1)+'.pdf');renderNew();toast('已添加材料（演示）')}
 function newToMask(){
-  S.newCase={dept:(document.getElementById('fDept')||{}).value,type:document.getElementById('fType').value,goal:document.getElementById('fGoal').value,facts:document.getElementById('fFacts').value};
+  S.newCase={dept:(document.getElementById('fDept')||{}).value,type:document.getElementById('fType').value,goal:document.getElementById('fGoal').value,facts:document.getElementById('fFacts').value,proofDue:(document.getElementById('fDue')||{}).value||''};
   S.mask={ctx:'new',cid:'C1',mode:'mask',show:'after',on:{name:1,id:1,phone:1,addr:1,bank:1}};
   go('mask');
 }
@@ -889,7 +913,7 @@ function confirmMask(){
     toast('已脱敏 '+res.count+' 处，作为第 '+rd+' 轮证据入库');
   } else {
     var nc=JSON.parse(JSON.stringify(C('C1')));
-    nc.id='C4'; nc.no='CASE-2026-004'; nc.owner='演示律师'; nc.team=['助理 陈晓']; nc.dept=S.newCase.dept||'民商事争议解决部'; nc.title='新建 · 刘某借款纠纷（'+S.newCase.type+'）'; nc.type=S.newCase.type; nc.role=S.role==='第三人'?'第三人':S.role; nc.goal=S.newCase.goal; nc.facts=S.newCase.facts; nc.hearing='2027-01-12 09:30'; nc.done=true;
+    nc.id='C4'; nc.no='CASE-2026-004'; nc.owner='演示律师'; nc.team=['助理 陈晓']; nc.dept=S.newCase.dept||'民商事争议解决部'; nc.title='新建 · 刘某借款纠纷（'+S.newCase.type+'）'; nc.type=S.newCase.type; nc.role=S.role==='第三人'?'第三人':S.role; nc.goal=S.newCase.goal; nc.facts=S.newCase.facts; nc.hearing='2027-01-12 09:30'; nc.proofDue=S.newCase.proofDue||''; nc.done=true;
     nc.claims=[{c:'借贷合意成立',ev:['E90']},{c:'款项已交付 15 万元',ev:['E91']},{c:'到期未还、已催收',ev:['E92']},{c:'借条签名真实',ev:[],sg:'原件当庭核对'}];
     nc.ours=['以「借条 E90 + 转账凭证 E91」证明借贷合意与交付','以「微信催收记录 E92」证明到期未还','主张本金 15 万元及逾期利息'];
     nc.opp=[{d:'可能抗辩：款项为装修工程款',c:'借条载明「借到」，转账附言为「借款」。'},{d:'可能抗辩：否认借条签名',c:'出示原件，必要时申请笔迹鉴定。'}];
@@ -957,7 +981,7 @@ function renderEvList(){
      '<div class="r1"><div class="nm"><span class="id">'+e.id+'</span>'+hl(e.name)+'</div>'+(e.id===S.fresh?'<span class="bd gold">刚入库</span>':(e.late?'<span class="bd hi">庭前新增</span>':''))+'</div>'+
      '<div class="ps">'+hl(e.purpose)+'</div>'+
      (inText?'<div class="snip">原文命中：…'+hl(e.text.slice(Math.max(0,e.text.toLowerCase().indexOf(S.q.toLowerCase())-14),e.text.toLowerCase().indexOf(S.q.toLowerCase())+30))+'…</div>':'')+
-     '<div class="tg"><span class="bd low">'+e.type+'</span><span class="bd '+(e.side==='我方'?'att':'def')+'">'+e.side+'</span><span class="bd low">第 '+e.round+' 轮</span>'+(e.mask?'<span class="bd ok">已脱敏 '+e.mask+' 处</span>':'')+(e.op?(e.opDone?'<span class="bd ok">已出质证意见</span>':'<span class="bd mid">待质证</span>'):'')+'</div>'+
+     '<div class="tg"><span class="bd low">'+e.type+'</span><span class="bd '+(e.side==='我方'?'att':'def')+'">'+e.side+'</span><span class="bd low">第 '+e.round+' 轮</span>'+dueBadge(c,e)+(e.mask?'<span class="bd ok">已脱敏 '+e.mask+' 处</span>':'')+(e.op?(e.opDone?'<span class="bd ok">已出质证意见</span>':'<span class="bd mid">待质证</span>'):'')+'</div>'+
      '<div class="src">'+c.no+' · '+c.title+' · '+e.date+'</div></div>';
   }).join('');
 }
@@ -968,6 +992,7 @@ function openEv(id){
    '<div class="tg" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px"><span class="bd low">'+e.type+'</span><span class="bd '+(e.side==='我方'?'att':'def')+'">'+e.side+'提交</span><span class="bd low">第 '+e.round+' 轮 · '+e.date+'</span>'+(e.late?'<span class="bd hi">庭前新增</span>':'')+(e.mask?'<span class="bd ok">已脱敏 '+e.mask+' 处</span>':'')+'</div>'+
    '<div class="kv"><div class="k">所属案件</div><div class="v">'+c.title+'（'+c.no+'）</div></div>'+
    '<div class="kv"><div class="k">证明目的</div><div class="v">'+e.purpose+'</div></div>'+
+   (function(){var d=e.side==='对方'?dueCheck(c,e.date):null;return d?'<div class="kv"><div class="k">举证期限</div><div class="v">期限至 '+d.due+' · '+d.sub+' 提交 · '+(d.late?'<b style="color:var(--dead)">逾期 '+d.n+' 天</b>，可请求法庭责令说明理由、不予采纳':'期限内提交')+'</div></div>':''})()+
    (claim.length?'<div class="kv"><div class="k">证据链 · 对应主张</div><div class="v">'+claim.map(function(x){return '▸ '+x}).join('<br>')+'</div></div>':'')+
    '<div class="kv"><div class="k">识别原文（脱敏后）</div><div class="v" style="font-size:12.5px">'+e.text+'</div></div>'+
    (e.op?'<div class="kv" id="opbox"><div class="k">质证意见</div>'+(e.opDone?threeHtml(e.op)+'<div class="opin"><b>意见：</b>'+e.op.t+'</div>':'<div class="v" style="color:var(--muted)">尚未生成。对方于 '+e.date+' 提交，距开庭仅 '+days(c.hearing.slice(0,10))+' 天。</div><button class="genbtn" onclick="genOp(\''+id+'\',\'sheet\')">✦ 一键生成质证意见</button>')+'</div>':''));
@@ -1025,7 +1050,7 @@ function renderStrategy(){
   setStep('strategy');setTabs('strategy');setBar('庭审策略',S.hist.length>0,'切换',function(){pickCase('st')});
   var c=C(S.cur);
   var dd=days(c.hearing);
-  var head='<div class="casebar"><div class="cdn'+(dd<=1?' soon':'')+'">'+(dd<=1?'明天开庭':'还有 '+dd+' 天开庭')+' · '+c.hearing.slice(5,16)+' · '+c.court+'</div><div class="t">'+c.title+'</div><div class="m">'+c.no+' · '+c.type+' · 我方'+c.role+'<br>目标：'+c.goal+'</div></div>';
+  var head='<div class="casebar"><div class="cdn'+(dd<=1?' soon':'')+'">'+(dd<=1?'明天开庭':'还有 '+dd+' 天开庭')+' · '+c.hearing.slice(5,16)+' · '+c.court+'</div><div class="t">'+c.title+'</div><div class="m">'+c.no+' · '+c.type+' · 我方'+c.role+(c.proofDue?' · 举证期限至 '+c.proofDue:'')+'<br>目标：'+c.goal+'</div></div>';
   if(!c.done){
     screen.innerHTML=head+'<div class="blk"><div class="h"><h4>该案件尚未生成策略</h4><span class="bd mid">待生成</span></div><div class="why">已入库 '+evOf(c.id).length+' 份证据（均已脱敏），其中对方庭前新增 '+lateOf(c.id).length+' 份。生成后将同步产出证据链匹配与质证意见。</div></div><button class="primary" onclick="startParse(9)">✦ 生成庭审策略草案</button>';
     return;
