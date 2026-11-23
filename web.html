@@ -486,6 +486,47 @@ body.web .trow,body.web .next{max-width:960px}
   .bar{padding-top:env(safe-area-inset-top);height:calc(50px + env(safe-area-inset-top))}
   .tabs{padding-bottom:env(safe-area-inset-bottom);height:calc(64px + env(safe-area-inset-bottom))}
 }
+
+/* ===== v2.3 成员与权限（律所管理员） ===== */
+.tabs [data-tab=admin] .ic{--i:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='8' r='3.2'/><path d='M3.5 19.5c.6-3.3 2.8-5 5.5-5s4.9 1.7 5.5 5'/><path d='M15.5 5.2a3 3 0 0 1 0 5.6M17.5 14.8c1.7.6 2.7 2.2 3 4.7'/></svg>")}
+@media (max-width:760px){.tabs [data-tab=admin]{display:none !important}}
+.adm-id{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:8px 0 12px;flex-wrap:wrap}
+.adm-id button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 10px;color:var(--navy2);cursor:pointer}
+.adm-id button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.adm-stat{display:flex;align-items:flex-end;padding:6px 0 18px;border-bottom:1px solid var(--line);gap:0}
+.adm-stat > div{padding:0 18px;border-left:1px solid var(--line)}
+.adm-stat > div:first-child{padding-left:0;border-left:0}
+.adm-stat b{display:block;font-family:var(--serif);font-size:30px;color:var(--navy);font-weight:600;line-height:1.15}
+.adm-stat b small{font-size:15px;color:var(--muted);font-weight:500}
+.adm-stat span{font-size:11.5px;color:var(--muted)}
+.adm-stat .full b{color:var(--dead)}
+.adm-stat .sp{margin-left:auto;border:0}
+.adm-btn{font-size:12.5px;border:1px solid #C6CED6;background:#fff;color:var(--navy);border-radius:7px;padding:7px 14px;cursor:pointer;white-space:nowrap}
+.adm-btn.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+.adm-bar{display:flex;gap:10px;align-items:center;margin:4px 0 6px;flex-wrap:wrap}
+.adm-bar input{flex:1;min-width:160px;border:0;border-bottom:1px solid var(--line);padding:8px 2px;font-size:13px;outline:0;font-family:inherit;background:transparent}
+.adm-bar input:focus{border-bottom-color:var(--navy)}
+.adm-wrap{overflow-x:auto}
+.utbl{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+.utbl th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:500;padding:10px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.utbl td{padding:12px 8px;border-bottom:1px solid var(--line2);color:var(--body);vertical-align:middle}
+.utbl td b{color:var(--navy);font-weight:600}
+.utbl td em{display:block;font-style:normal;font-size:11.5px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
+.utbl tr.off td{color:var(--faint)} .utbl tr.off td b{color:var(--faint)}
+.utbl select{font-size:12.5px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:#fff;color:var(--ink);font-family:inherit}
+.utbl .lk{color:var(--gold);cursor:pointer;font-size:12.5px;margin-right:12px;white-space:nowrap}
+.utbl .lk.dg{color:var(--dead)}
+.utbl .me{font-size:10px;color:var(--gold-ink);background:var(--gold-soft);border-radius:3px;padding:1px 5px;margin-left:6px;font-weight:500}
+.ptbl td,.ptbl th{text-align:center}
+.ptbl td:first-child,.ptbl th:first-child{text-align:left}
+.ptbl .y{color:var(--ok);font-weight:600} .ptbl .n{color:#C3CAD2}
+.ptbl tr.grp td{font-size:11px;color:var(--muted);letter-spacing:1px;padding-top:16px;border-bottom:1px solid var(--line)}
+.ptbl th.cur{color:var(--navy);font-weight:600}
+.lock{border-left:2px solid #D9C48F;padding:6px 0 6px 12px;font-size:12.5px;color:#6E5316;line-height:1.7;margin:10px 0 14px}
+.logi{display:grid;grid-template-columns:118px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line2);font-size:13px}
+.logi span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.logi b{color:var(--navy);font-weight:600}
+.inv .field select,.inv .field input{width:100%}
 </style>
 </head>
 <body class="web">
@@ -497,7 +538,7 @@ body.web .trow,body.web .next{max-width:960px}
     <p>面向<strong>律所</strong>的诉讼工作台：案件和材料按律所统一归档。把<strong>案件材料整理</strong>和<strong>庭审策略生成</strong>放进同一个工作台：材料上传即脱敏，证据按案件入库可检索，时间线按案件生成，证据可以分多轮录入；对方临开庭补交证据时，录入后先判断是否逾期，再生成三性质证意见、调整庭审策略。</p>
     <div>
       <span class="tag">案件管理</span><span class="tag">证据链 ↔ 证据目录</span><span class="tag">攻防策略</span><span class="tag">质证意见</span>
-      <span class="tag new">新 · 证据库检索</span><span class="tag new">新 · 先选案件再出时间线</span><span class="tag new">新 · 上传自动脱敏</span><span class="tag new">新 · 账号登录</span><span class="tag new">新 · 证据目录自动编号</span><span class="tag new">新 · 不利点排查</span>
+      <span class="tag new">新 · 证据库检索</span><span class="tag new">新 · 先选案件再出时间线</span><span class="tag new">新 · 上传自动脱敏</span><span class="tag new">新 · 账号登录</span><span class="tag new">新 · 证据目录自动编号</span><span class="tag new">新 · 不利点排查</span><span class="tag new">新 · 成员与权限管理</span>
     </div>
     <div class="steps">
       <h4>演示路线（可点击跳转）</h4>
@@ -509,6 +550,7 @@ body.web .trow,body.web .next{max-width:960px}
       <div class="s" data-s="strategy" onclick="jump('strategy')">⑥ 证据链 · 证据目录 · 质证</div>
       <div class="s" data-s="rush" onclick="jump('rush')">⑦ 开庭前一天对方交证据 → 快速应对</div>
       <div class="s" data-s="report" onclick="jump('report')">⑧ 不利点排查与策略报告</div>
+      <div class="s" data-s="admin" onclick="jump('admin')">⑨ 成员与权限（律所管理员）</div>
     </div>
     <button class="reset" onclick="resetAll()">↺ 重置演示</button>
     <div class="note">手机演示：用手机浏览器打开本页面，安卓选「安装应用 / 添加到主屏幕」，iPhone 用 Safari 点分享 →「添加到主屏幕」，即可像 App 一样全屏使用、断网可用。<br><br>全部为演示数据，人名、证件号、账号均为虚构。AI 输出仅为律师工作初稿，须人工核对。手机打开此页面会自动切换为全屏 App 视图。</div>
@@ -523,6 +565,7 @@ body.web .trow,body.web .next{max-width:960px}
       <div data-tab="evidence" onclick="switchTab('evidence')"><span class="ic">▦</span>证据库<span class="rd" id="evDot"></span></div>
       <div data-tab="timeline" onclick="switchTab('timeline')"><span class="ic">┇</span>时间线</div>
       <div data-tab="report" onclick="switchTab('report')"><span class="ic">▧</span>报告</div>
+      <div data-tab="admin" onclick="switchTab('admin')"><span class="ic">◎</span>成员与权限</div>
     </div>
     <div class="sheet" id="sheet"></div>
     <div class="toast" id="toast"></div>
@@ -653,7 +696,8 @@ function init(){
   EV = JSON.parse(JSON.stringify(BASE_EV));
   TL = JSON.parse(JSON.stringify(BASE_TL));
   S = {view:'home', hist:[], cur:'C1', tl:null, tlGen:{}, tlF:'all', q:'', fCase:'all', fType:'全部', fSide:'全部', fLate:false, stTab:'focus', checked:{}, flagged:{}, mask:null, fresh:null, newFiles:['借条.jpg','银行转账凭证.pdf','微信催收记录.png'], role:'原告', lg:'code'};
-  S.user=loadUser(); if(!S.user)S.view='login';
+  S.user=loadUser(); if(!S.user)S.view='login'; else if(!S.user.role)S.user.role='承办律师';
+  M=JSON.parse(JSON.stringify(BASE_MEMBERS)); LOGS=JSON.parse(JSON.stringify(BASE_LOGS)); S.seats={law:6,ast:4}; S.admTab='members'; S.admQ=''; S.admDept='全部';
 }
 
 // ================= 工具函数 =================
@@ -683,7 +727,7 @@ function render(){
   if(v==='home')renderHome(); else if(v==='new')renderNew(); else if(v==='mask')renderMask();
   else if(v==='parse')renderParse(); else if(v==='evidence')renderEvidence(); else if(v==='timeline')renderTimeline();
   else if(v==='strategy')renderStrategy(); else if(v==='report')renderReport();
-  else if(v==='login')renderLogin(); else if(v==='rushing')renderRushing(); else if(v==='respond')renderRespond();
+  else if(v==='login')renderLogin(); else if(v==='admin')renderAdmin(); else if(v==='rushing')renderRushing(); else if(v==='respond')renderRespond();
 }
 
 
@@ -797,8 +841,8 @@ function respText(){var cid=S.resp.cid,c=C(cid),r=RUSH[cid],e=E(r.ev.id);return 
 function myCases(){return S.scope==='all'?CASES:CASES.filter(function(c){return !c.owner||c.owner===(S.user&&S.user.name)||c.owner==='演示律师'&&S.user&&S.user.name.indexOf('律师')>=0})}
 function openFirm(){
   openSheet(FIRM.name,
-   '<div class="kv"><div class="k">当前空间</div><div class="v">'+FIRM.name+'（'+FIRM.plan+'）<br>'+(S.user?S.user.name:'')+' · 承办律师</div></div>'+
-   '<div class="kv"><div class="k">采购与席位（由律所购买，律师使用）</div><div class="v">版本：律所专业版 · 按席位年付<br>席位：已用 <b>8</b> / 10（律师 6 · 助理 2）<br>有效期至 2027-11-30 · 管理员：律所行政 王女士</div></div>'+
+   '<div class="kv"><div class="k">当前空间</div><div class="v">'+FIRM.name+'（'+FIRM.plan+'）<br>'+(S.user?S.user.name+' · '+(S.user.role||'承办律师'):'')+'</div></div>'+
+   '<div class="kv"><div class="k">采购与席位（由律所购买，律师使用）</div><div class="v">版本：律所专业版 · 按席位年付<br>席位：已用 <b>'+(seatUse().law+seatUse().ast)+'</b> / '+(S.seats.law+S.seats.ast)+'（律师 '+seatUse().law+' · 助理 '+seatUse().ast+'）<br>有效期至 2027-11-30 · 管理员：刘主任</div></div>'+(isAdmin()?'<button class="primary" style="margin:4px 0 12px" onclick="closeSheet();switchTab(\'admin\')">管理成员与权限 ›</button>':'<div class="hint" style="margin:0 2px 12px">成员与权限由律所管理员管理 · <a style="color:var(--gold);cursor:pointer" onclick="closeSheet();switchTab(\'admin\')">查看角色权限</a></div>')+
    '<div class="kv"><div class="k">归档方式</div><div class="v">材料按「律所 → 部门 → 案件 → 证据轮次 → 证据」归档在律所空间，不存在个人账号下。律师离职或换人承办，案件跟着律所走，可直接交接。</div></div>'+
    '<table class="mt"><tr><th>角色</th><th>能做什么</th></tr>'+
    [['律所管理员 / 主任','管理成员与部门；查看全所案件；审批结案归档'],['承办律师','创建和编辑自己承办的案件；生成策略；导出报告'],['协办律师','查看、编辑被加入的案件'],['律师助理','上传与整理材料；不能导出报告']].map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td></tr>'}).join('')+'</table>'+
@@ -818,7 +862,7 @@ function caseCard(c,opts){
   '</div>';
 }
 function renderHome(){
-  setStep('home');setTabs('home');setBar('证目',false,'＋ 新建',function(){go('new')});
+  setStep('home');setTabs('home');setBar('证目',false,'＋ 新建',function(){if(!can('NEW'))return deny('新建案件');go('new')});
   var byH=function(a,b){return a.hearing.localeCompare(b.hearing)};
   var nx=CASES.slice().sort(byH)[0];
   var list=(S.scope==='all'?CASES:CASES.filter(function(c){return c.owner!=='李律师'})).filter(function(c){return c.id!==nx.id}).sort(byH);
@@ -833,7 +877,7 @@ function renderHome(){
   '<div class="alert" onclick="pickCase(\'rush\')"><div class="t"><b>庭前新证据应对</b><span style="white-space:nowrap">判断是否逾期</span> · <span style="white-space:nowrap">生成三性质证意见</span> · <span style="white-space:nowrap">调整庭审策略</span></div><span class="go">录入 ›</span></div>'+
   (todo.length?'<div class="sec">待出质证意见<span class="n">'+todo.length+'</span></div>'+todo.map(function(e){var c=C(e.c);return '<div class="trow" onclick="openEv(\''+e.id+'\')"><span class="tid">'+e.id+'</span><span class="ttx"><b>'+e.name+'</b><em>'+c.type+' · '+(e.late?'对方庭前提交':'第 '+e.round+' 轮')+' · 开庭 '+c.hearing.slice(5,10)+'</em></span><span class="tgo">›</span></div>'}).join(''):'')+
   '<div class="sec">其他案件<span class="n">'+list.length+'</span></div>'+
-  '<div class="seg sm" style="margin-bottom:4px"><button class="'+(S.scope!=='all'?'on':'')+'" onclick="S.scope=\'mine\';renderHome()">我参与的</button><button class="'+(S.scope==='all'?'on':'')+'" onclick="S.scope=\'all\';renderHome()">本所全部</button></div>'+
+  '<div class="seg sm" style="margin-bottom:4px"><button class="'+(S.scope!=='all'?'on':'')+'" onclick="S.scope=\'mine\';renderHome()">我参与的</button><button class="'+(S.scope==='all'?'on':'')+'" onclick="if(!can(\'ALL\')){toast(\'「本所全部」仅律所管理员可见\');return}S.scope=\'all\';renderHome()">本所全部</button></div>'+
   list.map(function(c){return caseCard(c)}).join('');
 }
 function openCase(id){
@@ -1156,7 +1200,7 @@ function renderReport(){
   '<div class="disc" style="margin:14px 0 0">⚠ 本报告个人信息均已脱敏。AI 生成初稿，须律师逐条核对。</div></div>'+
   '<button class="primary" onclick="copyReport()">复制报告全文</button>';
 }
-function copyReport(){var t=reportText(C(S.cur));if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('报告已复制到剪贴板')}).catch(function(){toast('复制失败，请手动选择')})}else toast('当前环境不支持自动复制')}
+function copyReport(){if(!can('EXP'))return deny('导出报告');logAdd('导出策略报告 · '+C(S.cur).title);var t=reportText(C(S.cur));if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('报告已复制到剪贴板')}).catch(function(){toast('复制失败，请手动选择')})}else toast('当前环境不支持自动复制')}
 
 // ================= 登录（演示账号体系，前端本地校验） =================
 function store(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -1176,8 +1220,8 @@ function renderLogin(){
   '<div class="hint">使用律所分配的账号登录。案件与材料统一归档在律所空间，按角色授权查看。</div>'+
   '<label class="agree"><input type="checkbox" id="lgA"><span>我已阅读并同意《用户协议》《隐私政策》，同意上传材料先在本机脱敏再进行 AI 分析</span></label>'+
   '<button class="primary" onclick="doLogin()">登录</button>'+
-  '<button class="ghost" onclick="loginOk({name:\'演示律师\',phone:\'\'})">演示账号一键登录</button>'+
-  '<div class="hint" style="text-align:center;margin-top:16px">演示环境：任意 11 位手机号 + 获取验证码即可登录；<br>或账号 demo / 密码 123456。不会发送真实短信。</div>';
+  '<button class="ghost" onclick="loginOk({name:\'演示律师\',phone:\'\',role:\'承办律师\'})">演示账号一键登录（承办律师）</button>'+'<button class="ghost" onclick="loginOk({name:\'刘主任\',phone:\'\',role:\'律所管理员\'})">以律所管理员登录</button>'+
+  '<div class="hint" style="text-align:center;margin-top:16px">演示环境：任意 11 位手机号 + 获取验证码即可登录；<br>或账号 demo / 密码 123456（承办律师）、admin / 123456（律所管理员）。不会发送真实短信。</div>';
 }
 function getCode(){
   var p=document.getElementById('lgP').value.trim();
@@ -1193,19 +1237,174 @@ function doLogin(){
     var p=document.getElementById('lgP').value.trim(), c=document.getElementById('lgC').value.trim();
     if(!/^1\d{10}$/.test(p)){toast('请输入正确的 11 位手机号');return}
     if(!/^\d{6}$/.test(c)){toast('请输入 6 位验证码');return}
-    loginOk({name:'演示律师',phone:p.slice(0,3)+'****'+p.slice(-4)});
+    loginOk({name:'演示律师',phone:p.slice(0,3)+'****'+p.slice(-4),role:'承办律师'});
   } else {
     var u=document.getElementById('lgU').value.trim(), w=document.getElementById('lgW').value;
-    if(u==='demo'&&w==='123456')loginOk({name:'演示律师',phone:''}); else toast('账号或密码错误（演示账号 demo / 123456）');
+    if(u==='demo'&&w==='123456')loginOk({name:'演示律师',phone:'',role:'承办律师'}); else if(u==='admin'&&w==='123456')loginOk({name:'刘主任',phone:'',role:'律所管理员'}); else toast('账号或密码错误（演示账号 demo / 123456）');
   }
 }
-function loginOk(u){S.user=u;store('lw_user',u);S.hist=[];S.view='home';render();screen.scrollTop=0;toast('已进入 '+FIRM.name+' · '+u.name)}
+function loginOk(u){if(!u.role)u.role='承办律师';S.user=u;store('lw_user',u);S.hist=[];S.view='home';render();screen.scrollTop=0;toast('已进入 '+FIRM.name+' · '+u.name)}
 function logout(){store('lw_user',null);S.user=null;S.view='login';closeSheet();render();toast('已退出登录')}
+
+
+// ================= 成员与权限（律所管理员，演示数据） =================
+var M=[], LOGS=[];
+var ROLES=['律所管理员','承办律师','协办律师','律师助理'];
+var DEPTS=['管理层','民商事争议解决部','劳动与人事部','公司与合规部'];
+var BASE_MEMBERS=[
+ {id:'U1',name:'刘主任',phone:'139****6601',dept:'管理层',role:'律所管理员',st:'在用',last:'今天 08:47',cases:2},
+ {id:'U2',name:'演示律师',phone:'138****0008',dept:'民商事争议解决部',role:'承办律师',st:'在用',last:'刚刚',cases:3},
+ {id:'U3',name:'李律师',phone:'137****2190',dept:'民商事争议解决部',role:'承办律师',st:'在用',last:'昨天 21:06',cases:5},
+ {id:'U4',name:'周宁',phone:'186****7735',dept:'民商事争议解决部',role:'协办律师',st:'在用',last:'昨天 18:20',cases:2},
+ {id:'U5',name:'赵敏',phone:'135****4412',dept:'劳动与人事部',role:'承办律师',st:'在用',last:'11-20 16:32',cases:4},
+ {id:'U6',name:'孙浩',phone:'158****9023',dept:'劳动与人事部',role:'协办律师',st:'在用',last:'11-19 10:05',cases:1},
+ {id:'U7',name:'陈晓',phone:'176****3318',dept:'民商事争议解决部',role:'律师助理',st:'在用',last:'今天 09:02',cases:0},
+ {id:'U8',name:'吴悦',phone:'150****6627',dept:'劳动与人事部',role:'律师助理',st:'待激活',last:'—',cases:0},
+ {id:'U9',name:'郑律师',phone:'131****5580',dept:'公司与合规部',role:'承办律师',st:'已停用',last:'10-31 17:45',cases:0,note:'已离职，3 件案件已移交李律师'}
+];
+var BASE_LOGS=[
+ ['今天 09:02','陈晓','上传材料：被告补充证据（证人证言）.pdf · 李某诉张某'],
+ ['今天 08:47','刘主任','登录律所空间'],
+ ['11-21 15:10','刘主任','邀请成员 吴悦（律师助理 · 劳动与人事部）'],
+ ['11-20 11:30','演示律师','导出策略报告 · 某建材公司诉某装饰公司'],
+ ['10-31 17:50','刘主任','停用账号 郑律师；3 件案件移交给 李律师'],
+ ['10-31 17:48','刘主任','审批结案归档 · CASE-2025-087']
+];
+// 权限矩阵：顺序 = 律所管理员 / 承办律师 / 协办律师 / 律师助理
+var PERMS=[
+ ['成员与席位',[
+  ['ADMIN','邀请成员、分配席位、扩容',[1,0,0,0]],
+  ['ROLE','修改角色、停用账号、案件移交',[1,0,0,0]],
+  ['LOG','查看全所操作日志',[1,0,0,0]]]],
+ ['案件',[
+  ['ALL','查看本所全部案件',[1,0,0,0]],
+  ['NEW','新建案件、指定协办',[1,1,0,0]],
+  ['EDIT','编辑自己承办 / 被加入的案件',[1,1,1,0]],
+  ['ARCH','结案归档（管理员审批）',[1,1,0,0]]]],
+ ['材料与 AI',[
+  ['UP','上传材料、整理证据',[1,1,1,1]],
+  ['RAW','查看脱敏前原文对照',[1,1,1,0]],
+  ['AI','生成质证意见与策略',[1,1,1,0]],
+  ['ADOPT','采纳 AI 结论写回策略',[1,1,0,0]]]],
+ ['导出',[
+  ['EXP','导出 / 复制策略报告',[1,1,0,0]]]]
+];
+function can(code){var r=ROLES.indexOf((S.user&&S.user.role)||'承办律师');var ok=false;PERMS.forEach(function(g){g[1].forEach(function(p){if(p[0]===code)ok=!!p[2][r]})});return ok}
+function deny(what){toast('当前角色「'+((S.user&&S.user.role)||'')+'」无权'+what+'，请联系律所管理员')}
+function isAdmin(){return can('ADMIN')}
+function seatUse(){var law=0,ast=0;M.forEach(function(m){if(m.st==='已停用')return;if(m.role==='律师助理')ast++;else law++});return {law:law,ast:ast}}
+function logAdd(t){var d=new Date();LOGS.unshift(['今天 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2),(S.user&&S.user.name)||'',t])}
+function actAs(role){
+  var who={'律所管理员':'刘主任','承办律师':'演示律师','律师助理':'陈晓'}[role];
+  S.user={name:who,phone:'',role:role};store('lw_user',S.user);render();toast('已切换为：'+who+' · '+role+'（演示）');
+}
+function renderAdmin(){
+  setStep('admin');setTabs('admin');
+  var adm=isAdmin();
+  setBar('成员与权限',false,adm?'＋ 邀请成员':'',adm?openInvite:null);
+  var u=seatUse(), tot=S.seats.law+S.seats.ast, used=u.law+u.ast;
+  var idbar='<div class="adm-id">演示身份：'+['律所管理员','承办律师','律师助理'].map(function(r){return '<button class="'+(S.user.role===r?'on':'')+'" onclick="actAs(\''+r+'\')">'+r+'</button>'}).join('')+'<span>切换后可看到不同角色的可见范围与操作权限</span></div>';
+  var head='<div class="hd"><span>'+FIRM.name+' · 律所专业版 · 有效期至 2027-11-30</span><span>当前：'+S.user.name+' · '+S.user.role+'</span></div>'+idbar;
+  var stat='<div class="adm-stat">'+
+    '<div class="'+(used>=tot?'full':'')+'"><b>'+used+'<small> / '+tot+'</small></b><span>已用席位</span></div>'+
+    '<div class="'+(u.law>=S.seats.law?'full':'')+'"><b>'+u.law+'<small> / '+S.seats.law+'</small></b><span>律师席位</span></div>'+
+    '<div class="'+(u.ast>=S.seats.ast?'full':'')+'"><b>'+u.ast+'<small> / '+S.seats.ast+'</small></b><span>助理席位</span></div>'+
+    '<div><b>'+M.filter(function(m){return m.st==='待激活'}).length+'</b><span>待激活</span></div>'+
+    '<div class="sp">'+(adm?'<button class="adm-btn" onclick="expandSeats()">席位扩容</button>':'')+'</div></div>';
+  var tabs='<div class="tabs2" style="margin-top:14px">'+[['members','成员 '+M.length],['roles','角色权限'],['logs','操作日志']].map(function(t){return '<button class="'+(S.admTab===t[0]?'on':'')+'" onclick="S.admTab=\''+t[0]+'\';renderAdmin()">'+t[1]+'</button>'}).join('')+'</div>';
+  var body='';
+  if(S.admTab==='members'){
+    if(!adm) body+='<div class="lock">你是「'+S.user.role+'」，只能查看本部门同事与自己的账号信息。邀请成员、修改角色、停用账号需要律所管理员操作。</div>';
+    var me=S.user.name, myDept=(M.filter(function(m){return m.name===me})[0]||{}).dept;
+    var list=M.filter(function(m){
+      if(!adm&&m.dept!==myDept&&m.name!==me)return false;
+      if(S.admDept!=='全部'&&m.dept!==S.admDept)return false;
+      if(S.admQ&&(m.name+m.phone+m.dept+m.role).indexOf(S.admQ)<0)return false;return true});
+    body+='<div class="adm-bar"><input id="admQ" placeholder="搜索姓名、手机号、部门、角色" value="'+S.admQ+'" oninput="S.admQ=this.value;renderAdmTbl()">'+
+      (adm?'<select class="adm-btn" style="padding:6px 8px" onchange="S.admDept=this.value;renderAdmin()">'+['全部'].concat(DEPTS).map(function(d){return '<option'+(S.admDept===d?' selected':'')+'>'+d+'</option>'}).join('')+'</select>':'')+'</div>'+
+      '<div class="adm-wrap" id="admTbl">'+memberTbl(list,adm)+'</div>'+
+      '<div class="hint" style="margin-top:12px">席位按「律师 + 助理」计算，已停用账号不占席位。律师离职时先把名下案件整体移交，再停用账号，案件和材料留在律所空间。</div>';
+  } else if(S.admTab==='roles'){
+    var ri=ROLES.indexOf(S.user.role);
+    body+='<div class="adm-wrap"><table class="utbl ptbl"><tr><th>权限</th>'+ROLES.map(function(r,i){return '<th class="'+(i===ri?'cur':'')+'">'+r+(i===ri?'（我）':'')+'</th>'}).join('')+'</tr>'+
+      PERMS.map(function(g){return '<tr class="grp"><td colspan="5">'+g[0]+'</td></tr>'+g[1].map(function(p){return '<tr><td>'+p[1]+'</td>'+p[2].map(function(v){return '<td class="'+(v?'y':'n')+'">'+(v?'✓':'—')+'</td>'}).join('')+'</tr>'}).join('')}).join('')+
+      '</table></div><div class="hint" style="margin-top:12px">接口层同样按角色和律所 ID 校验，前端隐藏按钮只是第一道。专业版可按部门细分权限（规划中）。</div>';
+  } else {
+    if(!can('LOG')){body+='<div class="lock">操作日志仅律所管理员可查看。</div>'}
+    else body+=LOGS.map(function(l){return '<div class="logi"><span>'+l[0]+'</span><div><b>'+l[1]+'</b>　'+l[2]+'</div></div>'}).join('')+'<div class="hint" style="margin-top:12px">记录上传、查看、导出、成员变更的人和时间，日志不可删除（演示数据）。</div>';
+  }
+  screen.innerHTML=head+stat+tabs+body;
+}
+function renderAdmTbl(){
+  var adm=isAdmin(), me=S.user.name, myDept=(M.filter(function(m){return m.name===me})[0]||{}).dept;
+  var list=M.filter(function(m){if(!adm&&m.dept!==myDept&&m.name!==me)return false;if(S.admDept!=='全部'&&m.dept!==S.admDept)return false;if(S.admQ&&(m.name+m.phone+m.dept+m.role).indexOf(S.admQ)<0)return false;return true});
+  document.getElementById('admTbl').innerHTML=memberTbl(list,adm);
+}
+function memberTbl(list,adm){
+  if(!list.length)return '<div class="empty">没有符合条件的成员</div>';
+  var bd={'在用':'ok','待激活':'mid','已停用':'low'};
+  return '<table class="utbl"><tr><th>成员</th><th>部门</th><th>角色</th><th>席位</th><th>状态</th><th>最近登录</th>'+(adm?'<th>操作</th>':'')+'</tr>'+
+  list.map(function(m){var self=m.name===S.user.name, off=m.st==='已停用';
+   var roleCell=(adm&&!self&&!off)?'<select onchange="setRole(\''+m.id+'\',this.value)">'+ROLES.map(function(r){return '<option'+(m.role===r?' selected':'')+'>'+r+'</option>'}).join('')+'</select>':m.role;
+   var ops='';
+   if(adm){
+     if(self) ops='<span style="color:var(--faint);font-size:12px">当前账号</span>';
+     else if(off) ops='<span class="lk" onclick="enableM(\''+m.id+'\')">重新启用</span>';
+     else ops=(m.st==='待激活'?'<span class="lk" onclick="reinvite(\''+m.id+'\')">重发邀请</span>':'<span class="lk" onclick="toast(\'已向 '+m.name+' 发送重置密码短信（演示）\');logAdd(\'重置密码 '+m.name+'\')">重置密码</span>')+'<span class="lk dg" onclick="disableM(\''+m.id+'\')">停用</span>';
+   }
+   return '<tr class="'+(off?'off':'')+'"><td><b>'+m.name+'</b>'+(self?'<span class="me">我</span>':'')+'<em>'+m.phone+'</em></td><td>'+m.dept+'</td><td>'+roleCell+'</td><td>'+(off?'不占用':m.role==='律师助理'?'助理':'律师')+'</td>'+
+     '<td><span class="bd '+bd[m.st]+'">'+m.st+'</span>'+(m.note?'<em style="font-family:inherit">'+m.note+'</em>':'')+'</td><td style="white-space:nowrap">'+m.last+'</td>'+(adm?'<td>'+ops+'</td>':'')+'</tr>'}).join('')+'</table>';
+}
+function mOf(id){return M.filter(function(m){return m.id===id})[0]}
+function seatFree(role){var u=seatUse();return role==='律师助理'?u.ast<S.seats.ast:u.law<S.seats.law}
+function setRole(id,r){var m=mOf(id);if(!isAdmin())return deny('修改角色');
+  var wasAst=m.role==='律师助理', toAst=r==='律师助理';
+  if(wasAst!==toAst&&!seatFree(r)){toast((toAst?'助理':'律师')+'席位已满，请先扩容');renderAdmin();return}
+  var old=m.role;m.role=r;logAdd('修改角色 '+m.name+'：'+old+' → '+r);renderAdmin();toast(m.name+' 已改为「'+r+'」，下次操作即生效')}
+function disableM(id){var m=mOf(id);if(!isAdmin())return deny('停用账号');
+  var others=M.filter(function(x){return x.id!==id&&x.st==='在用'&&(x.role==='承办律师'||x.role==='律所管理员')});
+  openSheet('停用账号 · '+m.name,
+   '<div class="kv"><div class="v">停用后 <b>'+m.name+'</b> 将无法登录，席位立即释放。'+(m.cases?'<br>Ta 名下有 <b>'+m.cases+'</b> 件承办 / 协办案件，需先整体移交（含证据、时间线、策略和操作记录）。':'<br>Ta 名下没有案件，可直接停用。')+'</div></div>'+
+   (m.cases?'<div class="field"><label>移交给</label><select id="toM">'+others.map(function(x){return '<option>'+x.name+'（'+x.role+'）</option>'}).join('')+'</select></div>':'')+
+   '<button class="primary" style="background:var(--dead)" onclick="doDisable(\''+id+'\')">'+(m.cases?'移交案件并停用':'确认停用')+'</button><button class="ghost" onclick="closeSheet()">取消</button>');
+}
+function doDisable(id){var m=mOf(id),to=document.getElementById('toM');var tn=to?to.value.split('（')[0]:'';
+  m.st='已停用';m.note=m.cases?(m.cases+' 件案件已移交'+tn):'';
+  logAdd('停用账号 '+m.name+(m.cases?'；'+m.cases+' 件案件移交给 '+tn:''));m.cases=0;closeSheet();renderAdmin();toast(m.name+' 已停用，席位已释放')}
+function enableM(id){var m=mOf(id);if(!seatFree(m.role)){toast('席位已满，请先扩容');return}m.st='在用';m.note='';logAdd('重新启用 '+m.name);renderAdmin();toast(m.name+' 已重新启用')}
+function reinvite(id){var m=mOf(id);logAdd('重发邀请 '+m.name);toast('已重新发送邀请短信给 '+m.name+'（演示，不发真实短信）')}
+function expandSeats(){
+  openSheet('席位扩容',
+   '<div class="kv"><div class="v">当前：律师 '+S.seats.law+' 席 · 助理 '+S.seats.ast+' 席。扩容按剩余有效期折算费用，由律所统一付款。</div></div>'+
+   '<div class="field"><label>增加律师席位</label><select id="xLaw"><option>0</option><option selected>2</option><option>5</option><option>10</option></select></div>'+
+   '<div class="field"><label>增加助理席位</label><select id="xAst"><option selected>0</option><option>2</option><option>5</option></select></div>'+
+   '<button class="primary" onclick="doExpand()">提交扩容（演示直接生效）</button>');
+}
+function doExpand(){var a=+document.getElementById('xLaw').value,b=+document.getElementById('xAst').value;if(!a&&!b){toast('请选择要增加的席位');return}
+  S.seats.law+=a;S.seats.ast+=b;logAdd('席位扩容：律师 +'+a+'，助理 +'+b);closeSheet();renderAdmin();toast('扩容成功：律师 '+S.seats.law+' 席 · 助理 '+S.seats.ast+' 席')}
+function openInvite(){
+  if(!isAdmin())return deny('邀请成员');
+  openSheet('邀请成员',
+   '<div class="inv"><div class="field"><label>姓名</label><input type="text" id="iN" placeholder="如：钱律师"></div>'+
+   '<div class="field"><label>手机号（用于登录）</label><input type="text" id="iP" maxlength="11" placeholder="11 位手机号"></div>'+
+   '<div class="field"><label>部门</label><select id="iD">'+DEPTS.map(function(d){return '<option'+(d==='民商事争议解决部'?' selected':'')+'>'+d+'</option>'}).join('')+'</select></div>'+
+   '<div class="field"><label>角色</label><select id="iR">'+ROLES.map(function(r){return '<option'+(r==='承办律师'?' selected':'')+'>'+r+'</option>'}).join('')+'</select></div>'+
+   '<div class="hint">律师助理占用助理席位，其他角色占用律师席位。对方收到短信后用手机号登录即激活。</div>'+
+   '<button class="primary" onclick="doInvite()">发送邀请</button></div>');
+}
+function doInvite(){
+  var n=document.getElementById('iN').value.trim(),p=document.getElementById('iP').value.trim(),d=document.getElementById('iD').value,r=document.getElementById('iR').value;
+  if(!n){toast('请填写姓名');return}
+  if(!/^1\d{10}$/.test(p)){toast('请输入正确的 11 位手机号');return}
+  if(M.some(function(m){return m.phone===p.slice(0,3)+'****'+p.slice(-4)&&m.st!=='已停用'})){toast('该手机号已在本律所空间');return}
+  if(!seatFree(r)){toast((r==='律师助理'?'助理':'律师')+'席位已满，请先扩容');return}
+  M.push({id:'U'+(M.length+1)+'x',name:n,phone:p.slice(0,3)+'****'+p.slice(-4),dept:d,role:r,st:'待激活',last:'—',cases:0});
+  logAdd('邀请成员 '+n+'（'+r+' · '+d+'）');closeSheet();S.admTab='members';renderAdmin();toast('已向 '+n+' 发送邀请短信（演示，不发真实短信）')}
 
 // ================= 演示路线跳转 =================
 function jump(s){
   closeSheet();
-  if(!S.user&&s!=='login'){S.user={name:'演示律师',phone:''}}
+  if(!S.user&&s!=='login'){S.user={name:'演示律师',phone:'',role:'承办律师'}}
   if(s==='login'){S.view='login';render()}
   else if(s==='home'){S.hist=[];S.view='home';render()}
   else if(s==='rush'){S.hist=['home'];S.view='home';startRush('C1')}
@@ -1214,6 +1413,7 @@ function jump(s){
   else if(s==='timeline'){S.hist=[];S.tl=null;S.view='timeline';render()}
   else if(s==='strategy'){S.hist=[];S.cur='C1';S.stTab='chain';S.view='strategy';render()}
   else if(s==='report'){S.hist=[];S.cur='C1';S.view='report';render()}
+  else if(s==='admin'){S.hist=[];S.user={name:'刘主任',phone:'',role:'律所管理员'};store('lw_user',S.user);S.admTab='members';S.view='admin';render()}
   screen.scrollTop=0;
 }
 function resetAll(){closeSheet();init();render();toast('已重置演示')}
@@ -1222,7 +1422,7 @@ init(); render();
 (function(){var q={};location.search.replace(/^\?/,'').split('&').forEach(function(kv){var a=kv.split('=');if(a[0])q[a[0]]=decodeURIComponent(a[1]||'')});
  if(q.embed){document.body.classList.add('embed')}
  var s=q.s; if(!s)return;
- if(s!=='login'){S.user=S.user||{name:'演示律师',phone:''}}
+ if(s!=='login'){S.user=S.user||{name:'演示律师',phone:'',role:'承办律师'}}
  if(s==='login'){S.view='login';render()}
  else if(s==='home'||s==='mask'||s==='evidence'||s==='report'){jump(s)}
  else if(s==='search'){goEvidence({});S.q='还款';var i=document.getElementById('q');if(i)i.value='还款';renderEvList()}
@@ -1233,6 +1433,7 @@ init(); render();
  else if(s==='tlpick'){jump('timeline')}
  else if(s==='timeline'){S.hist=[];S.tl='C1';S.tlGen.C1=1;S.view='timeline';render()}
  else if(s==='new'){S.view='new';render()}
+ else if(s==='admin'||s==='roles'){jump('admin');if(s==='roles'){S.admTab='roles';render()}}
 
  else if(['focus','attack','chain','catalog','op','risk'].indexOf(s)>=0){S.hist=[];S.cur='C1';S.stTab=s;S.view='strategy';render()}
  else if(s==='todo'){S.hist=[];S.cur='C1';S.stTab='chain';S.view='strategy';render();openTodo('C1')}
