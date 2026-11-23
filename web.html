@@ -527,6 +527,16 @@ body.web .trow,body.web .next{max-width:960px}
 .logi span{font-family:var(--mono);font-size:12px;color:var(--muted)}
 .logi b{color:var(--navy);font-weight:600}
 .inv .field select,.inv .field input{width:100%}
+
+/* v2.3.1 网页端登录页排版修复：按钮独占一行、内容居中不溢出 */
+@media (min-width:761px){
+body.web .phone{grid-template-columns:228px minmax(0,1fr)}
+body.web .screen{min-width:0}
+body.web .screen .primary,body.web .screen .ghost{display:block;width:100%}
+body.web .phone.notabs .screen{padding:40px 32px 64px}
+body.web .phone.notabs .screen > *{width:100%;max-width:440px}
+body.web .phone.notabs .agree{align-items:flex-start}
+}
 </style>
 </head>
 <body class="web">
